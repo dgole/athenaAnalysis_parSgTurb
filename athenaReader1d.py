@@ -1,20 +1,11 @@
 #!/usr/bin/python
-from __future__ import unicode_literals
 import numpy as np
 import matplotlib as m
 import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1 import AxesGrid
 import os
-import math
-from scipy import fftpack as fft
-import sys
-from matplotlib.backends.backend_pdf import PdfPages
-import resource
-m.rcParams['text.usetex'] = True
-m.rcParams['text.latex.unicode'] = True
+import matplotlib.colors as colors
 
-font = {'family' : 'normal', 'weight' : 'bold', 'size'   : 14}
-m.rc('font', **font)
+#m.rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 
 def getTimeStepString(i):
 	if i > 999:	 zstring = ""
@@ -23,300 +14,197 @@ def getTimeStepString(i):
 	elif i > -1: zstring = "000"
 	return zstring+str(i)
 
+#headerTex1d = [r"$z$", r"$\rho$", r"$P$", r"$T$", r"$E_x$", r"$E_tot$", r"$KE_x$", r"$KE_y$", r"$KE_z$", r"$KE$", r"$\mathbf{\rho v_x \delta v_y}$", r"$ME_x$", r"$ME_y$", r"$ME_z$", r"$ME$", r"$B_x$", r"$B_y$", r"$B_z$", r"$B_x B_y$"]
+headerTex1d = [r"$z$", r"$\rho$", r"$P$", r"$KE_x$", r"$KE_y$", r"$KE_z$", r"$KE$", r"$\rho v_x \delta v_y$"]
 
-
-headerTex3d = [r"$x$", r"$y$", r"$z$", r"$\rho$", r"$v_x$", r"$v_y$", r"$v_z$", r"$P$", r"$B_x$", r"$B_y$", r"$B_z$"]
-
-class Data3d:
-	def __init__(self, path, iStart, iEnd, baseName="StratCooling", dt=1.0):
-		print "initializing 3d data structure from " + path
-		self.path=path
-		self.names = [baseName + "." + getTimeStepString(i) + ".npy" for i in range(iStart, iEnd)]
-		self.files = [np.load(path+self.names[i]) for i in range(iStart, iEnd)]
+class Data:
+	def __init__(self, path, baseName="Par_Strat3d", dt=0.1):
+		print("initializing 1d data structure from " + path)
+		self.path      = path
+		fileList       = os.listdir(self.path)
+		self.nFiles    = len(fileList)
+		self.names     = [baseName + "." + getTimeStepString(n) + ".1d" for n in range(self.nFiles)]
+		self.files     = [np.loadtxt(path+self.names[n]) for n in range(self.nFiles)]
 		self.dataArray = np.asarray(self.files)
-		self.data = [self.dataArray[...,...,...,...,i] for i in range(0, self.dataArray.shape[4])]
-		del self.files	
-		del self.dataArray
-		self.nt = self.data[0].shape[0]
-		self.tmax = dt*self.nt
-		self.tArray = np.arange(0, self.tmax, dt)
-		self.pdfName = PdfPages(path + "/analysis3d.pdf")
-		self.header = headerTex3d
-		print "data of shape " + str(self.data[0].shape) + " imported for " + str(self.nt) + " time steps"
-		print "total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0)
-
-	def addCol(self, funcName, label, *args, **kwargs):
-		print self.path + ": adding column named " + label
-		self.data.append(funcName(self.data))
-		self.header.append(label)
-
-	def gettindex(self, t):
-		return (np.abs(self.tArray-t)).argmin()
-
-	def getzindex(self, z):
-		return (np.abs(self.data[2][0,0,0]-z)).argmin()
-
-	def stPlot(self, col, cmapType="viridis", logOption=0, save=None, savePath=None, clim1=None, clim2=None):
-		print self.path + ": making ST plot for column " + str(col)
-		if savePath is None:
-			savePath=self.path
-		if logOption==0:
-			plotData = np.mean(self.data[col], axis=(1,2)); title = self.header[col];
-		if logOption==1:
-			plotData = np.log10(np.absolute(np.mean(self.data[col], axis=(1,2)))); title = "log " + self.header[col];
-		plt.imshow(np.transpose(np.fliplr(plotData)), extent=[0,self.tmax,self.data[2][0,0,0].min(),self.data[2][0,0,0].max()], aspect=(0.2*self.tmax/self.data[2][0,0,0].max()), cmap=plt.get_cmap(cmapType))
-		plt.title(title); plt.xlabel("Time (orbits)"); plt.ylabel(r"$z/H$");
-		plt.colorbar(shrink=0.5)
-		if (clim1 is not None and clim2 is not None):
-			plt.clim(clim1,clim2)
-		if (clim1 is not None and clim2 is None):
-			plt.clim(clim1,np.amax(plotData))
-		if (clim1 is None and clim2 is not None):
-			plt.clim(np.aminx(plotData),clim2)
-		plt.tight_layout()
-		if save=="png":
-			plt.savefig(savePath + "ST_" + str(col) + ".png", bbox_inches='tight')
-			print "saved ST plot for column " + str(col) + " to png"
-		if save=="pdf":
-			plt.savefig(self.pdfName, format='pdf', bbox_inches='tight');
-			print "saved ST plot for column " + str(col) + " to pdf"
-		plt.clf()
-
-	def profile(self, col, tStart, tEnd, logOption=0, save=None, savePath=None, legendLabel=None):
-		print self.path + ": making profile plot for column " + str(col)
-		nStart=self.gettindex(tStart); nEnd=self.gettindex(tEnd); 
-		if savePath is None:
-			savePath=self.path
-		for n in range(self.nt):
-			plotData = np.mean(self.data[col][nStart:nEnd], axis=(0,1,2)); title = self.header[col];
-		if logOption==0 and save is not None:
-			plt.plot(self.data[2][0,0,0,...], plotData);	plt.ylabel(self.header[col]);
-		if logOption==1 and save is not None:
-			plt.semilogy(self.data[2][0,0,0,...], np.absolute(plotData));	plt.ylabel(self.header[col]);
-		if logOption==2 and save is not None:
-			plt.plot(self.data[2][0,0,0,...], -np.sign(plotData)*np.log10(np.absolute(plotData)));	plt.ylabel("log " + self.header[col]);
-		if logOption==0 and save is None:
-			plt.plot(self.data[2][0,0,0,...], plotData, label=legendLabel);	plt.ylabel(self.header[col]);
-		if logOption==1 and save is None:
-			plt.semilogy(self.data[2][0,0,0,...], np.absolute(plotData), label=legendLabel);	plt.ylabel(self.header[col]);
-		if logOption==2 and save is None:
-			plt.plot(self.data[2][0,0,0,...], -np.sign(plotData)*np.log10(np.absolute(plotData)), label=legendLabel);	plt.ylabel("log " + self.header[col]);
-		plt.xlabel(r"$z/H$");
-		plt.tight_layout()
-		if save=="png":
-			plt.savefig(savePath + "profile_" + str(col) + ".png", bbox_inches='tight')
-			print "saved profile plot for column " + str(col) + " to png"
-		if save=="pdf":
-			plt.savefig(self.pdfName, format='pdf', bbox_inches='tight');
-			print "saved profile plot for column " + str(col) + " to pdf"
-		if save is None:
-			plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-		if save is not None:
-			plt.clf()
-
-	def timeEvo(self, col, zStart, zEnd, logOption=0, save=None, savePath=None, legendLabel=None):
-		print self.path + ": making timeEvo plot for column " + str(col)
-		ziStart=self.getzindex(zStart)
-		ziEnd=self.getzindex(zEnd)		
-		if savePath is None:
-			savePath=self.path
-		plotData = np.mean(self.data[col][...,...,...,ziStart:ziEnd], axis=(1,2,3)); title = self.header[col];
-		if logOption==0 and save is not None:
-			plt.plot(self.tArray, plotData); plt.ylabel(self.header[col]);
-		if logOption==1 and save is not None:
-			plt.semilogy(self.tArray, np.absolute(plotData)); plt.ylabel(self.header[col]);
-		if logOption==2 and save is not None:
-			plt.loglog(self.tArray, np.absolute(plotData));	plt.ylabel(self.header[col]);
-		if logOption==0 and save is None:
-			plt.plot(self.tArray, plotData, label=legendLabel); plt.ylabel(self.header[col]);
-		if logOption==1 and save is None:
-			plt.semilogy(self.tArray, np.absolute(plotData), label=legendLabel); plt.ylabel(self.header[col]);
-		if logOption==2 and save is None:
-			plt.loglog(self.tArray, np.absolute(plotData), label=legendLabel);	plt.ylabel(self.header[col]);
-		plt.xlabel("Time (orbits)");
-		plt.tight_layout()
-		if save=="png":
-			plt.savefig(savePath + "timeEvo_" + str(col) + ".png", bbox_inches='tight')
-			print "saved timeEvo plot for column " + str(col) + " to png"
-		if save=="pdf":
-			plt.savefig(self.pdfName, format='pdf', bbox_inches='tight');
-			print "saved timeEvo plot for column " + str(col) + " to pdf"
-		if save is None:
-			plt.legend()
-		if save is not None:
-			plt.clf()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-headerTex1d = [r"$z$", r"$\rho$", r"$P$", r"$T$", r"$E_x$", r"$E_tot$", r"$KE_x$", r"$KE_y$", r"$KE_z$", r"$KE$", r"$\mathbf{\rho v_x \delta v_y}$", r"$ME_x$", r"$ME_y$", r"$ME_z$", r"$ME$", r"$B_x$", r"$B_y$", r"$B_z$", r"$B_x B_y$"]
-
-class Data1d:
-	def __init__(self, path, iStart, iEnd, baseName="StratCooling", dt=0.1):
-		print "initializing 1d data structure from " + path
-		self.path=path
-		self.names = [baseName + "." + getTimeStepString(i) + ".1d" for i in range(iStart, iEnd)]
-		self.files = [np.loadtxt(path+self.names[i]) for i in range(iStart, iEnd)]
-		self.dataArray = np.asarray(self.files)
-		self.data = [self.dataArray[...,...,i] for i in range(self.dataArray.shape[2])]
+		self.data      = [self.dataArray[:,:,i] for i in range(self.dataArray.shape[2])]
 		del self.files
-		del self.dataArray	
-		self.nt = self.data[0].shape[0]
-		self.nz = self.data[0].shape[1]  
-		self.zArray = self.data[0][0,...]
-		self.zmax = np.round(-self.data[0][0,0])
-		self.tmax = dt*self.nt
-		self.tArray = np.arange(0, self.tmax, dt)
-		self.pdfName = PdfPages(path + "/analysis1d.pdf")
+		del self.dataArray
+		self.nt     = self.data[0].shape[0]
+		self.nz     = self.data[0].shape[1]
+		self.z      = self.data[0][0,:]
+		self.zmax   = np.round(-self.data[0][0,0],1)
+		self.tmax   = dt*self.nt
+		self.t      = np.arange(0, self.tmax, dt)
 		self.header = headerTex1d
-		print "data of shape " + str(self.data[0].shape) + " imported for " + str(self.nt) + " time steps"
-		print "total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0)
+		print("data of shape " + str(self.data[0].shape) + " imported")
 
 	def getzindex(self, z):
-		return (np.abs(self.zArray-z)).argmin()
+		return (np.abs(self.z-z)).argmin()
 
 	def gettindex(self, t):
-		return (np.abs(self.tArray-t)).argmin()
+		return (np.abs(self.t-t)).argmin()
 
-	def addCol(self, funcName, label, *args, **kwargs):
-		print self.path + ": adding column named " + label
-		self.data.append(funcName(self.data))
-		self.header.append(label)		
+	#def addCol(self, funcName, label, *args, **kwargs):
+		#print self.path + ": adding column named " + label
+		#self.data.append(funcName(self.data))
+		#self.header.append(label)
 
-	def stPlot(self, col, cmapType="viridis", logOption=0, save=None, savePath=None, clim1=None, clim2=None):
-		print self.path + ": making ST plot for column " + str(col)
-		if savePath is None:
-			savePath=self.path
-		if logOption==0:
-			plotData = self.data[col]; title = self.header[col];
-		if logOption==1:
-			plotData = np.log10(np.absolute(self.data[col])); title = "log " + self.header[col];
-		plt.imshow(np.transpose(np.fliplr(plotData)), extent=[0,self.tmax,-self.zmax,self.zmax], aspect=(0.2*self.tmax/self.zmax), cmap=plt.get_cmap(cmapType))
-		plt.title(title); plt.xlabel("Time (orbits)"); plt.ylabel(r"$z/H$");
-		plt.colorbar(shrink=0.5)
-		if (clim1 is not None and clim2 is not None):
-			plt.clim(clim1,clim2)
-		if (clim1 is not None and clim2 is None):
-			plt.clim(clim1,np.amax(plotData))
-		if (clim1 is None and clim2 is not None):
-			plt.clim(np.aminx(plotData),clim2)
-		plt.tight_layout()
-		if save=="png":
-			plt.savefig(savePath + "ST_" + str(col) + ".png", bbox_inches='tight')
-			print "saved ST plot for column " + str(col) + " to png"
-		if save=="pdf":
-			plt.savefig(self.pdfName, format='pdf', bbox_inches='tight');
-			print "saved ST plot for column " + str(col) + " to pdf"
+
+def stPlot(do, col, figNum=0, cmapType="viridis", logOption=0):
+	print (do.path + ": making ST plot for column " + str(col))
+	plt.figure(figNum)
+	title = do.header[col];
+	plotData = do.data[col]
+	if np.amin(plotData) < 0.0 and cmapType == 'viridis':
+		plotData = np.absolute(plotData)
+	if cmapType == 'viridis':
+		plt.imshow(
+				   np.transpose(np.fliplr(plotData)),
+				   extent=[0,do.tmax,-do.zmax,do.zmax],
+				   aspect=(0.2*do.tmax/do.zmax),
+				   cmap=plt.get_cmap(cmapType),
+				   norm=colors.LogNorm()
+				   )
+	elif cmapType == 'coolwarm':
+		maxVal = np.amax(np.absolute(plotData))
+		plt.imshow(
+				   np.transpose(np.fliplr(plotData)),
+				   extent=[0,do.tmax,-do.zmax,do.zmax],
+				   aspect=(0.2*do.tmax/do.zmax),
+				   cmap=plt.get_cmap(cmapType),
+				   norm=colors.SymLogNorm(maxVal/100.0, linscale=1.0)
+				   )
+	plt.title(title);
+	plt.xlabel(r"$t \Omega$");
+	plt.ylabel(r"$z/H$");
+	plt.colorbar(shrink=0.5)
+	plt.tight_layout()
+
+
+'''
+def profile(self, col, tStart, tEnd, logOption=0, save=None, savePath=None, legendLabel=None):
+	print self.path + ": making profile plot for column " + str(col)
+	nStart=self.gettindex(tStart); nEnd=self.gettindex(tEnd);
+	if savePath is None:
+		savePath=self.path
+	plotData = np.mean(self.data[col][nStart:nEnd,...], axis=0); title = self.header[col];
+	if logOption==0 and save is not None:
+		plt.plot(self.zArray, plotData);	plt.ylabel(self.header[col]);
+	if logOption==1 and save is not None:
+		plt.semilogy(self.zArray, np.absolute(plotData));	plt.ylabel(self.header[col]);
+	if logOption==0 and save is None:
+		plt.plot(self.zArray, plotData, label=legendLabel);	plt.ylabel(self.header[col]);
+	if logOption==1 and save is None:
+		plt.semilogy(self.zArray, np.absolute(plotData), label=legendLabel);	plt.ylabel(self.header[col]);
+	plt.xlabel(r"$z/H$");
+	plt.tight_layout()
+	if save=="png":
+		plt.savefig(savePath + "profile_" + str(col) + ".png", bbox_inches='tight')
+		print "saved profile plot for column " + str(col) + " to png"
+	if save=="pdf":
+		plt.savefig(self.pdfName, format='pdf', bbox_inches='tight');
+		print "saved profile plot for column " + str(col) + " to pdf"
+	if save is None:
+		#plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+		plt.legend()
+	if save is not None:
 		plt.clf()
-		
-	def profile(self, col, tStart, tEnd, logOption=0, save=None, savePath=None, legendLabel=None):
-		print self.path + ": making profile plot for column " + str(col)
-		nStart=self.gettindex(tStart); nEnd=self.gettindex(tEnd); 
-		if savePath is None:
-			savePath=self.path
-		plotData = np.mean(self.data[col][nStart:nEnd,...], axis=0); title = self.header[col];
-		if logOption==0 and save is not None:
-			plt.plot(self.zArray, plotData);	plt.ylabel(self.header[col]);
-		if logOption==1 and save is not None:
-			plt.semilogy(self.zArray, np.absolute(plotData));	plt.ylabel(self.header[col]);
-		if logOption==0 and save is None:
-			plt.plot(self.zArray, plotData, label=legendLabel);	plt.ylabel(self.header[col]);
-		if logOption==1 and save is None:
-			plt.semilogy(self.zArray, np.absolute(plotData), label=legendLabel);	plt.ylabel(self.header[col]);
-		plt.xlabel(r"$z/H$");
-		plt.tight_layout()
-		if save=="png":
-			plt.savefig(savePath + "profile_" + str(col) + ".png", bbox_inches='tight')
-			print "saved profile plot for column " + str(col) + " to png"
-		if save=="pdf":
-			plt.savefig(self.pdfName, format='pdf', bbox_inches='tight');
-			print "saved profile plot for column " + str(col) + " to pdf"
-		if save is None:
-			#plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-			plt.legend()
-		if save is not None:
-			plt.clf()
-				
-	def timeEvo(self, col, zStart, zEnd, logOption=0, save=None, savePath=None, legendLabel=None):
-		print self.path + ": making timeEvo plot for column " + str(col)
-		ziStart=self.getzindex(zStart)
-		ziEnd=self.getzindex(zEnd)		
-		if savePath is None:
-			savePath=self.path
-		plotData = np.mean(self.data[col][...,ziStart:ziEnd], axis=1); title = self.header[col];
-		if logOption==0 and save is not None:
-			plt.plot(self.tArray, plotData); plt.ylabel(self.header[col]);
-		if logOption==1 and save is not None:
-			plt.semilogy(self.tArray, np.absolute(plotData)); plt.ylabel(self.header[col]);
-		if logOption==2 and save is not None:
-			plt.loglog(self.tArray, np.absolute(plotData));	plt.ylabel("log " + self.header[col]);
-		if logOption==0 and save is None:
-			plt.plot(self.tArray, plotData, label=legendLabel); plt.ylabel(self.header[col]);
-		if logOption==1 and save is None:
-			plt.semilogy(self.tArray, np.absolute(plotData), label=legendLabel); plt.ylabel(self.header[col]);
-		if logOption==2 and save is None:
-			plt.loglog(self.tArray, np.absolute(plotData), label=legendLabel);	plt.ylabel("log " + self.header[col]);
-		plt.xlabel("Time (orbits)");
-		plt.tight_layout()
-		if save=="png":
-			plt.savefig(savePath + "timeEvo_" + str(col) + ".png", bbox_inches='tight')
-			print "saved timeEvo plot for column " + str(col) + " to png"
-		if save=="pdf":
-			plt.savefig(self.pdfName, format='pdf', bbox_inches='tight');
-			print "saved timeEvo plot for column " + str(col) + " to pdf"
-		if save is None:
-			plt.legend()
-		if save is not None:
-			plt.clf()
 
+def timeEvo(self, col, zStart, zEnd, logOption=0, save=None, savePath=None, legendLabel=None):
+	print self.path + ": making timeEvo plot for column " + str(col)
+	ziStart=self.getzindex(zStart)
+	ziEnd=self.getzindex(zEnd)
+	if savePath is None:
+		savePath=self.path
+	plotData = np.mean(self.data[col][...,ziStart:ziEnd], axis=1); title = self.header[col];
+	if logOption==0 and save is not None:
+		plt.plot(self.tArray, plotData); plt.ylabel(self.header[col]);
+	if logOption==1 and save is not None:
+		plt.semilogy(self.tArray, np.absolute(plotData)); plt.ylabel(self.header[col]);
+	if logOption==2 and save is not None:
+		plt.loglog(self.tArray, np.absolute(plotData));	plt.ylabel("log " + self.header[col]);
+	if logOption==0 and save is None:
+		plt.plot(self.tArray, plotData, label=legendLabel); plt.ylabel(self.header[col]);
+	if logOption==1 and save is None:
+		plt.semilogy(self.tArray, np.absolute(plotData), label=legendLabel); plt.ylabel(self.header[col]);
+	if logOption==2 and save is None:
+		plt.loglog(self.tArray, np.absolute(plotData), label=legendLabel);	plt.ylabel("log " + self.header[col]);
+	plt.xlabel("Time (orbits)");
+	plt.tight_layout()
+	if save=="png":
+		plt.savefig(savePath + "timeEvo_" + str(col) + ".png", bbox_inches='tight')
+		print "saved timeEvo plot for column " + str(col) + " to png"
+	if save=="pdf":
+		plt.savefig(self.pdfName, format='pdf', bbox_inches='tight');
+		print "saved timeEvo plot for column " + str(col) + " to pdf"
+	if save is None:
+		plt.legend()
+	if save is not None:
+		plt.clf()
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 	def makeStandardPlotsPdf(self, t1, t2, t3):
 		#density
-		col=1				
+		col=1
 		self.stPlot(col, logOption=1, save="pdf")
 		self.profile(col, t2, t3, logOption=1, save="pdf")
 		#pressure
-		col=2				
+		col=2
 		self.stPlot(col, logOption=1, save="pdf")
 		self.profile(col, t2, t3, logOption=1, save="pdf")
 		#temp
-		col=3				
+		col=3
 		self.stPlot(col, clim1=0.4, clim2=1.2, save="pdf")
 		self.profile(col, t2, t3, save="pdf")
 		#KE
-		col=9				
+		col=9
 		self.stPlot(col, logOption=1, save="pdf", clim1=-7.0)
 		self.profile(col, t2, t3, logOption=1, save="pdf")
 		self.timeEvo(col, t1, t3, logOption=1, save="pdf")
 		#Reynolds
-		col=10				
+		col=10
 		self.stPlot(col, logOption=1, save="pdf", clim1=-7.0)
 		self.profile(col, t2, t3, logOption=1, save="pdf")
 		self.timeEvo(col, t1, t3, logOption=1, save="pdf")
 		#ME
-		col=14				
+		col=14
 		self.stPlot(col, logOption=1, save="pdf", clim1=-7.0)
 		self.profile(col, t2, t3, logOption=1, save="pdf")
 		self.timeEvo(col, t1, t3, logOption=1, save="pdf")
 		#Maxwell
-		col=18				
+		col=18
 		self.stPlot(col, logOption=1, save="pdf", clim1=-7.0)
 		self.profile(col, t2, t3, logOption=1, save="pdf")
-		self.timeEvo(col, t1, t3, logOption=1, save="pdf")		
+		self.timeEvo(col, t1, t3, logOption=1, save="pdf")
 
 
 
@@ -341,7 +229,7 @@ def vx(data):
 
 def dv3d(data):
 	dv=np.zeros_like(data[0]);
-	for n in range(0,data[0].shape[0]):	
+	for n in range(0,data[0].shape[0]):
 		shiftedArrayListVx = []
 		shiftedArrayListVy = []
 		shiftedArrayListVz = []
@@ -362,11 +250,11 @@ def dv3d(data):
 		del shiftedArrayArrayVy
 		del shiftedArrayArrayVz
 		print "n=" + str(n) + " total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0)
-	return np.sqrt(dv)/np.sqrt(data[7]/data[3]) 
+	return np.sqrt(dv)/np.sqrt(data[7]/data[3])
 
 def drho3d(data):
 	drho=np.zeros_like(data[0]);
-	for n in range(0,data[0].shape[0]):	
+	for n in range(0,data[0].shape[0]):
 		shiftedArrayList = []
 		for iShift in range(-2, 3):
 			for jShift in range(-2, 3):
@@ -377,7 +265,7 @@ def drho3d(data):
 		drho[n] = np.var(shiftedArrayArray, axis=0)
 		del shiftedArrayArray
 		print "n=" + str(n) + " total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0)
-	return np.sqrt(drho)/data[3] 
+	return np.sqrt(drho)/data[3]
 
 def zeros3d(data):
 	return np.zeros_like(data[0]);
@@ -396,12 +284,4 @@ def keFluxz(data):
 	ke = 0.5*data[3]*(np.power(data[4], 2) + np.power(data[5], 2) + np.power(data[6], 2))
 	keFlux = data[6]*ke
 	return keFlux
-
-
-
-
-
-
-
-
-
+'''
