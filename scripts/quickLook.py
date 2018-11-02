@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import os
 import math
 import sys
+sys.path.append('../python')
 import athenaReader1d as reader1d
 import athenaReaderPhst as readerPhst
 from matplotlib.backends.backend_pdf import PdfPages
@@ -13,7 +14,7 @@ doGas1d  = 1
 doParAvg = 1
 
 # data path and output path
-path        = '../data/' + str(sys.argv[1])
+path        = '../../data/' + str(sys.argv[1])
 savePath    = path + 'plots/'
 if not os.path.exists(savePath): os.makedirs(savePath)
 
