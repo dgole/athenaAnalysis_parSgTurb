@@ -14,7 +14,7 @@ timeStepStart=int(sys.argv[2])
 timeStepEnd=int(sys.argv[3])
 path=str(sys.argv[4])
 outDir=str(sys.argv[5])
-basename="StratCooling"
+basename="Par_strat3d"
 
 def getTimeStepString(i):
 	if i > 999:	 zstring = ""
