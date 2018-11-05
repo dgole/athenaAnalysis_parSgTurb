@@ -14,7 +14,7 @@ timeStepStart=int(sys.argv[2])
 timeStepEnd=int(sys.argv[3])
 path=str(sys.argv[4])
 outDir=str(sys.argv[5])
-basename="Par_strat3d"
+basename="Par_Strat3d"
 
 def getTimeStepString(i):
 	if i > 999:	 zstring = ""
@@ -34,6 +34,7 @@ for timeStep in range(timeStepStart, timeStepEnd):
 	print("combining tab files for " + path + "  time step = " + str(timeStep))
 	# read in files
 	print("reading in files")
+	sys.stdout.flush()
 	files=getFiles(basename, path, getFileNames(basename, timeStep, npc))
 	res=abs(1.0/(files[0][0,3]-files[0][1,3]))
 	cols=files[0].shape[1]
@@ -42,16 +43,13 @@ for timeStep in range(timeStepStart, timeStepEnd):
 	coordsListArray=[np.unique(coordsArray[:,:,i]) for i in range(3)]
 	# assign data to 3d array
 	masterArray=np.zeros([coordsListArray[0].shape[0],coordsListArray[1].shape[0],coordsListArray[2].shape[0],cols-3])
-	count=0; masterLength=len(files)*files[0].shape[0];
+	masterLength=len(files)*files[0].shape[0];
 	print("arranging files into 3d numpy array")
+	sys.stdout.flush()
 	for file in files:
 		for i in range(file.shape[0]): 
 			indicies=[(np.abs(coordsListArray[j]-file[i,3+j])).argmin() for j in range(3)]
-			count=count+1;
 			masterArray[indicies[0],indicies[1],indicies[2]]=file[i,3:cols]
-			progress = 100.0*float(count)/float(masterLength)
-			sys.stdout.write("progress: %d%%\r"%progress)
-			sys.stdout.flush()
 	# export table
 	if not os.path.exists(outDir): os.makedirs(outDir)
 	np.save(outDir+basename+"."+getTimeStepString(timeStep)+".npy", masterArray)
