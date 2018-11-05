@@ -91,11 +91,11 @@ def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None):
 	plt.tight_layout()
 '''
 
-def timeEvo(do, key, figNum=0, legendLabel=None):
+def timeEvo(do, key, figNum=0, legendLabel=None, logForce=0):
 	print(do.path + ": making timeEvo plot for key " + key)
 	plt.figure(figNum)
 	plotData = do.data[key]
-	if 10.0*np.amin(np.absolute(plotData[2:])) < np.amax(np.absolute(plotData[2:])):
+	if 10.0*np.amin(np.absolute(plotData[2:])) < np.amax(np.absolute(plotData[2:])) or logForce==1:
 		plt.semilogy(do.t, np.absolute(plotData), label=legendLabel)
 	else:
 		plt.plot(do.t, np.absolute(plotData), label=legendLabel)

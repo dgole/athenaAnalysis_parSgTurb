@@ -4,15 +4,11 @@ import matplotlib as m
 import matplotlib.pyplot as plt
 import os
 import matplotlib.colors as colors
+import sys
+sys.path.append('../python')
+import athenaTools as tools
 
 #m.rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
-
-def getTimeStepString(i):
-	if i > 999:	 zstring = ""
-	elif i > 99: zstring = "0"
-	elif i > 9:  zstring = "00"
-	elif i > -1: zstring = "000"
-	return zstring+str(i)
 
 ####################################################################
 # Data class ###############################################
@@ -23,7 +19,7 @@ class Data1d:
 		self.path    = path
 		fileList     = os.listdir(self.path)
 		nFiles       = len(fileList)
-		names        = [baseName + "." + getTimeStepString(n) + ".1d" for n in range(nFiles)]
+		names        = [baseName + "." + tools.getTimeStepString(n) + ".1d" for n in range(nFiles)]
 		files        = [np.loadtxt(path+names[n]) for n in range(nFiles)]
 		dataArray    = np.asarray(files)
 		self.data    = {'rho'     : dataArray[:,:,1],
@@ -95,11 +91,11 @@ def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None):
 	plt.xlabel(r"$z/H$");
 	plt.tight_layout()
 
-def timeEvo(do, key, figNum=0, legendLabel=None):
+def timeEvo(do, key, figNum=0, legendLabel=None, logForce=0):
 	print(do.path + ": making timeEvo plot for key " + key)
 	plt.figure(figNum)
 	plotData = np.mean(do.data[key], axis=1)
-	if 10.0*np.amin(np.absolute(plotData[2:])) < np.amax(np.absolute(plotData[2:])):
+	if 10.0*np.amin(np.absolute(plotData[2:])) < np.amax(np.absolute(plotData[2:])) or logForce==1:
 		plt.semilogy(do.t, np.absolute(plotData), label=legendLabel)
 	else:
 		plt.plot(do.t, np.absolute(plotData), label=legendLabel)
@@ -109,3 +105,9 @@ def timeEvo(do, key, figNum=0, legendLabel=None):
 
 def dv(do):
 	return np.sqrt(2.0*do.data['KE']/do.data['rho'])
+
+def dvz(do):
+	return np.sqrt(2.0*do.data['KEz']/do.data['rho'])
+
+def alphaz(do):
+	return np.square(do.data['dvz'])
