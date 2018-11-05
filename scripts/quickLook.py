@@ -9,6 +9,7 @@ sys.path.append('../python')
 import athenaReader1d as reader1d
 import athenaReaderPhst as readerPhst
 from matplotlib.backends.backend_pdf import PdfPages
+####################################################
 
 doGas1d  = 1
 doParAvg = 1
