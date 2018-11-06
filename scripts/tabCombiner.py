@@ -5,6 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import sys
+sys.path.append('../python')
+import athenaTools as tools
 import resource
 ####################################################
 
@@ -16,15 +18,9 @@ path=str(sys.argv[4])
 outDir=str(sys.argv[5])
 basename="Par_Strat3d"
 
-def getTimeStepString(i):
-	if i > 999:	 zstring = ""
-	elif i > 99: zstring = "0"
-	elif i > 9:  zstring = "00"
-	elif i > -1: zstring = "000"
-	return zstring+str(i)
 def getFileNames(basename, timeStep, npc):
-	names = [("id"+str(i)+"/"+basename+"-id" + str(i) + "." + getTimeStepString(timeStep) + ".tab") for i in range(npc)] 
-	names[0] = "id0/"+basename+"."+getTimeStepString(timeStep)+".tab"
+	names = [("id"+str(i)+"/"+basename+"-id" + str(i) + "." + tools.getTimeStepString(timeStep) + ".tab") for i in range(npc)]
+	names[0] = "id0/"+basename+"."+tools.getTimeStepString(timeStep)+".tab"
 	return names
 def getFiles(basename, path, names):
 	files = [np.loadtxt(path+name) for name in names]
@@ -47,64 +43,15 @@ for timeStep in range(timeStepStart, timeStepEnd):
 	print("arranging files into 3d numpy array")
 	sys.stdout.flush()
 	for file in files:
-		for i in range(file.shape[0]): 
+		for i in range(file.shape[0]):
 			indicies=[(np.abs(coordsListArray[j]-file[i,3+j])).argmin() for j in range(3)]
 			masterArray[indicies[0],indicies[1],indicies[2]]=file[i,3:cols]
 	# export table
 	if not os.path.exists(outDir): os.makedirs(outDir)
-	np.save(outDir+basename+"."+getTimeStepString(timeStep)+".npy", masterArray)
+	np.save(outDir+basename+"."+tools.getTimeStepString(timeStep)+".npy", masterArray)
 	print("total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
 	del files
 	del masterArray
 	del coordsList
 	del coordsArray
 	del coordsListArray
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
