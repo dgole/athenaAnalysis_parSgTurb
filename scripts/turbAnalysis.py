@@ -18,7 +18,7 @@ if not os.path.exists(pathSave): os.makedirs(pathSave)
 
 runNameList = ['run10', 'run11', 'run12', 'run13', 'run14']
 alphaInList = [1.e-2,    1.e-3,   1.e-4,   1.e-5,   1.e-6]
-colorList   = ['b',  'tab:orange', 'g',    'r',     'm']
+colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
 
 # read 1d and phst files in for all runs
 do1dList    = []
@@ -53,6 +53,7 @@ for n in range(len(do1dList)):
 	parh       = np.sqrt(alphazMean/0.1)
 	readerPhst.timeEvo(doPhst, 'zvar', legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
 	plt.axhline(y=parh, linestyle='--', color=color)
+plt.axhline(y=do.dz, linestyle='--', color='k')
 plt.legend()
 tools.saveAndClear(pathSave + "par_" + 'scaleHeightComparison' + ".png")
 
@@ -62,10 +63,11 @@ for n in range(len(do1dList)):
 	alphaIn    = alphaInList[n]
 	color      = colorList[n]
 	doPhst     = doPhstList[n]
-	alphazMean = np.mean(do.data['alphaz'][do.nt//2:, do.nz//2-4:do.nz//2+5])
+	alphazMean = np.mean(do.data['alphaz'][do.nt//2:, do.nz//2-1:do.nz//2+2])
 	parh       = np.sqrt(alphazMean/0.1)
 	readerPhst.timeEvo(doPhst, 'zvar', legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
 	plt.axhline(y=parh, linestyle='--', color=color)
+plt.axhline(y=do.dz, linestyle='--', color='k')
 plt.legend()
 tools.saveAndClear(pathSave + "par_" + 'scaleHeightComparison2' + ".png")
 
