@@ -15,7 +15,7 @@ npc=int(sys.argv[1])
 timeStepStart=int(sys.argv[2])
 timeStepEnd=int(sys.argv[3])
 path=str(sys.argv[4])
-outDir=str(sys.argv[5])
+outDir=path+'combTabs/'
 basename="Par_Strat3d"
 
 def getFileNames(basename, timeStep, npc):
