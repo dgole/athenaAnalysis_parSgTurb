@@ -10,15 +10,34 @@ import athenaReader1d as reader1d
 import athenaReaderPhst as readerPhst
 import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
-####################################################
+#########################################################################
 
-pathBase = '../../data/turbTest/'
+#pathBase = '../../data/turbTest/'
+#runNameList = ['run10', 'run11', 'run12', 'run13', 'run14']
+#alphaInList = [1.e-2,    1.e-3,   1.e-4,   1.e-5,   1.e-6]
+#tsList      = [1.e-1,    1.e-1,   1.e-1,   1.e-1,   1.e-1]
+#colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
+#pathSave = pathBase + 'plots/turbAnalysis2/'
+
+#pathBase = '../../data/turbTest/'
+#runNameList = ['run41', 'run42', 'run43']
+#alphaInList = [1.e-3,   1.e-4,   1.e-5  ]
+#tsList      = [1.e-1,   1.e-1,   1.e-1  ]
+#colorList   = ['b',  'tab:orange', 'g'  ]
+#pathSave = pathBase + 'plots/turbAnalysis2/'
+
+pathBase = '../../data/parhTest/'
+runNameList = ['run10', 'run11', 'run12', 'run13']
+alphaInList = [1.e-2,    1.e-2,   1.e-2,   1.e-2 ]
+tsList      = [1.e1,     1.e0,    1.e-1,   1.e-2 ]
+colorList   = ['b',  'tab:orange', 'g',    'r'   ]
 pathSave = pathBase + 'plots/turbAnalysis/'
-if not os.path.exists(pathSave): os.makedirs(pathSave)
 
-runNameList = ['run10', 'run11', 'run12', 'run13', 'run14']
-alphaInList = [1.e-2,    1.e-3,   1.e-4,   1.e-5,   1.e-6]
-colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
+########################################################################
+
+
+
+if not os.path.exists(pathSave): os.makedirs(pathSave)
 
 # read 1d and phst files in for all runs
 do1dList    = []
@@ -50,21 +69,21 @@ for n in range(len(do1dList)):
 	color      = colorList[n]
 	doPhst     = doPhstList[n]
 	alphazMean = np.mean(do.data['alphaz'][do.nt//2:])
-	parh       = np.sqrt(alphazMean/0.1)
+	parh       = np.sqrt(alphazMean/tsList[n])
 	readerPhst.timeEvo(doPhst, 'zvar', legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
 	plt.axhline(y=parh, linestyle='--', color=color)
 plt.axhline(y=do.dz, linestyle='--', color='k')
 plt.legend()
 tools.saveAndClear(pathSave + "par_" + 'scaleHeightComparison' + ".png")
 
-# plot particle dz vs expected value based on alpha ~ dvz^2
+# plot particle dz vs expected value based on alpha ~ dvz^2, just at mid-plane
 for n in range(len(do1dList)):
 	do         = do1dList[n]
 	alphaIn    = alphaInList[n]
 	color      = colorList[n]
 	doPhst     = doPhstList[n]
 	alphazMean = np.mean(do.data['alphaz'][do.nt//2:, do.nz//2-1:do.nz//2+2])
-	parh       = np.sqrt(alphazMean/0.1)
+	parh       = np.sqrt(alphazMean/tsList[n])
 	readerPhst.timeEvo(doPhst, 'zvar', legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
 	plt.axhline(y=parh, linestyle='--', color=color)
 plt.axhline(y=do.dz, linestyle='--', color='k')
@@ -73,12 +92,6 @@ tools.saveAndClear(pathSave + "par_" + 'scaleHeightComparison2' + ".png")
 
 
 
-
-# PARTICLE AVERAGES
-#doPhst = readerPhst.DataPhst(pathBase)
-#for key in ['zvar', 'vzvar']:
-	#readerPhst.timeEvo(doPhst, key)
-	#tools.saveAndClear(pathSave + "par_timeEvo_" + key + ".png")
 
 
 

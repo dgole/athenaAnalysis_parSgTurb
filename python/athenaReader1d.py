@@ -42,7 +42,7 @@ class Data1d:
 		self.nz     = self.data['rho'].shape[1]
 		self.zmax   = np.round(-self.z[0],1)
 		self.tmax   = dt*self.nt
-		self.t      = np.arange(0, self.tmax, dt)
+		self.t      = np.arange(0, self.tmax-dt/2.0, dt)
 		del files, dataArray
 		print("data of shape " + str(self.data['rho'].shape) + " imported")
 	def getzindex(self, z):
