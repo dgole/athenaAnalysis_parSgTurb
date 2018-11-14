@@ -10,17 +10,15 @@ import athenaReader1d as reader1d
 import athenaReaderPhst as readerPhst
 import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
-####################################################
-
+#########################################################
 doGas1d  = 1
 doParAvg = 1
-
 # paths
-pathBase = '../../data/' + str(sys.argv[1])
+pathBase = str(sys.argv[1])
 path1d   = pathBase + '1d/'
 pathSave = pathBase + 'plots/quickLook/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
-
+#########################################################
 # 1d GAS
 if doGas1d == 1:
 	do1d = reader1d.Data1d(path1d)
@@ -33,7 +31,6 @@ if doGas1d == 1:
 		tools.saveAndClear(pathSave + "gas_profile_" + key + ".png")
 		reader1d.timeEvo(do1d, key)
 		tools.saveAndClear(pathSave + "gas_timeEvo_" + key + ".png")
-
 # PARTICLE AVERAGES
 if doParAvg == 1:
 	doPhst = readerPhst.DataPhst(pathBase)

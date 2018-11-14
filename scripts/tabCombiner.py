@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 ####################################################
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,13 +8,12 @@ sys.path.append('../python')
 import athenaTools as tools
 import resource
 ####################################################
-
 # parameters
 npc=int(sys.argv[1])
 timeStepStart=int(sys.argv[2])
 timeStepEnd=int(sys.argv[3])
 path=str(sys.argv[4])
-outDir=path+'combTabs/'
+outDir=path+'3d/'
 basename="Par_Strat3d"
 
 def getFileNames(basename, timeStep, npc):

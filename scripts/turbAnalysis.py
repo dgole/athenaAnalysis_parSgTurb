@@ -11,13 +11,19 @@ import athenaReaderPhst as readerPhst
 import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 #########################################################################
-
 #pathBase = '../../data/turbTest/'
 #runNameList = ['run10', 'run11', 'run12', 'run13', 'run14']
 #alphaInList = [1.e-2,    1.e-3,   1.e-4,   1.e-5,   1.e-6]
 #tsList      = [1.e-1,    1.e-1,   1.e-1,   1.e-1,   1.e-1]
 #colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
 #pathSave = pathBase + 'plots/turbAnalysis2/'
+
+pathBase = '../../data/turbTest/'
+runNameList = ['run30', 'run31', 'run32', 'run33', 'run34']
+alphaInList = [1.e-2,    1.e-3,   1.e-4,   1.e-5,   1.e-6]
+tsList      = [1.e-1,    1.e-1,   1.e-1,   1.e-1,   1.e-1]
+colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
+pathSave = pathBase + 'plots/turbAnalysis3/'
 
 #pathBase = '../../data/turbTest/'
 #runNameList = ['run41', 'run42', 'run43']
@@ -26,16 +32,13 @@ from matplotlib.backends.backend_pdf import PdfPages
 #colorList   = ['b',  'tab:orange', 'g'  ]
 #pathSave = pathBase + 'plots/turbAnalysis2/'
 
-pathBase = '../../data/parhTest/'
-runNameList = ['run10', 'run11', 'run12', 'run13']
-alphaInList = [1.e-2,    1.e-2,   1.e-2,   1.e-2 ]
-tsList      = [1.e1,     1.e0,    1.e-1,   1.e-2 ]
-colorList   = ['b',  'tab:orange', 'g',    'r'   ]
-pathSave = pathBase + 'plots/turbAnalysis/'
-
+#pathBase = '../../data/parhTest/'
+#runNameList = ['run10', 'run11', 'run12', 'run13']
+#alphaInList = [1.e-2,    1.e-2,   1.e-2,   1.e-2 ]
+#tsList      = [1.e1,     1.e0,    1.e-1,   1.e-2 ]
+#colorList   = ['b',  'tab:orange', 'g',    'r'   ]
+#pathSave = pathBase + 'plots/turbAnalysis/'
 ########################################################################
-
-
 
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 
