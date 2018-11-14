@@ -109,46 +109,55 @@ def getPertNorm(a):
 
 def drho(do, n):
 	print('calculating drho for n=' + str(n))
+	sys.stdout.flush()
 	da = getPert(do.get3d('rho', n))
 	return da
 
 def drhoNorm(do, n):
 	print('calculating drhoNorm for n=' + str(n))
+	sys.stdout.flush()
 	daNorm = getPertNorm(do.get3d('rho', n))
 	return daNorm
 
 def dvx(do, n):
 	print('calculating dvx for n=' + str(n))
+	sys.stdout.flush()
 	da = getPert(do.get3d('vx', n))
 	return da
 
 def dvxNorm(do, n):
 	print('calculating dvxNorm for n=' + str(n))
+	sys.stdout.flush()
 	daNorm = getPertNorm(do.get3d('vx', n))
 	return daNorm
 
 def dvy(do, n):
 	print('calculating dvy for n=' + str(n))
+	sys.stdout.flush()
 	da = getPert(do.get3d('vy', n))
 	return da
 
 def dvyNorm(do, n):
 	print('calculating dvyNorm for n=' + str(n))
+	sys.stdout.flush()
 	daNorm = getPertNorm(do.get3d('vy', n))
 	return daNorm
 
 def dvz(do, n):
 	print('calculating dvz for n=' + str(n))
+	sys.stdout.flush()
 	da = getPert(do.get3d('vz', n))
 	return da
 
 def dvzNorm(do, n):
 	print('calculating dvzNorm for n=' + str(n))
+	sys.stdout.flush()
 	daNorm = getPertNorm(do.get3d('vz', n))
 	return daNorm
 
 def dv(do, n):
 	print('calculating dv for n=' + str(n))
+	sys.stdout.flush()
 	dvx = do.get3d('dvx', n)
 	dvy = do.get3d('dvy', n)
 	dvz = do.get3d('dvz', n)
@@ -157,6 +166,7 @@ def dv(do, n):
 
 def dvNorm(do, n):
 	print('calculating dvNorm for n=' + str(n))
+	sys.stdout.flush()
 	dvx = do.get3d('dvx', n)
 	dvy = do.get3d('dvy', n)
 	dvz = do.get3d('dvz', n)

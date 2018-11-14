@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import numpy as np
 import matplotlib as m
+m.use('Agg')
 import matplotlib.pyplot as plt
 import os
 import matplotlib.colors as colors

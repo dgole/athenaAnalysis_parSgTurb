@@ -17,6 +17,7 @@ import athenaTools as tools
 class Data1d:
 	def __init__(self, path, baseName="Par_Strat3d", dt=0.1):
 		print("initializing 1d data structure from " + path)
+		sys.stdout.flush()
 		self.path    = path
 		fileList     = os.listdir(self.path)
 		nFiles       = len(fileList)
@@ -46,12 +47,14 @@ class Data1d:
 		self.t      = np.arange(0, self.tmax-dt/2.0, dt)
 		del files, dataArray
 		print("data of shape " + str(self.data['rho'].shape) + " imported")
+		sys.stdout.flush()
 	def getzindex(self, z):
 		return (np.abs(self.z-z)).argmin()
 	def gettindex(self, t):
 		return (np.abs(self.t-t)).argmin()
 	def addCol(self, funcName, key, headerLabel, *args, **kwargs):
 		print(self.path + ": adding data with key " + key)
+		sys.stdout.flush()
 		self.data[key]   = funcName(self)
 		self.header[key] = headerLabel
 
@@ -60,6 +63,7 @@ class Data1d:
 ####################################################################
 def stPlot(do, key, figNum=0):
 	print (do.path + ": making ST plot for key " + key)
+	sys.stdout.flush()
 	plt.figure(figNum)
 	title = do.header[key]
 	extent = [0,do.tmax,-do.zmax,do.zmax]
@@ -81,6 +85,7 @@ def stPlot(do, key, figNum=0):
 
 def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None):
 	print(do.path + ": making profile plot for key " + key)
+	sys.stdout.flush()
 	plt.figure(figNum)
 	if tStart == None: tStart = do.t[-1]/2.0
 	if tEnd   == None: tEnd   = do.t[-1]
@@ -95,6 +100,7 @@ def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None):
 
 def timeEvo(do, key, figNum=0, legendLabel=None, logForce=0, z1=-100.0, z2=100.0):
 	print(do.path + ": making timeEvo plot for key " + key)
+	sys.stdout.flush()
 	plt.figure(figNum)
 	zi1 = do.getzindex(z1)
 	zi2 = do.getzindex(z2)
