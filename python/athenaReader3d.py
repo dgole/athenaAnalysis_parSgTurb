@@ -219,7 +219,7 @@ def acfMean(do, key, shiftMax, ziList, nList):
 
 def acf4d(do, key, shiftMax):
 	acf4d = np.zeros([do.nt, do.nz, shiftMax*2+1, shiftMax*2+1])
-	for n in range(40, do.nt, 1):
+	for n in range(0, do.nt, 1):
 		data3d = do.get3d(key, n)
 		for zi in range(0, do.nz, 1):
 			print('calculating 2d ACF for'+' n=' + str(n)+' zi='+str(zi))
