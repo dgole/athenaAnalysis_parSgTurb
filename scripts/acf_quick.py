@@ -27,7 +27,7 @@ pathSave = pathBase + 'plots/quickAcf/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3d = reader3d.Data3d(path3d)
 #############################################################
-shiftMax   = do3d.nz // 2
+shiftMax   = do3d.nz // 4
 sCutFactor = do3d.nz // 8
 tCutFactor = 6
 ziList = range(sCutFactor//2, do3d.nz, sCutFactor)
