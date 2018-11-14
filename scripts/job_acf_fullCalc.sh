@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -J acf30
+#SBATCH -J acf34
 #SBATCH --time=48:00:00
 #SBATCH -N 1
 #SBATCH --ntasks 1
@@ -10,7 +10,7 @@
 
 module load gcc python3
 
-export DIR=../../turbTest/run30/bin/
+export DIR=../../turbTest/run34/bin/
 
 python3 acf_fullCalc.py $DIR
 
