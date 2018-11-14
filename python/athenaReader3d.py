@@ -198,6 +198,7 @@ def acfMean(do, key, shiftMax, ziList, nList):
 		data3d = do.get3d(key, n)
 		for zi in ziList:
 			print('calculating 2d ACF for'+' n=' + str(n)+' zi='+str(zi))
+			sys.stdout.flush()
 			data2d = data3d[:,:,zi]
 			acf = acf2d(data2d, shiftMax)
 			if sliceCount == 0: acfMean  = acf
@@ -212,6 +213,7 @@ def acf4d(do, key, shiftMax):
 		data3d = do.get3d(key, n)
 		for zi in range(0, do.nz, 1):
 			print('calculating 2d ACF for'+' n=' + str(n)+' zi='+str(zi))
+			sys.stdout.flush()
 			data2d       = data3d[:,:,zi]
 			acf          = acf2d(data2d, shiftMax)
 			acf4d[n, zi] = acf
