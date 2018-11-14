@@ -99,7 +99,7 @@ def getPertNorm(a):
 	aAvg1d = np.mean(a, axis=(0,1))
 	aAvg3d = np.zeros_like(a)
 	for zi in range(a.shape[2]): aAvg3d[:,:,zi] = aAvg1d[zi]
-	daNorm = (a - aAvg3d) / np.absolute(a)
+	daNorm = (a - aAvg3d) / aAvg3d
 	return daNorm
 
 

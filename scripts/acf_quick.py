@@ -13,10 +13,11 @@ import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 #############################################################
 pathBase = str(sys.argv[1])
+nz       = 8
 if len(sys.argv) == 2:
     keyList = [
-              'drho', 'dvx', 'dvy', 'dvz', 'dv',
-              'drhoNorm', 'dvxNorm', 'dvyNorm', 'dvzNorm', 'dvNorm'
+              'drho', 'dvx', 'dvy', 'dvz', 'dv'
+              #,'drhoNorm', 'dvxNorm', 'dvyNorm', 'dvzNorm', 'dvNorm'
               ]
 else:
     keyList = []
@@ -27,8 +28,8 @@ pathSave = pathBase + 'plots/quickAcf/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3d = reader3d.Data3d(path3d)
 #############################################################
-shiftMax   = do3d.nz // 4
-sCutFactor = do3d.nz // 8
+shiftMax   = do3d.nz // 2
+sCutFactor = do3d.nz // nz
 tCutFactor = 6
 ziList = range(sCutFactor//2, do3d.nz, sCutFactor)
 nList  = range(do3d.nt-6*4-1, do3d.nt, tCutFactor)

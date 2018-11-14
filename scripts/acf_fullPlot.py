@@ -15,8 +15,8 @@ from matplotlib.backends.backend_pdf import PdfPages
 pathBase = str(sys.argv[1])
 if len(sys.argv) == 2:
     keyList = [
-              'drho', 'dvx', 'dvy', 'dvz', 'dv',
-              'drhoNorm', 'dvxNorm', 'dvyNorm', 'dvzNorm', 'dvNorm'
+              'drho', 'dvx', 'dvy', 'dvz', 'dv'
+              #,'drhoNorm', 'dvxNorm', 'dvyNorm', 'dvzNorm', 'dvNorm'
               ]
 else:
     keyList = []
