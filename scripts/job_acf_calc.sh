@@ -2,9 +2,11 @@
 
 #SBATCH -J acf34
 #SBATCH --time=48:00:00
+##SBATCH --time=1:00:00
 #SBATCH -N 1
 #SBATCH --ntasks 1
 #SBATCH -p normal
+##SBATCH -p development
 
 # The following commands will be executed when this script is run.
 
