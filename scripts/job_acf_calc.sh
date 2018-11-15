@@ -12,7 +12,7 @@ module load gcc python3
 
 export DIR=../../turbTest/run34/bin/
 
-python3 acf_fullCalc.py $DIR
+python3 acf_calc.py $DIR 4 2 2
 
 
 

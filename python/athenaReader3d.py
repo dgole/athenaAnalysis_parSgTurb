@@ -180,14 +180,14 @@ def dvNorm(do, n):
 # ACF STUFF
 #########################################################################
 
-def acf2d(data, shiftMax):
-	corrArray = np.zeros([2*shiftMax+1, 2*shiftMax+1])
+def acf2d(data, shiftMax, resCut):
+	corrArray = np.zeros([(2*shiftMax//resCut)+1, (2*shiftMax//resCut)+1])
 	array1    = data
 	# loop over all desired x and y shifts
-	for i in range(-shiftMax, shiftMax+1):
-		for j in range(-shiftMax, shiftMax+1):
-			xShift = i
-			yShift = j
+	for i in range(-shiftMax//resCut, shiftMax//resCut+1):
+		for j in range(-shiftMax//resCut, shiftMax//resCut+1):
+			xShift = i * resCut
+			yShift = j * resCut
 			# the 2d slice of data shifted by xShift and yShift
 			array2 = np.roll(np.roll(array1, xShift, axis=0), yShift, axis=1)
 			# loop over all rows in the tables and add the correlations together
@@ -197,12 +197,12 @@ def acf2d(data, shiftMax):
 				corr = np.correlate(array1[:,k], array2[:,k])
 				tot = tot + corr
 			# assign the final sum to it's place in the corrArray based on the x and y shifts
-			corrArray[i+shiftMax,j+shiftMax] = tot
+			corrArray[i+shiftMax//resCut,j+shiftMax//resCut] = tot
 	# normalize
 	corrArray = corrArray/np.amax(corrArray)
 	return corrArray
 
-def acfMean(do, key, shiftMax, ziList, nList):
+def acfMean(do, key, shiftMax, ziList, nList, resCut):
 	sliceCount = 0
 	for n in nList:
 		data3d = do.get3d(key, n)
@@ -210,29 +210,31 @@ def acfMean(do, key, shiftMax, ziList, nList):
 			print('calculating 2d ACF for'+' n=' + str(n)+' zi='+str(zi))
 			sys.stdout.flush()
 			data2d = data3d[:,:,zi]
-			acf = acf2d(data2d, shiftMax)
+			acf = acf2d(data2d, shiftMax, resCut)
 			if sliceCount == 0: acfMean  = acf
 			else:               acfMean += acf
 			sliceCount+=1
 	acfMean /= sliceCount
 	return acfMean
 
-def acf4d(do, key, shiftMax):
-	acf4d = np.zeros([do.nt, do.nz, shiftMax*2+1, shiftMax*2+1])
-	for n in range(0, do.nt, 1):
+def acf4d(do, key, shiftMax, sCut, tCut, resCut):
+	nList  = np.arange(0, do.nt, tCut)
+	ziList = np.arange(sCut//2, do.nz, sCut)
+	acf4d = np.zeros([len(nList), len(ziList), shiftMax*2//resCut+1, shiftMax*2//resCut+1])
+	for n in nList:
 		data3d = do.get3d(key, n)
-		for zi in range(0, do.nz, 1):
+		for zi in ziList:
 			print('calculating 2d ACF for'+' n=' + str(n)+' zi='+str(zi))
 			sys.stdout.flush()
-			data2d       = data3d[:,:,zi]
-			acf          = acf2d(data2d, shiftMax)
-			acf4d[n, zi] = acf
+			data2d = data3d[:,:,zi]
+			acf    = acf2d(data2d, shiftMax, resCut)
+			acf4d[n//tCut, zi//sCut] = acf
 	return acf4d
 
-def plotAcf(acfData, figNum=0):
+def plotAcf(acfData, figNum=0, extent=[-0.1,0.1,-0.1,0.1]):
 	plt.figure(figNum)
 	plotData = np.transpose(np.fliplr(acfData))
-	plt.imshow(plotData, extent=[-1,1,-1,1], aspect=1.0, cmap=plt.get_cmap('coolwarm'))
+	plt.imshow(plotData, extent=extent, aspect=1.0, cmap=plt.get_cmap('coolwarm'))
 	plt.colorbar()
 	plt.clim(-1,1)
 	plt.tight_layout()

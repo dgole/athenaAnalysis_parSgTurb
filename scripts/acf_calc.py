@@ -12,14 +12,17 @@ import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 #############################################################
 pathBase = str(sys.argv[1])
-if len(sys.argv) == 2:
+sCut     = int(sys.argv[2])
+tCut     = int(sys.argv[3])
+resCut   = int(sys.argv[4])
+if len(sys.argv) == 5:
     keyList = [
               'drho', 'dvx', 'dvy', 'dvz', 'dv'
               #,'drhoNorm', 'dvxNorm', 'dvyNorm', 'dvzNorm', 'dvNorm'
               ]
 else:
     keyList = []
-    for arg in sys.argv[2:]: keyList.append(str(arg))
+    for arg in sys.argv[5:]: keyList.append(str(arg))
 #############################################################
 path3d   = pathBase + '3d/'
 pathSave = pathBase + 'acf4d/'
@@ -28,8 +31,13 @@ do3d = reader3d.Data3d(path3d)
 #############################################################
 shiftMax = do3d.nx // 2
 for key in keyList:
-    acf4d = reader3d.acf4d(do3d, key, shiftMax)
-    np.save(pathSave + key + '.npy', acf4d)
+    acf4d = reader3d.acf4d(do3d, key, shiftMax, sCut, tCut, resCut)
+    np.save(pathSave + key + '_' +
+            str(sCut)   + '_' +
+            str(tCut)   + '_' +
+            str(resCut) +
+            '.npy',
+            acf4d)
 #############################################################
 
 

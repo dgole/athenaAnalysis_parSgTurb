@@ -8,7 +8,7 @@
 
 # The following commands will be executed when this script is run.
 
-export DIR=../../turbTest/run34/bin/ 
+export DIR=../../turbTest/run34/bin/
 
 module load gcc python3
 
@@ -17,14 +17,14 @@ mkdir 1d
 mv *.1d ./1d/
 cd ../../../athenaAnalysis_parSgTurb/scripts/
 
-#echo running quickLook.py
-#python3 quickLook.py $DIR
+echo running quickLook.py
+python3 quickLook.py $DIR
 
-#echo running tabCombiner.py
-#python tabCombiner.py 64 0 1000 $DIR
+echo running tabCombiner.py
+python tabCombiner.py 64 0 1000 $DIR
 
 echo running acf_quick.py
-python3 acf_quick.py $DIR
+python3 acf_quick.py $DIR 16 6 2
 
 
 
