@@ -31,6 +31,8 @@ saves plots in dir quickAcf
 # acf_fullPlot.py
 plots data from acf npy nFile
 
+# pspec.py
+power spectrum calculations from 3d files
 
 ####################################################################
 MULTIPLE RUNS

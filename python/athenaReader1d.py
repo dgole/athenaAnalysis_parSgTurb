@@ -121,3 +121,6 @@ def dvz(do):
 
 def alphaz(do):
 	return np.square(do.data['dvz'])
+
+def alpha(do):
+	return np.square(do.data['dv'])

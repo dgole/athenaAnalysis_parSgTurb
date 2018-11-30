@@ -17,5 +17,5 @@ def getTimeStepString(i):
 
 def saveAndClear(plotName, figNum=0):
 	plt.figure(figNum)
-	plt.savefig(plotName, bbox_inches='tight')
+	plt.savefig(plotName, bbox_inches='tight', dpi=600)
 	plt.clf()
