@@ -52,7 +52,6 @@ plt.loglog(freqs, psk/norm,  'bo', label=title, markersize=ms)
 
 title = 'kePertSpec'
 vxpsk, vxpskx, vxpsky, vxpskz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx')
-print(vxpsk.shape, freqs.shape)
 vypsk, vypskx, vypsky, vypskz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy')
 vzpsk, vzpskx, vzpsky, vzpskz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz')
 psk  = vxpsk  + vypsk  + vzpsk

@@ -144,15 +144,18 @@ def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None, absAvg=
 	nCount   = 0
 	for n in range(nStart, nEnd):
 		if absAvg==1: data3d = np.absolute(do.get3d(key, n))
-		else:            data3d =             do.get3d(key, n)
+		else:         data3d =             do.get3d(key, n)
 		data1d    = np.mean(data3d, axis=(0,1))
 		plotData += data1d
 		nCount   += 1
 	plotData /= nCount
 	title = do.header[key]
-	plt.ylim(0.5*np.amin(np.absolute(plotData)),2.0*np.amax(np.absolute(plotData)))
-	if absPlot==1: plt.semilogy(do.z, np.absolute(plotData), label=legendLabel)
-	else:          plt.plot    (do.z,             plotData , label=legendLabel)
+	if absPlot==1:
+		plt.semilogy(do.z, np.absolute(plotData), label=legendLabel)
+		plt.ylim(0.8*np.amin(np.absolute(plotData)),1.5*np.amax(np.absolute(plotData)))
+	else:
+		plt.plot(do.z, plotData , label=legendLabel)
+		plt.ylim(1.1*np.amin(plotData),1.1*np.amax(plotData))
 	plt.ylabel(do.header[key]);
 	plt.xlabel(r"$z/H$");
 	plt.tight_layout()
@@ -171,7 +174,7 @@ def getPert(a):
 	return da
 
 def getPertNorm(a):
-	aAvg1d = np.mean(a, axis=(0,1))
+	aAvg1d = np.mean(np.absolute(a), axis=(0,1))
 	aAvg3d = np.zeros_like(a)
 	for zi in range(a.shape[2]): aAvg3d[:,:,zi] = aAvg1d[zi]
 	daNorm = (a - aAvg3d) / aAvg3d
@@ -363,7 +366,7 @@ def rootRhoDvz(do, n):
 
 
 #########################################################################
-# FFT STUFF
+# PSPEC STUFF
 #########################################################################
 
 def calcPs(do, key, n):
@@ -384,7 +387,7 @@ def psProfile(do, key, n):
 	return psk, pskx, psky, pskz, freqs
 
 def psProfileMean(do, key, nStart=None, nEnd=None):
-	if nStart is None: nStart = do.nt-10
+	if nStart is None: nStart = do.nt // 2
 	if nEnd   is None: nEnd   = do.nt
 	pskList  = []
 	pskxList = []
@@ -410,6 +413,8 @@ def psProfileMean(do, key, nStart=None, nEnd=None):
 #########################################################################
 
 def acf3d(do, key, n):
+	print('calculating ACF for'+' n=' + str(n))
+	sys.stdout.flush()
 	data       = do.get3d(key, n)
 	nFreqs     = do.nx//2
 	fft        = np.fft.fftn(data)
@@ -419,13 +424,44 @@ def acf3d(do, key, n):
 	corrNorm   = corr/np.amax(corr)
 	return corrNorm
 
-def plotAcf(acfData, figNum=0, extent=[-0.1,0.1,-0.1,0.1]):
+def acf3dto2d_xy(do, key, n):
+	nn        = do.nx//2
+	acf       = acf3d(do, key, n)
+	acf2d     = np.mean(acf, axis=2)
+	acf2d2   = np.zeros_like(acf2d)
+	acf2d2[:nn,:nn] = acf2d[nn:,nn:] # 3 into 1
+	acf2d2[:nn,nn:] = acf2d[nn:,:nn] # 4 into 2
+	acf2d2[nn:,nn:] = acf2d[:nn,:nn] # 1 into 3
+	acf2d2[nn:,:nn] = acf2d[:nn,nn:] # 2 into 4
+	return acf2d2
+
+def acfMean(do, key, nStart=None, nEnd=None):
+	if nStart is None: nStart = do.nt // 2
+	if nEnd   is None: nEnd   = do.nt
+	for n in range(nStart,nEnd):
+		acf2d = acf3dto2d_xy(do, key, n)
+		if n==nStart: acfMean  = acf2d
+		else:         acfMean += acf2d
+	acfMean /= np.amax(acfMean)
+	return acfMean
+
+def plotAcf(acf, figNum=0, extent=[-0.1,0.1,-0.1,0.1]):
 	plt.figure(figNum)
-	plotData = np.transpose(np.fliplr(acfData))
-	plt.imshow(plotData, extent=extent, aspect=1.0, cmap=plt.get_cmap('coolwarm'))
+	plotData = np.transpose(np.fliplr(acf))
+	plt.imshow(plotData, extent=extent, aspect=1.0, cmap=plt.get_cmap('viridis'))
+	plt.clim(0,1)
 	plt.colorbar()
-	plt.clim(-1,1)
 	plt.tight_layout()
+
+def plotAcfDiverging(acf, figNum=0, extent=[-0.1,0.1,-0.1,0.1]):
+	plt.figure(figNum)
+	plotData = np.transpose(np.fliplr(acf))
+	plt.imshow(plotData, extent=extent, aspect=1.0, cmap=plt.get_cmap('coolwarm'))
+	plt.clim(-1,1)
+	plt.colorbar()
+	plt.tight_layout()
+
+
 
 '''
 def acfMean(do, key, shiftMax, ziList, nList, resCut):

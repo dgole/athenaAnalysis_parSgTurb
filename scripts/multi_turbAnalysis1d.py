@@ -20,10 +20,10 @@ from matplotlib.backends.backend_pdf import PdfPages
 #pathSave = pathBase + 'plots/turbAnalysis2/'
 
 pathBase = '../../data/turbTest/'
-runNameList = ['run120', 'run122', 'run124']
-alphaInList = [4.e-2,   4.e-4,   4.e-6  ]
+runNameList = ['run126', 'run120', 'run122', 'run124', 'run128']
+alphaInList = [4.e0,      4.e-2,     4.e-4,   4.e-6,   4.e-8   ]
 tsList      = [1.e-1,   1.e-1,   1.e-1  ]
-colorList   = ['b',  'tab:orange', 'g'  ]
+colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
 pathSave = pathBase + 'plots/turbAnalysis120/'
 
 #pathBase = '../../data/turbTest/'
@@ -85,7 +85,7 @@ for n in range(len(do1dList)):
 	plt.axhline(y=np.sqrt(alphaIn), linestyle='--', color=color)
 plt.legend()
 tools.saveAndClear(pathSave + "gas_timeEvo_mid_" + key + ".png")
-
+'''
 # plot particle dz vs expected value based on alpha ~ dvz^2
 for n in range(len(do1dList)):
 	do         = do1dList[n]
@@ -113,7 +113,7 @@ for n in range(len(do1dList)):
 plt.axhline(y=do.dz, linestyle='--', color='k')
 plt.legend()
 tools.saveAndClear(pathSave + "par_" + 'scaleHeightComparison2' + ".png")
-
+'''
 # plot measured alpha vs input alpha
 alphaActList  = []
 for n in range(len(do1dList)):
@@ -122,19 +122,19 @@ for n in range(len(do1dList)):
 plt.loglog(alphaInList, alphaActList, 'ko', label='data')
 plt.xlabel(r'$\alpha_{in}$')
 plt.ylabel(r'$\alpha_{real}$')
-alphaSat = [1.e-6, 1.e-5, 1.e-4, 1.e-3, 1.e-2, 1.e-1, 1.e0]
+alphaSat = [1.e-8, 1.e-7, 1.e-6, 1.e-5, 1.e-4, 1.e-3, 1.e-2, 1.e-1, 1.e0, 1.e1]
 plt.loglog(alphaSat, alphaSat, lineStyle='--', color='r', label='dissipation')
 alphaIn  = []
 for x in alphaSat:
 	alphaIn.append(np.power(100.0*x, 1.5))
 plt.loglog(alphaIn, alphaSat, lineStyle='--', color='g', label='outflow')
-BoA      = 70
+BoA      = 95
 alphaIn  = []
 for x in alphaSat:
 	alphaIn.append(x + BoA*np.power(x, 1.5))
 plt.loglog(alphaIn, alphaSat, lineStyle='--', color='b', label='both')
 plt.legend()
-plt.xlim(8.e-7, 2.e0)
+plt.xlim(8.e-9, 2.e1)
 tools.saveAndClear(pathSave + "alphaAct.png")
 
 
