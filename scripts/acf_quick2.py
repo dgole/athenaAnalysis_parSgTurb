@@ -28,11 +28,17 @@ if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3d = reader3d.Data3d(path3d)
 #############################################################
 key = 'drho'; n=100; extent=[-0.1,0.1,-0.1,0.1];
+nn = do3d.nx//2
 acf3d = reader3d.acf3d(do3d, key, n)
 acf2d = np.mean(acf3d, axis=2)
-plotData = np.transpose(np.fliplr(acf2d))
+plotData  = np.transpose(np.fliplr(acf2d))
+plotData2 = np.zeros_like(plotData)
+plotData2[:nn,:nn] = plotData[nn:,nn:] # 3 into 1
+plotData2[:nn,nn:] = plotData[nn:,:nn] # 4 into 2
+plotData2[nn:,nn:] = plotData[:nn,:nn] # 1 into 3
+plotData2[nn:,:nn] = plotData[:nn,nn:] # 2 into 4
 plt.figure(0)
-plt.imshow(plotData, extent=extent, aspect=1.0, cmap=plt.get_cmap('coolwarm'))
+plt.imshow(plotData2, extent=extent, aspect=1.0, cmap=plt.get_cmap('coolwarm'))
 plt.colorbar()
 #plt.clim(-1,1)
 plt.tight_layout()

@@ -412,9 +412,8 @@ def psProfileMean(do, key, nStart=None, nEnd=None):
 def acf3d(do, key, n):
 	data       = do.get3d(key, n)
 	nFreqs     = do.nx//2
-	fft        = np.fft.fftn(data)[:nFreqs,:nFreqs,:nFreqs]
+	fft        = np.fft.fftn(data)
 	fftFixed   = np.zeros_like(data)
-	fftFixed[:nFreqs] =
 	ps         = np.square(np.absolute(fft))
 	corr       = np.absolute(np.fft.fftn(ps))
 	corrNorm   = corr/np.amax(corr)
