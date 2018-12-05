@@ -103,10 +103,16 @@ class Data3d:
 		self.ny     = self.y.shape[0]
 		self.nz     = self.z.shape[0]
 		self.dx     = self.x[2] - self.x[1]
-		#self.zmax   = np.round(-self.z[0],1)
+		self.xmax   = np.round(-self.x[0],1)
+		self.ymax   = np.round(-self.y[0],1)
+		self.zmax   = np.round(-self.z[0],1)
 		self.dt     = dt
 		self.tmax   = dt*self.nt
 		self.t      = np.arange(0, self.tmax-dt/2.0, dt)
+		self.q      = 1.5
+		self.omega  = 1.0
+		self.vk     = -self.q*self.omega*self.x
+		self.shearTime = (self.y[0]-self.y[-1])/self.vk[-1]
 		print("data structure initialized pointing to data of shape " + str(dataTemp.shape)
 		      + ' x ' + str(self.nt) + ' time steps')
 		del dataTemp
@@ -119,6 +125,16 @@ class Data3d:
 			print('unknown key given')
 			returnData = None
 		return returnData
+	def get3d_unsheared(self, key, n, *args, **kwargs):
+		data       = self.get3d(key, n)
+		newData    = np.zeros_like(data)
+		tSinceEven = np.mod(self.t[n], self.shearTime)
+		shearDisp  = (tSinceEven)*self.vk
+		for i in range(data.shape[0]):
+			shearI = int(np.floor((shearDisp[i]/self.dx)+0.5))
+			newData[i,:,:] = np.roll(data[i,:,:], -shearI, axis=0)
+			print(i, n, -shearI)
+		return newData
 	def getxindex(self, x):
 		return (np.abs(self.x-x)).argmin()
 	def getzindex(self, y):
@@ -128,11 +144,12 @@ class Data3d:
 	def gettindex(self, t):
 		return (np.abs(self.t-t)).argmin()
 
+
 #########################################################################
 # Plots
 #########################################################################
 
-def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None, absAvg=1, absPlot=1):
+def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None, absAvg=1, absPlot=1, color='b'):
 	print(do.path + ": making profile plot for key " + key)
 	sys.stdout.flush()
 	plt.figure(figNum)
@@ -151,15 +168,14 @@ def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None, absAvg=
 	plotData /= nCount
 	title = do.header[key]
 	if absPlot==1:
-		plt.semilogy(do.z, np.absolute(plotData), label=legendLabel)
+		plt.semilogy(do.z, np.absolute(plotData), label=legendLabel, color=color)
 		plt.ylim(0.8*np.amin(np.absolute(plotData)),1.5*np.amax(np.absolute(plotData)))
 	else:
-		plt.plot(do.z, plotData , label=legendLabel)
+		plt.plot(do.z, plotData , label=legendLabel, color=color)
 		plt.ylim(1.1*np.amin(plotData),1.1*np.amax(plotData))
 	plt.ylabel(do.header[key]);
 	plt.xlabel(r"$z/H$");
 	plt.tight_layout()
-
 
 
 #########################################################################
@@ -370,7 +386,8 @@ def rootRhoDvz(do, n):
 #########################################################################
 
 def calcPs(do, key, n):
-	data       = do.get3d(key, n)
+	#data       = do.get3d(key, n)
+	data       = do.get3d_unsheared(key, n)
 	freqs      = np.fft.fftfreq(data.shape[0], d=do.dx)
 	nFreqs     = freqs.shape[0]//2
 	freqs      = freqs[:nFreqs]
@@ -378,34 +395,33 @@ def calcPs(do, key, n):
 	ps         = np.square(np.absolute(fft))
 	return ps, freqs
 
-def psProfile(do, key, n):
+def psProfiles(do, key, n):
 	ps, freqs = calcPs(do, key, n)
-	pskx = np.mean(ps, axis=(1,2))
-	psky = np.mean(ps, axis=(0,2))
-	pskz = np.mean(ps, axis=(0,1))
-	psk  = pskx+psky+pskz
-	return psk, pskx, psky, pskz, freqs
+	psk       = np.zeros(ps.shape[0])
+	count     = np.zeros_like(psk)
+	for i in range(ps.shape[0]):
+		for j in range(ps.shape[1]):
+			for k in range(ps.shape[2]):
+				dist          = np.sqrt(i*i+j*j+k*k)
+				index         = int(np.floor(dist))
+				if index < freqs.shape[0]:
+					psk[index]   += ps[i,j,k]
+					count[index] += 1
+	psk /= count
+	return psk, freqs
 
 def psProfileMean(do, key, nStart=None, nEnd=None):
-	if nStart is None: nStart = do.nt // 2
+	#if nStart is None: nStart = do.nt // 2
+	if nStart is None: nStart = do.nt - 10
 	if nEnd   is None: nEnd   = do.nt
-	pskList  = []
-	pskxList = []
-	pskyList = []
-	pskzList = []
-	count    = 0
+	pskList = []
+	count   = 0
 	for n in range(nStart, nEnd):
-		psk, pskx, psky, pskz, freqs = psProfile(do, key, n)
+		psk, freqs = psProfiles(do, key, n)
 		pskList.append(psk)
-		pskxList.append(pskx)
-		pskyList.append(psky)
-		pskzList.append(pskz)
-		count+=1
-	psk  = np.asarray(np.mean(pskList,  axis=0))/float(count)
-	pskx = np.asarray(np.mean(pskxList, axis=0))/float(count)
-	psky = np.asarray(np.mean(pskyList, axis=0))/float(count)
-	pskz = np.asarray(np.mean(pskzList, axis=0))/float(count)
-	return psk, pskx, psky, pskz, freqs
+		count += 1
+	psk = np.asarray(np.mean(pskList,  axis=0))/float(count)
+	return psk, freqs
 
 
 #########################################################################
@@ -416,6 +432,7 @@ def acf3d(do, key, n):
 	print('calculating ACF for'+' n=' + str(n))
 	sys.stdout.flush()
 	data       = do.get3d(key, n)
+	data       = do.get3d_unsheared(key, n)
 	nFreqs     = do.nx//2
 	fft        = np.fft.fftn(data)
 	fftFixed   = np.zeros_like(data)
@@ -436,7 +453,7 @@ def acf3dto2d_xy(do, key, n):
 	return acf2d2
 
 def acfMean(do, key, nStart=None, nEnd=None):
-	if nStart is None: nStart = do.nt // 2
+	if nStart is None: nStart = do.nt -10
 	if nEnd   is None: nEnd   = do.nt
 	for n in range(nStart,nEnd):
 		acf2d = acf3dto2d_xy(do, key, n)
@@ -460,106 +477,6 @@ def plotAcfDiverging(acf, figNum=0, extent=[-0.1,0.1,-0.1,0.1]):
 	plt.clim(-1,1)
 	plt.colorbar()
 	plt.tight_layout()
-
-
-
-'''
-def acfMean(do, key, shiftMax, ziList, nList, resCut):
-	sliceCount = 0
-	for n in nList:
-		data3d = do.get3d(key, n)
-		for zi in ziList:
-			print('calculating 2d ACF for'+' n=' + str(n)+' zi='+str(zi))
-			sys.stdout.flush()
-			data2d = data3d[:,:,zi]
-			acf = acf2d(data2d, shiftMax, resCut)
-			if sliceCount == 0: acfMean  = acf
-			else:               acfMean += acf
-			sliceCount+=1
-	acfMean /= sliceCount
-	return acfMean
-'''
-'''
-def acf4d(do, key, shiftMax, sCut, tCut, resCut):
-	nList  = np.arange(0, do.nt, tCut)
-	ziList = np.arange(sCut//2, do.nz, sCut)
-	acf4d = np.zeros([len(nList), len(ziList), shiftMax*2//resCut+1, shiftMax*2//resCut+1])
-	for n in nList:
-		data3d = do.get3d(key, n)
-		for zi in ziList:
-			print('calculating 2d ACF for'+' n=' + str(n)+' zi='+str(zi))
-			sys.stdout.flush()
-			data2d = data3d[:,:,zi]
-			acf    = acf2d(data2d, shiftMax, resCut)
-			acf4d[n//tCut, zi//sCut] = acf
-	return acf4d
-'''
-'''
-'''
-'''
-def acf2d(data, shiftMax, resCut):
-	corrArray = np.zeros([(2*shiftMax//resCut)+1, (2*shiftMax//resCut)+1])
-	array1    = data
-	# loop over all desired x and y shifts
-	for i in range(-shiftMax//resCut, shiftMax//resCut+1):
-		for j in range(-shiftMax//resCut, shiftMax//resCut+1):
-			xShift = i * resCut
-			yShift = j * resCut
-			# the 2d slice of data shifted by xShift and yShift
-			array2 = np.roll(np.roll(array1, xShift, axis=0), yShift, axis=1)
-			# loop over all rows in the tables and add the correlations together
-			tot = 0
-			for k in range(0, data.shape[1]):
-				# correlate one row of the original and shifted arrays
-				corr = np.correlate(array1[:,k], array2[:,k])
-				tot = tot + corr
-			# assign the final sum to it's place in the corrArray based on the x and y shifts
-			corrArray[i+shiftMax//resCut,j+shiftMax//resCut] = tot
-	# normalize
-	corrArray = corrArray/np.amax(corrArray)
-	return corrArray
-'''
-'''
-def acfMean(do, key, shiftMax, ziList, nList, resCut):
-	sliceCount = 0
-	for n in nList:
-		data3d = do.get3d(key, n)
-		for zi in ziList:
-			print('calculating 2d ACF for'+' n=' + str(n)+' zi='+str(zi))
-			sys.stdout.flush()
-			data2d = data3d[:,:,zi]
-			acf = acf2d(data2d, shiftMax, resCut)
-			if sliceCount == 0: acfMean  = acf
-			else:               acfMean += acf
-			sliceCount+=1
-	acfMean /= sliceCount
-	return acfMean
-'''
-'''
-def acf4d(do, key, shiftMax, sCut, tCut, resCut):
-	nList  = np.arange(0, do.nt, tCut)
-	ziList = np.arange(sCut//2, do.nz, sCut)
-	acf4d = np.zeros([len(nList), len(ziList), shiftMax*2//resCut+1, shiftMax*2//resCut+1])
-	for n in nList:
-		data3d = do.get3d(key, n)
-		for zi in ziList:
-			print('calculating 2d ACF for'+' n=' + str(n)+' zi='+str(zi))
-			sys.stdout.flush()
-			data2d = data3d[:,:,zi]
-			acf    = acf2d(data2d, shiftMax, resCut)
-			acf4d[n//tCut, zi//sCut] = acf
-	return acf4d
-'''
-'''
-def plotAcf(acfData, figNum=0, extent=[-0.1,0.1,-0.1,0.1]):
-	plt.figure(figNum)
-	plotData = np.transpose(np.fliplr(acfData))
-	plt.imshow(plotData, extent=extent, aspect=1.0, cmap=plt.get_cmap('coolwarm'))
-	plt.colorbar()
-	plt.clim(-1,1)
-	plt.tight_layout()
-'''
-
 
 
 

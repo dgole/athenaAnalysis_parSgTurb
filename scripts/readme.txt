@@ -33,4 +33,27 @@ saves plots in dir plots3d
 ####################################################################
 MULTIPLE RUNS
 ####################################################################
-multi_turbAnalysis.py
+# multi_turbAnalysis.py
+compares level of turbulence in the simulation to alpha_in for multiple runs
+args: none, edit the script itself
+saves plots a level above the data directories, edit path in script
+
+# multi_plots3d.py
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#

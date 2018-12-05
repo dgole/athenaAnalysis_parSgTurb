@@ -19,67 +19,31 @@ path3d   = pathBase + '3d/'
 pathSave = pathBase + 'plots/pspec/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3d = reader3d.Data3d(path3d)
+plt.figure(0)
 ################################################################################
 def addFiveThirdsToFig():
-    for i in range(-1, 3):
+    for i in range(-2, 3):
         plt.loglog(freqs, 10**i*np.power(freqs, -5.0/3.0), color='tab:gray',
                    linestyle='--', linewidth=0.5)
 ################################################################################
-
-title = 'keSpec'
-vxpsk, vxpskx, vxpsky, vxpskz, freqs = reader3d.psProfileMean(do3d, 'rootRhoVx')
-vypsk, vypskx, vypsky, vypskz, freqs = reader3d.psProfileMean(do3d, 'rootRhoVy')
-vzpsk, vzpskx, vzpsky, vzpskz, freqs = reader3d.psProfileMean(do3d, 'rootRhoVz')
-psk  = vxpsk  + vypsk  + vzpsk
-pskx = vxpskx + vypskx + vzpskx
-psky = vxpsky + vypsky + vzpsky
-pskz = vxpskz + vypskz + vzpskz
-norm = psk[1]
-plt.figure(0)
-plt.xlabel(r'$k$')
-plt.ylabel('Power' + title)
-plt.loglog(freqs, psk/norm,  'ko', label='all', markersize=ms)
-plt.loglog(freqs, pskx/norm, 'ro', label='kx',  markersize=ms)
-plt.loglog(freqs, psky/norm, 'go', label='ky',  markersize=ms)
-plt.loglog(freqs, pskz/norm, 'bo', label='kz',  markersize=ms)
-addFiveThirdsToFig()
-plt.legend()
-tools.saveAndClear(pathSave + title + '.png', figNum=0)
-plt.figure(1)
-plt.loglog(freqs, psk/norm,  'bo', label=title, markersize=ms)
-
+psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoVx')
+psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoVy')
+psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoVz')
+psk  = psk_vx  + psk_vy  + psk_vz
+plt.loglog(freqs, psk/psk[1], 'ko', markersize=ms, label='normal')
 ################################################################################
-
-title = 'kePertSpec'
-vxpsk, vxpskx, vxpsky, vxpskz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx')
-vypsk, vypskx, vypsky, vypskz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy')
-vzpsk, vzpskx, vzpsky, vzpskz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz')
-psk  = vxpsk  + vypsk  + vzpsk
-pskx = vxpskx + vypskx + vzpskx
-psky = vxpsky + vypsky + vzpsky
-pskz = vxpskz + vypskz + vzpskz
-norm = psk[1]
-plt.figure(0)
-plt.xlabel(r'$k$')
-plt.ylabel('Power' + title)
-plt.loglog(freqs, psk/norm,  'ko', label='all', markersize=ms)
-plt.loglog(freqs, pskx/norm, 'ro', label='kx',  markersize=ms)
-plt.loglog(freqs, psky/norm, 'go', label='ky',  markersize=ms)
-plt.loglog(freqs, pskz/norm, 'bo', label='kz',  markersize=ms)
-addFiveThirdsToFig()
-plt.legend()
-tools.saveAndClear(pathSave + title + '.png', figNum=0)
-plt.figure(1)
-plt.loglog(freqs, psk/norm,  'ro', label=title, markersize=ms)
-
+psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx')
+psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy')
+psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz')
+psk  = psk_vx  + psk_vy  + psk_vz
+plt.loglog(freqs, psk/psk[1], 'bo', markersize=ms, label='pert')
 ################################################################################
-
-plt.figure(1)
-plt.xlabel(r'$k$')
+plt.xlabel(r'$|\mathbf{k}|$')
 plt.ylabel('Power')
 addFiveThirdsToFig()
 plt.legend()
-tools.saveAndClear(pathSave + 'compare' + '.png', figNum=1)
+tools.saveAndClear(pathSave + 'keSpec_unsheared.png', figNum=0)
+
 
 
 
