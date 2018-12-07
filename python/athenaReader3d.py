@@ -169,12 +169,28 @@ def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None, absAvg=
 	title = do.header[key]
 	if absPlot==1:
 		plt.semilogy(do.z, np.absolute(plotData), label=legendLabel, color=color)
-		plt.ylim(0.8*np.amin(np.absolute(plotData)),1.5*np.amax(np.absolute(plotData)))
 	else:
 		plt.plot(do.z, plotData , label=legendLabel, color=color)
-		plt.ylim(1.1*np.amin(plotData),1.1*np.amax(plotData))
 	plt.ylabel(do.header[key]);
 	plt.xlabel(r"$z/H$");
+	plt.tight_layout()
+
+def timeEvo(do, key, figNum=0, legendLabel=None, absAvg=1, absPlot=1, color='b'):
+	print(do.path + ": making timeEvo plot for key " + key)
+	sys.stdout.flush()
+	plt.figure(figNum)
+	plotData = np.zeros(do.nt)
+	for n in range(0, do.nt):
+		if absAvg==1: plotData[n] = np.mean(np.absolute(do.get3d(key, n)))
+		else:         plotData[n] = np.mean(            do.get3d(key, n))
+	plotData /= do.nt
+	title = do.header[key]
+	if absPlot==1:
+		plt.semilogy(do.t, np.absolute(plotData), label=legendLabel, color=color)
+	else:
+		plt.plot(do.t, plotData , label=legendLabel, color=color)
+	plt.ylabel(do.header[key]);
+	plt.xlabel(r"$t \Omega$");
 	plt.tight_layout()
 
 
@@ -412,7 +428,7 @@ def psProfiles(do, key, n):
 
 def psProfileMean(do, key, nStart=None, nEnd=None):
 	#if nStart is None: nStart = do.nt // 2
-	if nStart is None: nStart = do.nt - 10
+	if nStart is None: nStart = do.nt // 2
 	if nEnd   is None: nEnd   = do.nt
 	pskList = []
 	count   = 0
@@ -453,7 +469,7 @@ def acf3dto2d_xy(do, key, n):
 	return acf2d2
 
 def acfMean(do, key, nStart=None, nEnd=None):
-	if nStart is None: nStart = do.nt -10
+	if nStart is None: nStart = do.nt // 2
 	if nEnd   is None: nEnd   = do.nt
 	for n in range(nStart,nEnd):
 		acf2d = acf3dto2d_xy(do, key, n)

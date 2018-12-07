@@ -23,44 +23,30 @@ do3d = reader3d.Data3d(path3d)
 for key in ['vx', 'vy', 'vz', 'v']:
     reader3d.profile(do3d, key, figNum=0, absAvg=0, absPlot=0)
     tools.saveAndClear(pathSave + 'profileRealAvg_' + key + '.png', figNum=0)
+    reader3d.timeEvo(do3d, key, figNum=0, absAvg=0, absPlot=0)
+    tools.saveAndClear(pathSave + 'timeEvoRealAvg_' + key + '.png', figNum=0)
 ################################################################################
 # abs averages of quantities
 for key in ['vx', 'vy', 'vz', 'v']:
-    reader3d.profile(do3d, key, figNum=0, absAvg=1, absPlot=1)
+    reader3d.profile(do3d, key, figNum=0)
     tools.saveAndClear(pathSave + 'profileAbsAvg_' + key + '.png', figNum=0)
+    reader3d.timeEvo(do3d, key, figNum=0)
+    tools.saveAndClear(pathSave + 'timeEvoAbsAvg_' + key + '.png', figNum=0)
 ################################################################################
 # perts
 for key in ['drho', 'dvx', 'dvy', 'dvz', 'dv']:
     reader3d.profile(do3d, key, figNum=0)
     tools.saveAndClear(pathSave + 'profilePert_' + key + '.png', figNum=0)
+    reader3d.timeEvo(do3d, key, figNum=0)
+    tools.saveAndClear(pathSave + 'timeEvoPert_' + key + '.png', figNum=0)
 ################################################################################
 # normalized perts
 for key in ['drhoNorm', 'dvxNorm', 'dvyNorm', 'dvzNorm', 'dvNorm']:
     reader3d.profile(do3d, key, figNum=0)
     tools.saveAndClear(pathSave + 'profilePertNorm_' + key + '.png', figNum=0)
+    reader3d.timeEvo(do3d, key, figNum=0)
+    tools.saveAndClear(pathSave + 'timeEvoPertNorm_' + key + '.png', figNum=0)
 ################################################################################
-
-
-
-
-'''
-for key in ['dvx','dvy','dvz', 'dv']:
-    reader3d.profile(do3d, key, figNum=0, legendLabel=do3d.header[key])
-plt.legend()
-plt.ylim(1.e-3, 1.e-1)
-tools.saveAndClear(pathSave + 'multiVelocity_.png', figNum=0)
-################################################################################
-for key in ['vx', 'vy', 'vz']:
-    reader3d.profile(do3d, key, figNum=0, absAvg=1, absPlot=1)
-    tools.saveAndClear(pathSave + 'profileAbs_' + key + '.png', figNum=0)
-################################################################################
-for key in ['vx', 'vy', 'vz']:
-    reader3d.profile(do3d, key, figNum=0, absAvg=0, absPlot=0)
-    tools.saveAndClear(pathSave + 'profile_' + key + '.png', figNum=0)
-################################################################################
-'''
-
-
 
 
 
