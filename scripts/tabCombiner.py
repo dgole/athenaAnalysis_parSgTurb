@@ -141,7 +141,12 @@ while True:
 				sys.stdout.flush()
 				nProcNow +=1
 				combTabs(basename, path, npc, timeStep)
-	time.sleep(1)
+		else:
+			print('all avaliable output is done or currently being done')
+			print('will check again in 10 seconds...')
+			print('######################################################################')
+			sys.stdout.flush()
+	time.sleep(10)
 
 
 
