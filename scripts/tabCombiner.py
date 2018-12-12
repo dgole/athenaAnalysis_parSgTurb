@@ -16,7 +16,7 @@ def getFileNames(basename, timeStep, npc):
 def getFiles(basename, path, names):
 	files = [np.loadtxt(path+name) for name in names]
 	return files
-def combTabs(baseName, path, npc, timeStepStart, timeStepEnd):
+def combTabs(basename, path, npc, timeStepStart, timeStepEnd):
 	for timeStep in range(timeStepStart, timeStepEnd):
 		jobName = multiprocessing.current_process().name
 		print('job name is ' + jobName)
@@ -66,7 +66,7 @@ def checkAndDoLoop(path):
 			for item in contentsList:
 				if item[-4:]=='.npy': ntDone+=1
 			timeStepStart = ntDone
-			timeStepEnd   = ntAvail + 1
+			timeStepEnd   = ntAvail
 			print('checking ' + path)
 			print(str(ntAvail) + ' time steps available')
 			print(str(ntDone) + ' time steps already done')
@@ -78,6 +78,7 @@ pathList = []
 for path in sys.argv[1:]: pathList.append(path)
 ###############################################################################
 jobs = []; jobNum = 0;
+print(pathList)
 for path in pathList:
 	p = multiprocessing.Process(name='job num ' + str(jobNum), target=checkAndDoLoop, args=(path,))
 	jobs.append(p)
