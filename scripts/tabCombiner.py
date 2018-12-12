@@ -17,7 +17,6 @@ def getFileNames(basename, timeStep, npc):
 	names[0] = "id0/"+basename+"."+tools.getTimeStepString(timeStep)+".tab"
 	return names
 def getFiles(basename, path, names):
-	global myNPC
 	files = []
 	fileNum = 0
 	for name in names:
@@ -107,7 +106,7 @@ for path in pathList:
 	print(str(nDone) + ' time steps already done')
 	sys.stdout.flush()
 	if nAvail > nDone:
-		timeStepList = np.arange(nDone, nAvail+1)
+		timeStepList = np.arange(nDone, nAvail)
 		if myNPC>1:
 			for timeStep in timeStepList:
 				print('starting process to do ' + path + ', n=' + str(timeStep))
