@@ -110,18 +110,22 @@ while True:
 				while True:
 					if nProc < myNPC:
 						print('starting process to do ' + path + ', n=' + str(timeStep))
+						print('######################################################################')
+						print(' ')
 						sys.stdout.flush()
 						p = mp.Process(target=combTabs, args=(basename, path, npc, timeStep))
 						nProc +=1
+						p.start()
 						nDoingDict[path] +=1
 						break;
 					else:
 						print('at max number of processes, waiting...')
 						sys.stdout.flush()
-						time.sleep(30)
+						time.sleep(10)
 			else:
 				print('starting ' + path + ', n=' + str(timeStep))
 				sys.stdout.flush()
+				nProc +=1
 				combTabs(basename, path, npc, timeStep)
 
 	time.sleep(2)
