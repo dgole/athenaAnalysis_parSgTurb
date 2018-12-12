@@ -24,7 +24,7 @@ for key in ['vx', 'vy', 'vz', 'v']:
     reader3d.profile(do3d, key, figNum=0, absAvg=0, absPlot=0)
     tools.saveAndClear(pathSave + 'profileRealAvg_' + key + '.png', figNum=0)
     reader3d.timeEvo(do3d, key, figNum=0, absAvg=0, absPlot=0)
-    tools.saveAndClear(pathSave + 'timeEvoRealAvg_' + key + '.png', figNum=0)
+    tools.saveAndClear(pathSave + 'timvoRealAvg_' + key + '.png', figNum=0)
 ################################################################################
 # abs averages of quantities
 for key in ['vx', 'vy', 'vz', 'v']:

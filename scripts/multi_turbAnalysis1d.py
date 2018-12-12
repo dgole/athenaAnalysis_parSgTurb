@@ -19,12 +19,19 @@ from matplotlib.backends.backend_pdf import PdfPages
 #colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
 #pathSave = pathBase + 'plots/turbAnalysis2/'
 
-pathBase = '../../data/turbTest/'
-runNameList = ['run126', 'run120', 'run122', 'run124', 'run128']
-alphaInList = [4.e0,      4.e-2,     4.e-4,   4.e-6,   4.e-8   ]
-tsList      = [1.e-1,   1.e-1,   1.e-1  ]
-colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
-pathSave = pathBase + 'plots/turbAnalysis120/'
+pathBase = '../../data/newBCs_turbScaling/'
+runNameList = ['run10', 'run12', 'run14']
+alphaInList = [1.e-2,    1.e-4,   1.e-6 ]
+tsList      = [1.e0,     1.e0,    1.e0  ]
+colorList   = ['b',  'tab:orange', 'g']
+pathSave = pathBase + 'plots/turbAnalysis10/'
+
+#pathBase = '../../data/turbTest/'
+#runNameList = ['run126', 'run120', 'run122', 'run124', 'run128']
+#alphaInList = [4.e0,      4.e-2,     4.e-4,   4.e-6,   4.e-8   ]
+#tsList      = [1.e-1,   1.e-1,   1.e-1  ]
+#colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
+#pathSave = pathBase + 'plots/turbAnalysis120/'
 
 #pathBase = '../../data/turbTest/'
 #runNameList = ['run36', 'run35', 'run30', 'run31', 'run32', 'run33', 'run34']
