@@ -7,6 +7,7 @@ sys.path.append('../python')
 import athenaTools as tools
 import resource
 import time
+from multiprocessing import Pool
 ###############################################################################
 def getFileNames(basename, timeStep, npc):
 	names = [("id"+str(i)+"/"+basename+"-id" + str(i) + "." + tools.getTimeStepString(timeStep) + ".tab") for i in range(npc)]
@@ -17,7 +18,9 @@ def getFiles(basename, path, names):
 	return files
 def combTabs(baseName, path, npc, timeStepStart, timeStepEnd):
 	for timeStep in range(timeStepStart, timeStepEnd):
-		print("combining tab files for " + path + "  time step = " + str(timeStep))
+		jobName = multiprocessing.current_process().name
+		print('job name is ' + jobName)
+		print(path + " time step " + str(timeStep))
 		# read in files
 		print("reading in files")
 		sys.stdout.flush()
@@ -44,35 +47,42 @@ def combTabs(baseName, path, npc, timeStepStart, timeStepEnd):
 		del coordsList
 		del coordsArray
 		del coordsListArray
+def checkAndDoLoop(path):
+	while True:
+		for path in pathList:
+			basename="Par_Strat3d"
+			outDir=path+'3d/'
+			if not os.path.exists(outDir): os.makedirs(outDir)
+			contentsList = os.listdir(path)
+			npc=0
+			for item in contentsList:
+				if item[:2]=='id': npc+=1
+			contentsList = os.listdir(path+'id0/')
+			ntAvail = 0
+			for item in contentsList:
+				if item[-4:]=='.tab': ntAvail+=1
+			contentsList = os.listdir(outDir)
+			ntDone = 0
+			for item in contentsList:
+				if item[-4:]=='.npy': ntDone+=1
+			timeStepStart = ntDone
+			timeStepEnd   = ntAvail + 1
+			print('checking ' + path)
+			print(str(ntAvail) + ' time steps available')
+			print(str(ntDone) + ' time steps already done')
+			print('combining tabs for indicies ' + str(timeStepStart) + ' through ' + str(timeStepEnd-1))
+			combTabs(basename, path, npc, timeStepStart, timeStepEnd)
+		time.sleep(10)
 ###############################################################################
 pathList = []
 for path in sys.argv[1:]: pathList.append(path)
-while True:
-	for path in pathList:
-		basename="Par_Strat3d"
-		outDir=path+'3d/'
-		if not os.path.exists(outDir): os.makedirs(outDir)
-		contentsList = os.listdir(path)
-		npc=0
-		for item in contentsList:
-			if item[:2]=='id': npc+=1
-		contentsList = os.listdir(path+'id0/')
-		ntAvail = 0
-		for item in contentsList:
-			if item[-4:]=='.tab': ntAvail+=1
-		contentsList = os.listdir(outDir)
-		ntDone = 0
-		for item in contentsList:
-			if item[-4:]=='.npy': ntDone+=1
-		timeStepStart = ntDone
-		timeStepEnd   = ntAvail + 1
-		print('checking ' + path)
-		print(str(ntAvail) + ' time steps available')
-		print(str(ntDone) + ' time steps already done')
-		print('combining tabs for indicies ' + str(timeStepStart) + ' through ' + str(timeStepEnd-1))
-		combTabs(basename, path, npc, timeStepStart, timeStepEnd)
-	time.sleep(10)
-
+###############################################################################
+jobs = []; jobNum = 0;
+for path in pathList:
+	p = multiprocessing.Process(name='job num ' + str(jobNum), target=checkAndDoLoop, args=(path,))
+	jobs.append(p)
+	p.start()
+	jobNum+=1
 
 
 
