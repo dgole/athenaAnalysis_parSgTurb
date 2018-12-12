@@ -23,6 +23,7 @@ def getFiles(basename, path, names):
 	for name in names:
 		print('reading in file number ' + str(fileNum) + ' of ' + str(len(names)))
 		print("total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
+		sys.stdout.flush()
 		files.append(np.loadtxt(path+name))
 		fileNum+=1
 	return files
