@@ -36,13 +36,17 @@ def combTabs(basename, path, npc, timeStep):
 	masterLength=len(files)*files[0].shape[0];
 	print("arranging files into 3d numpy array")
 	sys.stdout.flush()
+	fileNum = 0
 	for file in files:
+		print('shuffling file number ' + str(fileNum) + ' of ' + str(len(files)))
+		print("total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
+		sys.stdout.flush()
+		fileNum+=1
 		for i in range(file.shape[0]):
 			indicies=[(np.abs(coordsListArray[j]-file[i,3+j])).argmin() for j in range(3)]
 			masterArray[indicies[0],indicies[1],indicies[2]]=file[i,3:cols]
 	# export table
 	np.save(outDir+basename+"."+tools.getTimeStepString(timeStep)+".npy", masterArray)
-	print("total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
 	del files
 	del masterArray
 	del coordsList
