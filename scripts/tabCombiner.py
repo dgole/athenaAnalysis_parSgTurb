@@ -95,19 +95,25 @@ while True:
 		sys.stdout.flush()
 		if nAvail > nDone + nDoing:
 			timeStep = nDone + nDoing
-			while True:
-				if nProc < myNPC:
-					print('starting process to do ' + path + ', n=' + str(timeStep))
-					sys.stdout.flush()
-					p = mp.Process(target=combTabs, args=(basename, path, npc, timeStep))
-					nProc +=1
-					nDoingDict[path] +=1
-					break;
-				else:
-					print('at max number of processes, waiting...')
-					sys.stdout.flush()
-					time.sleep(10)
-	time.sleep(10)
+			if myNPC>1:
+				while True:
+					if nProc < myNPC:
+						print('starting process to do ' + path + ', n=' + str(timeStep))
+						sys.stdout.flush()
+						p = mp.Process(target=combTabs, args=(basename, path, npc, timeStep))
+						nProc +=1
+						nDoingDict[path] +=1
+						break;
+					else:
+						print('at max number of processes, waiting...')
+						sys.stdout.flush()
+						time.sleep(30)
+			else:
+				print('starting ' + path + ', n=' + str(timeStep))
+				sys.stdout.flush()
+				combTabs(basename, path, npc, timeStep)
+
+	time.sleep(2)
 
 
 
