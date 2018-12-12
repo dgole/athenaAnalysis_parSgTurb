@@ -67,7 +67,7 @@ def checkAndDoLoop(path):
 				if item[-4:]=='.npy': ntDone+=1
 			timeStepStart = ntDone
 			timeStepEnd   = ntAvail
-			print('checking ' + path)
+			print('process ' + multiprocessing.current_process().name + ' checking ' + path)
 			print(str(ntAvail) + ' time steps available')
 			print(str(ntDone) + ' time steps already done')
 			print('combining tabs for indicies ' + str(timeStepStart) + ' through ' + str(timeStepEnd-1))
@@ -77,13 +77,11 @@ def checkAndDoLoop(path):
 pathList = []
 for path in sys.argv[1:]: pathList.append(path)
 ###############################################################################
-jobNum = 0;
 print(pathList)
-for path in pathList:
-	print('starting process ' + str(jobNum) + ' for path ' + path)
-	p = multiprocessing.Process(name=str(jobNum), target=checkAndDoLoop, args=(path,))
+for jobNum in range(len(pathList)):
+	print('starting process ' + str(jobNum) + ' for path ' + pathList[jobNum])
+	p = multiprocessing.Process(name=str(jobNum), target=checkAndDoLoop, args=(pathList[jobNum],))
 	p.start()
-	jobNum+=1
 
 
 
