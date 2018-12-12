@@ -42,7 +42,7 @@ plt.xlabel(r'$|\mathbf{k}|$')
 plt.ylabel('Power')
 addFiveThirdsToFig()
 plt.legend()
-tools.saveAndClear(pathSave + 'keSpec_unsheared.png', figNum=0)
+tools.saveAndClear(pathSave + 'keSpec.png', figNum=0)
 
 
 

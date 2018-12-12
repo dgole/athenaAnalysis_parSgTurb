@@ -402,8 +402,8 @@ def rootRhoDvz(do, n):
 #########################################################################
 
 def calcPs(do, key, n):
-	#data       = do.get3d(key, n)
-	data       = do.get3d_unsheared(key, n)
+	data       = do.get3d(key, n)
+	#data       = do.get3d_unsheared(key, n)
 	freqs      = np.fft.fftfreq(data.shape[0], d=do.dx)
 	nFreqs     = freqs.shape[0]//2
 	freqs      = freqs[:nFreqs]
@@ -448,7 +448,7 @@ def acf3d(do, key, n):
 	print('calculating ACF for'+' n=' + str(n))
 	sys.stdout.flush()
 	data       = do.get3d(key, n)
-	data       = do.get3d_unsheared(key, n)
+	#data       = do.get3d_unsheared(key, n)
 	nFreqs     = do.nx//2
 	fft        = np.fft.fftn(data)
 	fftFixed   = np.zeros_like(data)
