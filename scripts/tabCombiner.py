@@ -122,11 +122,9 @@ for path in pathList:
 				combTabs(basename, path, npc, timeStep)
 	else:
 		print('all avaliable output is done or currently being done')
-		print('will check again in 10 seconds...')
 		print('######################################################################')
 		print(' ')
 		sys.stdout.flush()
-		time.sleep(10)
 
 
 
