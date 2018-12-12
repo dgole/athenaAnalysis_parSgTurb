@@ -7,7 +7,7 @@ sys.path.append('../python')
 import athenaTools as tools
 import resource
 import time
-from multiprocessing
+import multiprocessing
 ###############################################################################
 def getFileNames(basename, timeStep, npc):
 	names = [("id"+str(i)+"/"+basename+"-id" + str(i) + "." + tools.getTimeStepString(timeStep) + ".tab") for i in range(npc)]
