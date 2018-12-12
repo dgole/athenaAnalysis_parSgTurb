@@ -19,7 +19,7 @@ def getFiles(basename, path, names):
 def combTabs(basename, path, npc, timeStepStart, timeStepEnd):
 	for timeStep in range(timeStepStart, timeStepEnd):
 		jobName = multiprocessing.current_process().name
-		print('job name is ' + jobName)
+		print('process number is ' + jobName)
 		print(path + " time step " + str(timeStep))
 		# read in files
 		print("reading in files")
@@ -77,14 +77,13 @@ def checkAndDoLoop(path):
 pathList = []
 for path in sys.argv[1:]: pathList.append(path)
 ###############################################################################
-jobs = []; jobNum = 0;
+jobNum = 0;
 print(pathList)
 for path in pathList:
-	p = multiprocessing.Process(name='job num ' + str(jobNum), target=checkAndDoLoop, args=(path,))
-	jobs.append(p)
+	print('starting process ' + str(jobNum) + ' for path ' + path)
+	p = multiprocessing.Process(name=str(jobNum), target=checkAndDoLoop, args=(path,))
 	p.start()
 	jobNum+=1
-
 
 
 
