@@ -8,7 +8,8 @@ import athenaTools as tools
 import resource
 import time
 import multiprocessing as mp
-nProc=0
+nProcNow=0
+nProcTot=0
 nDoingDict=dict()
 ###############################################################################
 def getFileNames(basename, timeStep, npc):
@@ -16,19 +17,22 @@ def getFileNames(basename, timeStep, npc):
 	names[0] = "id0/"+basename+"."+tools.getTimeStepString(timeStep)+".tab"
 	return names
 def getFiles(basename, path, names):
-	print("reading in files")
-	sys.stdout.flush()
+	global myNPC
 	files = []
 	fileNum = 0
 	for name in names:
+		print('#')
+		if myNPC>1: print('process number: ' + mp.current_process().name)
 		print('reading in file number ' + str(fileNum) + ' of ' + str(len(names)))
 		print("total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
+		print('#')
 		sys.stdout.flush()
 		files.append(np.loadtxt(path+name))
 		fileNum+=1
 	return files
 def combTabs(basename, path, npc, timeStep):
-	global nProc
+	global nProcNow
+	global nProcTot
 	global nDoingDict
 	outDir = path+'3d/'
 	# read in files
@@ -41,25 +45,32 @@ def combTabs(basename, path, npc, timeStep):
 	# assign data to 3d array
 	masterArray=np.zeros([coordsListArray[0].shape[0],coordsListArray[1].shape[0],coordsListArray[2].shape[0],cols-3])
 	masterLength=len(files)*files[0].shape[0];
-	print("arranging files into 3d numpy array")
-	sys.stdout.flush()
 	fileNum = 0
 	for file in files:
+		print('#')
+		if myNPC>1: print('process number: ' + mp.current_process().name)
 		print('shuffling file number ' + str(fileNum) + ' of ' + str(len(files)))
 		print("total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
+		print('#')
 		sys.stdout.flush()
 		fileNum+=1
 		for i in range(file.shape[0]):
 			indicies=[(np.abs(coordsListArray[j]-file[i,3+j])).argmin() for j in range(3)]
 			masterArray[indicies[0],indicies[1],indicies[2]]=file[i,3:cols]
 	# export table
+	print('#')
+	if myNPC>1: print('process number: ' + mp.current_process().name)
+	print('writing numpy file')
+	print("total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
+	print('#')
+	sys.stdout.flush()
 	np.save(outDir+basename+"."+tools.getTimeStepString(timeStep)+".npy", masterArray)
 	del files
 	del masterArray
 	del coordsList
 	del coordsArray
 	del coordsListArray
-	nProc-=1
+	nProcNow-=1
 	nDoingDict[path]-=1
 def getNpc(path):
 	contentsList = os.listdir(path)
@@ -98,7 +109,7 @@ while True:
 		nDone  = getnDone(path)
 		print(' ')
 		print('######################################################################')
-		print(str(nProc) + ' processes currently running')
+		print(str(nProcNow) + ' processes currently running')
 		print('checking ' + path)
 		print(str(nAvail) + ' time steps available')
 		print(str(nDone) + ' time steps already done')
@@ -108,15 +119,16 @@ while True:
 			timeStep = nDone + nDoing
 			if myNPC>1:
 				while True:
-					if nProc < myNPC:
+					if nProcNow < myNPC:
 						print('starting process to do ' + path + ', n=' + str(timeStep))
 						print('######################################################################')
 						print(' ')
 						sys.stdout.flush()
-						p = mp.Process(target=combTabs, args=(basename, path, npc, timeStep))
-						nProc +=1
+						p = mp.Process(name=str(nProcTot), target=combTabs, args=(basename, path, npc, timeStep))
+						nProcNow += 1
+						nProcTot += 1
 						p.start()
-						nDoingDict[path] +=1
+						nDoingDict[path] += 1
 						break;
 					else:
 						print('at max number of processes, waiting...')
@@ -125,10 +137,9 @@ while True:
 			else:
 				print('starting ' + path + ', n=' + str(timeStep))
 				sys.stdout.flush()
-				nProc +=1
+				nProcNow +=1
 				combTabs(basename, path, npc, timeStep)
-
-	time.sleep(2)
+	time.sleep(1)
 
 
 
