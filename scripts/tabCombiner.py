@@ -16,15 +16,21 @@ def getFileNames(basename, timeStep, npc):
 	names[0] = "id0/"+basename+"."+tools.getTimeStepString(timeStep)+".tab"
 	return names
 def getFiles(basename, path, names):
-	files = [np.loadtxt(path+name) for name in names]
+	print("reading in files")
+	sys.stdout.flush()
+	files = []
+	fileNum = 0
+	for name in names:
+		print('reading in file number ' + str(fileNum) + ' of ' + str(len(names)))
+		print("total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
+		files.append(np.loadtxt(path+name))
+		fileNum+=1
 	return files
 def combTabs(basename, path, npc, timeStep):
 	global nProc
 	global nDoingDict
 	outDir = path+'3d/'
 	# read in files
-	print("reading in files")
-	sys.stdout.flush()
 	files=getFiles(basename, path, getFileNames(basename, timeStep, npc))
 	res=abs(1.0/(files[0][0,3]-files[0][1,3]))
 	cols=files[0].shape[1]
