@@ -13,7 +13,7 @@ import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
 pathBase = str(sys.argv[1])
-#keyList = ['drho', 'dvx', 'dvy', 'dvz', 'dv']
+#keyList = ['drho', 'dvx', 'dvy', 'dvz']
 keyList = ['drho']
 ################################################################################
 path3d   = pathBase + '3d/'
