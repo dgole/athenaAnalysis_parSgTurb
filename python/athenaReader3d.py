@@ -193,6 +193,48 @@ def timeEvo(do, key, figNum=0, legendLabel=None, absAvg=1, absPlot=1, color='b')
 	plt.xlabel(r"$t \Omega$");
 	plt.tight_layout()
 
+def slicePlot(do, key, n=None, figNum=0, axis='z', coord=0.0):
+	print(do.path + ": making slice plot for key " + key)
+	if n==None: n = do.nt - 10
+	data3d = do.get3d(key, n)
+	if axis=='x':
+		index  = do.getxindex(coord)
+		data2d = data3d[index, :, :]
+		extent = [-do.ymax, do.ymax, -do.zmax, do.zmax]
+		xlabel = r"$y/H$"
+		ylabel = r"$z/H$"
+	if axis=='y':
+		index  = do.getyindex(coord)
+		data2d = data3d[:, index, :]
+		extent = [-do.xmax, do.xmax, -do.zmax, do.zmax]
+		xlabel = r"$x/H$"
+		ylabel = r"$z/H$"
+	if axis=='z':
+		index  = do.getzindex(coord)
+		data2d = data3d[:, :, index]
+		extent = [-do.xmax, do.xmax, -do.ymax, do.ymax]
+		xlabel = r"$x/H$"
+		ylabel = r"$y/H$"
+	title = do.header[key]
+	aspect  = 1.0
+	plotData = np.transpose(np.fliplr(data2d))
+	if np.amin(plotData) < 0.0:
+		cmapType = 'coolwarm'
+		maxVal   = np.amax(np.absolute(plotData))
+		#norm     = colors.SymLogNorm(maxVal/100.0, linscale=2.0)
+	else:
+		cmapType = 'viridis'
+		#norm     = colors.LogNorm()
+	#plt.imshow(plotData, extent=extent, aspect=aspect, cmap=plt.get_cmap(cmapType), norm=norm)
+	plt.imshow(plotData, extent=extent, aspect=aspect, cmap=plt.get_cmap(cmapType))
+	plt.title(title)
+	plt.xlabel(xlabel)
+	plt.ylabel(ylabel)
+	plt.colorbar()
+	plt.tight_layout()
+
+
+
 
 #########################################################################
 # Helper

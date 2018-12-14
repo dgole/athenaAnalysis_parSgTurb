@@ -19,3 +19,11 @@ def saveAndClear(plotName, figNum=0):
 	plt.figure(figNum)
 	plt.savefig(plotName, bbox_inches='tight', dpi=600)
 	plt.clf()
+
+def getColor(n, nStart, nEnd):
+	span = nEnd-nStart
+	nn   = n-nStart
+	r = 1.0 - (nn/span)
+	g = 0.0
+	b = 0.0 + (nn/span)
+	return (r,g,b)

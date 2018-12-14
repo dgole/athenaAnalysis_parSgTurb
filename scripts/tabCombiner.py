@@ -20,12 +20,6 @@ def getFiles(basename, path, names):
 	files = []
 	fileNum = 0
 	for name in names:
-		#print('#')
-		#if myNPC>1: print('process number: ' + mp.current_process().name)
-		#print('reading in file number ' + str(fileNum) + ' of ' + str(len(names)))
-		#print("total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
-		#print('#')
-		#sys.stdout.flush()
 		files.append(np.loadtxt(path+name))
 		fileNum+=1
 	return files
@@ -43,23 +37,11 @@ def combTabs(basename, path, npc, timeStep):
 	masterLength=len(files)*files[0].shape[0];
 	fileNum = 0
 	for file in files:
-		#print('#')
-		#if myNPC>1: print('process number: ' + mp.current_process().name)
-		#print('shuffling file number ' + str(fileNum) + ' of ' + str(len(files)))
-		#print("total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
-		#print('#')
-		#sys.stdout.flush()
 		fileNum+=1
 		for i in range(file.shape[0]):
 			indicies=[(np.abs(coordsListArray[j]-file[i,3+j])).argmin() for j in range(3)]
 			masterArray[indicies[0],indicies[1],indicies[2]]=file[i,3:cols]
-	# export table
-	#print('#')
-	#if myNPC>1: print('process number: ' + mp.current_process().name)
-	#print('writing numpy file')
 	#print("total MB of memory used: " + str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
-	#print('#')
-	#sys.stdout.flush()
 	np.save(outDir+basename+"."+tools.getTimeStepString(timeStep)+".npy", masterArray)
 	del files
 	del masterArray
@@ -100,7 +82,6 @@ for path in pathList:
 	nDone  = getnDone(path)
 	print(' ')
 	print('######################################################################')
-	print(str(nProcNow) + ' processes currently running')
 	print('checking ' + path)
 	print(str(nAvail) + ' time steps available')
 	print(str(nDone) + ' time steps already done')
@@ -120,7 +101,7 @@ for path in pathList:
 				sys.stdout.flush()
 				combTabs(basename, path, npc, timeStep)
 	else:
-		print('all avaliable output is done or currently being done')
+		print('all avaliable output is done')
 		print('######################################################################')
 		print(' ')
 		sys.stdout.flush()
