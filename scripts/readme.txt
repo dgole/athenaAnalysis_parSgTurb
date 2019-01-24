@@ -1,11 +1,11 @@
 ####################################################################
 COMPUTATION / MANIPULATION
 ####################################################################
-# job_tabCombiner.sh
-slurm template script to submit tabCombiner.py
 # tabCombiner.py
 combines the 3d files into one for each time step in 3d folder
-args: npc tsStart tsEnd pathToDir
+checks to see if data dump is already done first
+parallelizes infineitley
+args: <npc> <pathToDir1> <pathToDir2> <pathToDir3> ...
 
 ####################################################################
 SINGLE RUNS
@@ -30,6 +30,16 @@ plots various profiles and time evolution plots from 3d files
 args: <path to dir with 3d dir inside>
 saves plots in dir plots3d
 
+# slices3d.py
+plots slices every 10 dumps for most quantities and every dump for dpar
+args: <path to dir with 3d dir inside>
+saves plots in dir slices
+
+# sloshChecker.py
+makes several plots related to looking for vertical sloshing mostions
+args: <path to dir with 3d dir inside>
+saves plots in dir sloshChecker
+
 ####################################################################
 MULTIPLE RUNS
 ####################################################################
@@ -40,6 +50,13 @@ saves plots a level above the data directories, edit path in script
 
 # multi_plots3d.py
 
+####################################################################
+PLAN OUTPUT
+####################################################################
+# planPlotter.py
+plots number of particles over time and particle mass histogram
+args: <path to dir with planOutput dir inside>
+saves plots in dir plan
 
 
 

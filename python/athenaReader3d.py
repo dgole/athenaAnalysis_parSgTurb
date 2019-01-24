@@ -168,7 +168,7 @@ def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None, absAvg=
 	plotData /= nCount
 	title = do.header[key]
 	if absPlot==1:
-		plt.semilogy(do.z, np.absolute(plotData), label=legendLabel, color=color)
+		plt.plot(do.z, np.absolute(plotData), label=legendLabel, color=color)
 	else:
 		plt.plot(do.z, plotData , label=legendLabel, color=color)
 	plt.ylabel(do.header[key]);

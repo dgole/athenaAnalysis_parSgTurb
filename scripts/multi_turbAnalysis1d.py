@@ -11,49 +11,28 @@ import athenaReader1d as reader1d
 import athenaReaderPhst as readerPhst
 import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
-#########################################################################
-#pathBase = '../../data/turbTest/'
-#runNameList = ['run10', 'run11', 'run12', 'run13', 'run14']
-#alphaInList = [1.e-2,    1.e-3,   1.e-4,   1.e-5,   1.e-6]
-#tsList      = [1.e-1,    1.e-1,   1.e-1,   1.e-1,   1.e-1]
-#colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
-#pathSave = pathBase + 'plots/turbAnalysis2/'
-
-pathBase = '../../data/newBCs_turbScaling/'
-runNameList = ['run10', 'run12', 'run14']
-alphaInList = [1.e-2,    1.e-4,   1.e-6 ]
-tsList      = [1.e0,     1.e0,    1.e0  ]
-colorList   = ['b',  'tab:orange', 'g']
-pathSave = pathBase + 'plots/turbAnalysis10/'
-
-#pathBase = '../../data/turbTest/'
-#runNameList = ['run126', 'run120', 'run122', 'run124', 'run128']
-#alphaInList = [4.e0,      4.e-2,     4.e-4,   4.e-6,   4.e-8   ]
-#tsList      = [1.e-1,   1.e-1,   1.e-1  ]
-#colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
-#pathSave = pathBase + 'plots/turbAnalysis120/'
-
-#pathBase = '../../data/turbTest/'
-#runNameList = ['run36', 'run35', 'run30', 'run31', 'run32', 'run33', 'run34']
-#alphaInList = [1.e0,     1.e-1,   1.e-2,   1.e-3,   1.e-4,   1.e-5,   1.e-6,    ]
-#tsList      = [1.e-1,    1.e-1,   1.e-1,   1.e-1,   1.e-1,   1.e-1,   1.e-1 ]
-#colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple', 'tab:brown', 'tab:pink'  ]
-#pathSave = pathBase + 'plots/turbAnalysis3/'
-
-#pathBase = '../../data/turbTest/'
-#runNameList = ['run41', 'run42', 'run43']
-#alphaInList = [1.e-3,   1.e-4,   1.e-5  ]
-#tsList      = [1.e-1,   1.e-1,   1.e-1  ]
-#colorList   = ['b',  'tab:orange', 'g'  ]
-#pathSave = pathBase + 'plots/turbAnalysis2/'
-
-#pathBase = '../../data/parhTest/'
-#runNameList = ['run10', 'run11', 'run12', 'run13']
-#alphaInList = [1.e-2,    1.e-2,   1.e-2,   1.e-2 ]
-#tsList      = [1.e1,     1.e0,    1.e-1,   1.e-2 ]
-#colorList   = ['b',  'tab:orange', 'g',    'r'   ]
-#pathSave = pathBase + 'plots/turbAnalysis/'
-########################################################################
+################################################################################
+#pathBase = '../../data/fullPhysicsTest/'
+#runNameList = ['run10', 'run11', 'run12', 'run13', 'run14', 'run15', 'run16', 'run17', 'run18']
+#alphaInList = [1.e-2,   3.e-3,   1.e-3,   3.e-4,   1.e-4,   3.e-5,   1.e-5,   3.e-6,   1.e-6  ]
+#tsList      = [3.e-1,   3.e-1,   3.e-1,   3.e-1,   3.e-1,   3.e-1,   3.e-1,   3.e-1,   3.e-1  ]
+#colorList   = ['tab:blue', 'tab:orange', 'g', 'r', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive']
+#pathSave = pathBase + 'plots/turbAnalysis10/'
+################################################################################
+#pathBase = '../../data/fullPhysicsTest/'
+#runNameList = ['run20', 'run21', 'run22']
+#alphaInList = [1.e-4,   1.e-4,   1.e-4  ]
+#tsList      = [1.e0,    3.e-1,   1.e-1  ]
+#colorList   = ['tab:blue', 'tab:orange', 'g']
+#pathSave = pathBase + 'plots/turbAnalysis20/'
+################################################################################
+pathBase = '../../data/fullPhysicsTest/'
+runNameList = ['run70', 'run71', 'run72', 'run73', 'run74']
+alphaInList = [1.e-2,   1.e-3,   1.e-4, 1.e-5, 1.e-6  ]
+tsList      = [3.e-3,    3.e-1,   3.e-1,   3.e-1,   3.e-1  ]
+colorList   = ['tab:blue', 'tab:orange', 'g', 'r', 'tab:purple']
+pathSave = pathBase + 'plots/turbAnalysis70/'
+################################################################################
 
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 
@@ -92,7 +71,7 @@ for n in range(len(do1dList)):
 	plt.axhline(y=np.sqrt(alphaIn), linestyle='--', color=color)
 plt.legend()
 tools.saveAndClear(pathSave + "gas_timeEvo_mid_" + key + ".png")
-'''
+
 # plot particle dz vs expected value based on alpha ~ dvz^2
 for n in range(len(do1dList)):
 	do         = do1dList[n]
@@ -100,10 +79,11 @@ for n in range(len(do1dList)):
 	color      = colorList[n]
 	doPhst     = doPhstList[n]
 	alphazMean = np.mean(do.data['alphaz'][do.nt//2:])
-	parh       = np.sqrt(alphazMean/tsList[n])
+	parh       = 0.5*np.sqrt(alphazMean/tsList[n])
 	readerPhst.timeEvo(doPhst, 'zvar', legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
 	plt.axhline(y=parh, linestyle='--', color=color)
 plt.axhline(y=do.dz, linestyle='--', color='k')
+plt.axhline(y=do.zmax*2.0, linestyle='--', color='k')
 plt.legend()
 tools.saveAndClear(pathSave + "par_" + 'scaleHeightComparison' + ".png")
 
@@ -118,9 +98,10 @@ for n in range(len(do1dList)):
 	readerPhst.timeEvo(doPhst, 'zvar', legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
 	plt.axhline(y=parh, linestyle='--', color=color)
 plt.axhline(y=do.dz, linestyle='--', color='k')
+plt.axhline(y=do.zmax*2.0, linestyle='--', color='k')
 plt.legend()
 tools.saveAndClear(pathSave + "par_" + 'scaleHeightComparison2' + ".png")
-'''
+
 # plot measured alpha vs input alpha
 alphaActList  = []
 for n in range(len(do1dList)):
@@ -152,6 +133,62 @@ tools.saveAndClear(pathSave + "alphaAct.png")
 
 
 
+
+
+
+
+
+
+
+
+#pathBase = '../../data/turbTest/'
+#runNameList = ['run10', 'run11', 'run12', 'run13', 'run14']
+#alphaInList = [1.e-2,    1.e-3,   1.e-4,   1.e-5,   1.e-6]
+#tsList      = [1.e-1,    1.e-1,   1.e-1,   1.e-1,   1.e-1]
+#colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
+#pathSave = pathBase + 'plots/turbAnalysis2/'
+
+#pathBase = '../../data/newBCs_turbScaling/'
+#runNameList = ['run10', 'run12', 'run14']
+#alphaInList = [1.e-2,    1.e-4,   1.e-6 ]
+#tsList      = [1.e0,     1.e0,    1.e0  ]
+#colorList   = ['b',  'tab:orange', 'g']
+#pathSave = pathBase + 'plots/turbAnalysis10/'
+
+#pathBase = '../../data/fftTest/'
+#runNameList = ['run10']
+#alphaInList = [1.e-6 ]
+#tsList      = [1.e0  ]
+#colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple', 'tab:brown', 'tab:pink'  ]
+#pathSave = pathBase + 'plots/turbAnalysis10/'
+
+#pathBase = '../../data/turbTest/'
+#runNameList = ['run126', 'run120', 'run122', 'run124', 'run128']
+#alphaInList = [4.e0,      4.e-2,     4.e-4,   4.e-6,   4.e-8   ]
+#tsList      = [1.e-1,   1.e-1,   1.e-1  ]
+#colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple']
+#pathSave = pathBase + 'plots/turbAnalysis120/'
+
+#pathBase = '../../data/turbTest/'
+#runNameList = ['run36', 'run35', 'run30', 'run31', 'run32', 'run33', 'run34']
+#alphaInList = [1.e0,     1.e-1,   1.e-2,   1.e-3,   1.e-4,   1.e-5,   1.e-6,    ]
+#tsList      = [1.e-1,    1.e-1,   1.e-1,   1.e-1,   1.e-1,   1.e-1,   1.e-1 ]
+#colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple', 'tab:brown', 'tab:pink'  ]
+#pathSave = pathBase + 'plots/turbAnalysis3/'
+
+#pathBase = '../../data/turbTest/'
+#runNameList = ['run41', 'run42', 'run43']
+#alphaInList = [1.e-3,   1.e-4,   1.e-5  ]
+#tsList      = [1.e-1,   1.e-1,   1.e-1  ]
+#colorList   = ['b',  'tab:orange', 'g'  ]
+#pathSave = pathBase + 'plots/turbAnalysis2/'
+
+#pathBase = '../../data/parhTest/'
+#runNameList = ['run10', 'run11', 'run12', 'run13']
+#alphaInList = [1.e-2,    1.e-2,   1.e-2,   1.e-2 ]
+#tsList      = [1.e1,     1.e0,    1.e-1,   1.e-2 ]
+#colorList   = ['b',  'tab:orange', 'g',    'r'   ]
+#pathSave = pathBase + 'plots/turbAnalysis/'
 
 
 

@@ -15,9 +15,10 @@ def getTimeStepString(i):
 	elif i > -1: zstring = "000"
 	return zstring+str(i)
 
-def saveAndClear(plotName, figNum=0):
+def saveAndClear(plotName, figNum=0, dpi=600, bboxOption=1):
 	plt.figure(figNum)
-	plt.savefig(plotName, bbox_inches='tight', dpi=600)
+	if bboxOption==1: plt.savefig(plotName, bbox_inches='tight', dpi=dpi)
+	else:             plt.savefig(plotName, dpi=dpi)
 	plt.clf()
 
 def getColor(n, nStart, nEnd):

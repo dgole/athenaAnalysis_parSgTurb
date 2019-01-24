@@ -40,14 +40,12 @@ for key in ['drho', 'dvx', 'dvy', 'dvz']:
     reader3d.timeEvo(do3d, key, figNum=0)
     tools.saveAndClear(pathSave + 'timeEvoPert_' + key + '.png', figNum=0)
 ################################################################################
-'''
 # normalized perts
 for key in ['drhoNorm', 'dvxNorm', 'dvyNorm', 'dvzNorm', 'dvNorm']:
     reader3d.profile(do3d, key, figNum=0)
     tools.saveAndClear(pathSave + 'profilePertNorm_' + key + '.png', figNum=0)
     reader3d.timeEvo(do3d, key, figNum=0)
     tools.saveAndClear(pathSave + 'timeEvoPertNorm_' + key + '.png', figNum=0)
-'''
 ################################################################################
 
 

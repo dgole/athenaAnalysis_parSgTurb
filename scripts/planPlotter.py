@@ -12,6 +12,9 @@ import athenaReaderPhst as readerPhst
 import athenaTools as tools
 import planOutputReader as readerPlan
 from matplotlib.backends.backend_pdf import PdfPages
+from mpl_toolkits.mplot3d import Axes3D
+################################################################################
+scatters = False
 ################################################################################
 # paths
 pathBase = str(sys.argv[1])
@@ -23,39 +26,46 @@ if not os.path.exists(pathSave): os.makedirs(pathSave)
 # npar mass r_hill xcom ycom zcom
 doPlan = readerPlan.DataPlan(pathPlan)
 ################################################################################
+# n clumps over time
 plt.figure(0)
-plt.plot(doPlan.time, doPlan.nClumps, 'ko')
-plt.xlabel(r'$t \Omega$')
-plt.ylabel(r'$N_{clumps}$')
+readerPlan.nClumpsTimeEvo(doPlan, figNum=0)
 tools.saveAndClear(pathSave + "nClumps_timeEvo.png", figNum=0)
 ################################################################################
-plt.figure(0)
-n = len(doPlan.time)-1
-bins, hist = readerPlan.getCumMassHist(doPlan, n)
-plt.loglog(bins, hist, 'ko', label='at end')
-n = np.argmax(doPlan.nClumps)
-bins, hist = readerPlan.getCumMassHist(doPlan, n)
-plt.loglog(bins, hist, 'bo', label='at max Nclumps')
-plt.xlabel(r'$M_P$')
-plt.ylabel(r'$N(>M_P)$')
-plt.legend()
-tools.saveAndClear(pathSave + "hist.png", figNum=0)
+# mass cumulative hist
+readerPlan.plotCumMassHist(doPlan)
+tools.saveAndClear(pathSave + "hist_cumulative.png", figNum=0)
 ################################################################################
-plt.figure(0)
-for n in range(0,10000):
-	if doPlan.nClumps[n]>0:
-		nStart = n
-		break;
-nEnd = nStart + 50
-for n in range(nStart,nEnd,5):
-	bins, hist = readerPlan.getCumMassHist(doPlan, n)
-	rgb = tools.getColor(n, nStart, nEnd)
-	plt.loglog(bins, hist, color=rgb, label='n='+str(n))
-plt.xlabel(r'$M_P$')
-plt.ylabel(r'$N(>M_P)$')
-plt.legend()
-tools.saveAndClear(pathSave + "hist_timeEvo.png", figNum=0)
+# mass differential hist
+readerPlan.plotDiffMassHist(doPlan)
+tools.saveAndClear(pathSave + "hist_differential.png", figNum=0)
 ################################################################################
+# fraction of particle mass in planetesimals
+readerPlan.planMassFracTimeEvo(doPlan)
+tools.saveAndClear(pathSave + "massfrac_timeEvo.png", figNum=0)
+################################################################################
+# scatter plot of particle locations
+if scatters:
+	plt.figure(0)
+	for n in range(doPlan.nFirstClump, doPlan.nt):
+		readerPlan.scatterPlotXZ(doPlan, n)
+		tools.saveAndClear(pathSave + 'scatter_2d_XZ' + '_' + str(n) + '.png', figNum=0, dpi=100)
+		readerPlan.scatterPlotXY(doPlan, n)
+		tools.saveAndClear(pathSave + 'scatter_2d_XY' + '_' + str(n) + '.png', figNum=0, dpi=100)
+		readerPlan.scatterPlotXYZ(doPlan, n)
+		tools.saveAndClear(pathSave + 'scatter_3d' + '_' + str(n) + '.png', figNum=0, dpi=100, bboxOption=0)
+################################################################################
+# calculate p value (power law index)
+plt.figure(0)
+readerPlan.pValuePlot(doPlan)
+tools.saveAndClear(pathSave + "powerLawIndex.png", figNum=0)
+################################################################################
+
+
+
+
+
+
+
 
 
 
