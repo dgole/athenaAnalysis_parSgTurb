@@ -25,7 +25,10 @@ def getFiles(basename, path, names):
 	return files
 def combTabs(basename, path, npc, timeStep):
 	outDir = path+'3d/'
+	idStr  = path + str(n) + ': '
 	# read in files
+	print(idStr + 'reading in files')
+	sys.stdout.flush()
 	files=getFiles(basename, path, getFileNames(basename, timeStep, npc))
 	res=abs(1.0/(files[0][0,3]-files[0][1,3]))
 	cols=files[0].shape[1]
@@ -33,11 +36,15 @@ def combTabs(basename, path, npc, timeStep):
 	coordsArray=np.asarray(coordsList)
 	coordsListArray=[np.unique(coordsArray[:,:,i]) for i in range(3)]
 	# assign data to 3d array
+	print(idStr + 'assigning data to master array')
+	sys.stdout.flush()
 	masterArray=np.zeros([coordsListArray[0].shape[0],coordsListArray[1].shape[0],coordsListArray[2].shape[0],cols-3])
 	masterLength=len(files)*files[0].shape[0];
 	fileNum = 0
 	for file in files:
 		fileNum+=1
+		print(idStr + 'assigning file ' + str(fileNum) + ' of ' + str(len(files)))
+		sys.stdout.flush()
 		for i in range(file.shape[0]):
 			indicies=[(np.abs(coordsListArray[j]-file[i,3+j])).argmin() for j in range(3)]
 			masterArray[indicies[0],indicies[1],indicies[2]]=file[i,3:cols]
