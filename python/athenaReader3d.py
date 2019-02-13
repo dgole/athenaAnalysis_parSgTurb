@@ -109,10 +109,13 @@ class Data3d:
 		self.dt     = dt
 		self.tmax   = dt*self.nt
 		self.t      = np.arange(0, self.tmax-dt/2.0, dt)
+		print(self.t)
 		self.q      = 1.5
 		self.omega  = 1.0
 		self.vk     = -self.q*self.omega*self.x
-		self.shearTime = (self.y[0]-self.y[-1])/self.vk[-1]
+		#self.shearTime = (self.y[0]-self.y[-1])/self.vk[-1]
+		#print(self.shearTime)
+		self.shearTime = 1/(self.q*self.omega)
 		print("data structure initialized pointing to data of shape " + str(dataTemp.shape)
 		      + ' x ' + str(self.nt) + ' time steps')
 		del dataTemp
@@ -129,11 +132,13 @@ class Data3d:
 		data       = self.get3d(key, n)
 		newData    = np.zeros_like(data)
 		tSinceEven = np.mod(self.t[n], self.shearTime)
-		shearDisp  = (tSinceEven)*self.vk
+		shearDisp  = (tSinceEven/self.shearTime) * self.x * 2.0
+		#print(shearDisp)
+		shearNumFloat = np.floor((shearDisp/self.dx)+0.5)
+		#print(shearNumFloat)
 		for i in range(data.shape[0]):
-			shearI = int(np.floor((shearDisp[i]/self.dx)+0.5))
-			newData[i,:,:] = np.roll(data[i,:,:], -shearI, axis=0)
-			print(i, n, -shearI)
+			newData[i,:,:] = np.roll(data[i,:,:], -int(shearNumFloat[i]), axis=0)
+			#print(i, n, -shearI)
 		return newData
 	def getxindex(self, x):
 		return (np.abs(self.x-x)).argmin()
@@ -443,9 +448,9 @@ def rootRhoDvz(do, n):
 # PSPEC STUFF
 #########################################################################
 
-def calcPs(do, key, n):
-	data       = do.get3d(key, n)
-	#data       = do.get3d_unsheared(key, n)
+def calcPs(do, key, n, unsheared=True):
+	if unsheared: data = do.get3d_unsheared(key, n)
+	else:         data = do.get3d(key, n)
 	freqs      = np.fft.fftfreq(data.shape[0], d=do.dx)
 	nFreqs     = freqs.shape[0]//2
 	freqs      = freqs[:nFreqs]
@@ -453,8 +458,8 @@ def calcPs(do, key, n):
 	ps         = np.square(np.absolute(fft))
 	return ps, freqs
 
-def psProfiles(do, key, n):
-	ps, freqs = calcPs(do, key, n)
+def psProfiles(do, key, n, unsheared=True):
+	ps, freqs = calcPs(do, key, n, unsheared=unsheared)
 	psk       = np.zeros(ps.shape[0])
 	count     = np.zeros_like(psk)
 	for i in range(ps.shape[0]):
@@ -468,16 +473,17 @@ def psProfiles(do, key, n):
 	psk /= count
 	return psk, freqs
 
-def psProfileMean(do, key, nStart=None, nEnd=None):
+def psProfileMean(do, key, nStart=None, nEnd=None, unsheared=True):
 	#if nStart is None: nStart = do.nt // 2
 	if nStart is None: nStart = do.nt // 2
 	if nEnd   is None: nEnd   = do.nt
 	pskList = []
 	count   = 0
 	for n in range(nStart, nEnd):
-		psk, freqs = psProfiles(do, key, n)
-		pskList.append(psk)
-		count += 1
+		if np.mod(do.t[n], do.shearTime)<1.e-8:
+			psk, freqs = psProfiles(do, key, n, unsheared=unsheared)
+			pskList.append(psk)
+			count += 1
 	psk = np.asarray(np.mean(pskList,  axis=0))/float(count)
 	return psk, freqs
 
@@ -486,11 +492,11 @@ def psProfileMean(do, key, nStart=None, nEnd=None):
 # ACF STUFF
 #########################################################################
 
-def acf3d(do, key, n):
+def acf3d(do, key, n, unsheared=True):
 	print('calculating ACF for'+' n=' + str(n))
 	sys.stdout.flush()
-	data       = do.get3d(key, n)
-	#data       = do.get3d_unsheared(key, n)
+	if unsheared: data = do.get3d_unsheared(key, n)
+	else:         data = do.get3d(key, n)
 	nFreqs     = do.nx//2
 	fft        = np.fft.fftn(data)
 	fftFixed   = np.zeros_like(data)
@@ -499,9 +505,9 @@ def acf3d(do, key, n):
 	corrNorm   = corr/np.amax(corr)
 	return corrNorm
 
-def acf3dto2d_xy(do, key, n):
+def acf3dto2d_xy(do, key, n, unsheared=True):
 	nn        = do.nx//2
-	acf       = acf3d(do, key, n)
+	acf       = acf3d(do, key, n, unsheared=unsheared)
 	acf2d     = np.mean(acf, axis=2)
 	acf2d2   = np.zeros_like(acf2d)
 	acf2d2[:nn,:nn] = acf2d[nn:,nn:] # 3 into 1
@@ -510,11 +516,11 @@ def acf3dto2d_xy(do, key, n):
 	acf2d2[nn:,:nn] = acf2d[:nn,nn:] # 2 into 4
 	return acf2d2
 
-def acfMean(do, key, nStart=None, nEnd=None):
+def acfMean(do, key, nStart=None, nEnd=None, unsheared=True):
 	if nStart is None: nStart = do.nt // 2
 	if nEnd   is None: nEnd   = do.nt
 	for n in range(nStart,nEnd):
-		acf2d = acf3dto2d_xy(do, key, n)
+		acf2d = acf3dto2d_xy(do, key, n, unsheared=unsheared)
 		if n==nStart: acfMean  = acf2d
 		else:         acfMean += acf2d
 	acfMean /= np.amax(acfMean)

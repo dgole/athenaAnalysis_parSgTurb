@@ -12,6 +12,13 @@ import athenaReaderPhst as readerPhst
 import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
+pathBase = '../../data/fullPhysicsTest/'
+runNameList = ['run100']
+alphaInList = [1.e-4,   1.e-4]
+tsList      = [1.e-2,    1.e-2]
+colorList   = ['tab:blue', 'tab:orange', 'g']
+pathSave = pathBase + 'plots/turbAnalysis100/'
+################################################################################
 #pathBase = '../../data/fullPhysicsTest/'
 #runNameList = ['run10', 'run11', 'run12', 'run13', 'run14', 'run15', 'run16', 'run17', 'run18']
 #alphaInList = [1.e-2,   3.e-3,   1.e-3,   3.e-4,   1.e-4,   3.e-5,   1.e-5,   3.e-6,   1.e-6  ]
@@ -26,12 +33,12 @@ from matplotlib.backends.backend_pdf import PdfPages
 #colorList   = ['tab:blue', 'tab:orange', 'g']
 #pathSave = pathBase + 'plots/turbAnalysis20/'
 ################################################################################
-pathBase = '../../data/fullPhysicsTest/'
-runNameList = ['run70', 'run71', 'run72', 'run73', 'run74']
-alphaInList = [1.e-2,   1.e-3,   1.e-4, 1.e-5, 1.e-6  ]
-tsList      = [3.e-3,    3.e-1,   3.e-1,   3.e-1,   3.e-1  ]
-colorList   = ['tab:blue', 'tab:orange', 'g', 'r', 'tab:purple']
-pathSave = pathBase + 'plots/turbAnalysis70/'
+#pathBase = '../../data/fullPhysicsTest/'
+#runNameList = ['run70', 'run71', 'run72', 'run73', 'run74']
+#alphaInList = [1.e-2,   1.e-3,   1.e-4, 1.e-5, 1.e-6  ]
+#tsList      = [3.e-1,    3.e-1,   3.e-1,   3.e-1,   3.e-1  ]
+#colorList   = ['tab:blue', 'tab:orange', 'g', 'r', 'tab:purple']
+#pathSave = pathBase + 'plots/turbAnalysis70/'
 ################################################################################
 
 if not os.path.exists(pathSave): os.makedirs(pathSave)
@@ -78,9 +85,9 @@ for n in range(len(do1dList)):
 	alphaIn    = alphaInList[n]
 	color      = colorList[n]
 	doPhst     = doPhstList[n]
-	alphazMean = np.mean(do.data['alphaz'][do.nt//2:])
-	parh       = 0.5*np.sqrt(alphazMean/tsList[n])
 	readerPhst.timeEvo(doPhst, 'zvar', legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
+	alphazMean = np.mean(do.data['alphaz'][do.nt//2:])
+	parh       = np.sqrt(alphazMean/tsList[n])
 	plt.axhline(y=parh, linestyle='--', color=color)
 plt.axhline(y=do.dz, linestyle='--', color='k')
 plt.axhline(y=do.zmax*2.0, linestyle='--', color='k')
@@ -93,10 +100,15 @@ for n in range(len(do1dList)):
 	alphaIn    = alphaInList[n]
 	color      = colorList[n]
 	doPhst     = doPhstList[n]
-	alphazMean = np.mean(do.data['alphaz'][do.nt//2:, do.nz//2-10:do.nz//2+10])
+	alphazMean = np.mean(do.data['alphaz'][do.nt//2:, do.nz//2-8:do.nz//2+8])
 	parh       = np.sqrt(alphazMean/tsList[n])
 	readerPhst.timeEvo(doPhst, 'zvar', legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
 	plt.axhline(y=parh, linestyle='--', color=color)
+	if alphaIn == 1.e-3:
+		print(alphaIn)
+		print(np.round(alphazMean,6))
+		print(np.round(parh,6))
+		print(np.round(np.mean(doPhst.data['zvar'][doPhst.nt//2:]),4))
 plt.axhline(y=do.dz, linestyle='--', color='k')
 plt.axhline(y=do.zmax*2.0, linestyle='--', color='k')
 plt.legend()

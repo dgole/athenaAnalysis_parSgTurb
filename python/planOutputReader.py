@@ -13,10 +13,12 @@ import athenaTools as tools
 # Data class ###################################################################
 ################################################################################
 class DataPlan:
-	def __init__(self, path, dt=0.1, nPar=3.e5):
+	def __init__(self, path, dt=0.1, nPar=3.e5, G=0.05):
 		print("initializing PLAN data structure from " + path)
-		self.path = path
-		self.nPar = nPar
+		self.path  = path
+		self.nPar  = nPar
+		self.G     = G
+		self.m0_ceres = G * (720.0/0.05)
 		contentsList = os.listdir(path)
 		self.peakFileNameList = []
 		for item in contentsList:
@@ -30,6 +32,8 @@ class DataPlan:
 			n2   = int(peakFileName[13])
 			time = float(n1) + dt * float(n2)
 			n    = int(np.round(time/dt))
+			n    = min(n, len(self.peakArrayList)-1)
+			print(n)
 			temp = np.loadtxt(self.path+peakFileName)
 			if len(temp.shape) == 2:
 				self.peakArrayList[n] = temp
@@ -38,6 +42,8 @@ class DataPlan:
 			else:
 				self.peakArrayList[n] = np.zeros((1,13))
 		self.peakArrayList = self.peakArrayList[:-1]
+		for n in range(len(self.peakArrayList)):
+			self.peakArrayList[n][:,2] *= self.m0_ceres
 		self.timeList = [n*dt for n in range(0,len(self.peakArrayList))]
 		self.nClumpsList = []
 		for arr in self.peakArrayList:
@@ -60,14 +66,14 @@ class DataPlan:
 				break
 		self.nt = len(self.timeList)
 
-def getCumMassHist(do, n, spacing=0.1):
+def getCumMassHist(do, n, spacing=0.05):
 	if do.nClumps[n] != 0:
 		masses = []
 		for mass in do.peakArrayList[n][:,2]:
 			masses.append(mass)
 		masses     = np.asarray(masses)
-		indexStart = -6
-		indexEnd   = -3
+		indexStart = -4
+		indexEnd   = 1
 		lLimList   = [np.power(10,index) for index in np.arange(indexStart, indexEnd, spacing)]
 		nBins      = len(lLimList)
 		massHist   = np.zeros(nBins)
@@ -80,17 +86,17 @@ def getCumMassHist(do, n, spacing=0.1):
 		print('no partilce found in this output')
 		return 0, 0
 
-def getDiffMassHist(do, n, spacing=0.1):
+def getDiffMassHist(do, n, spacing=0.05):
 	if do.nClumps[n] != 0:
 		masses = []
 		for mass in do.peakArrayList[n][:,2]:
 			masses.append(mass)
 		masses     = np.asarray(masses)
-		indexStart = -6
-		indexEnd   = -3
-		lLimList   = [np.power(10,index) for index in np.arange(indexStart, indexEnd, spacing)]
-		uLimList   = [np.power(10,index+spacing) for index in np.arange(indexStart, indexEnd, spacing)]
-		avgMassList= 0.5 * (np.asarray(lLimList) + np.asarray(uLimList))
+		indexStart = -4
+		indexEnd   = 1
+		lLimList   = [np.power(10.0,index) for index in np.arange(indexStart, indexEnd, spacing)]
+		uLimList   = [np.power(10.0,index+spacing) for index in np.arange(indexStart, indexEnd, spacing)]
+		avgMassList= [np.power(10.0,index+spacing/2.0) for index in np.arange(indexStart, indexEnd, spacing)]
 		nBins      = len(lLimList)
 		dm         = np.zeros(nBins)
 		dn         = np.zeros(nBins)
@@ -114,7 +120,7 @@ def nClumpsTimeEvo(do, figNum=0, colorOption='k'):
 	plt.xlabel(r'$t \Omega$')
 	plt.ylabel(r'$N_{clumps}$')
 
-def plotCumMassHist(do, nStart=None, nEnd=None, spacing=0.1, figNum=0, legendLabel=None, colorOption='ko'):
+def plotCumMassHist(do, nStart=None, nEnd=None, spacing=0.05, figNum=0, legendLabel=None, colorOption='ko'):
 	print('plotting time-averaged cumulative mass hist for ' + do.path)
 	plt.figure(figNum)
 	if nStart is None: nStart = do.nt // 2
@@ -134,7 +140,7 @@ def plotCumMassHist(do, nStart=None, nEnd=None, spacing=0.1, figNum=0, legendLab
 	plt.xlabel(r'$M_p$')
 	plt.ylabel(r'$N(>M_p)$')
 
-def plotDiffMassHist(do, nStart=None, nEnd=None, spacing=0.1, figNum=0, legendLabel=None, colorOption='ko'):
+def plotDiffMassHist(do, nStart=None, nEnd=None, spacing=0.05, figNum=0, legendLabel=None, colorOption='ko'):
 	print('plotting time-averaged cumulative mass hist for ' + do.path)
 	plt.figure(figNum)
 	if nStart is None: nStart = do.nt - 100
@@ -179,7 +185,7 @@ def scatterPlotXZ(do, n, figNum=0):
 	xs     = do.peakArrayList[n][:, 4]
 	ys     = do.peakArrayList[n][:, 5]
 	zs     = do.peakArrayList[n][:, 6]
-	sizes  = [np.power(1.e8*mass, 1./2.) for mass in masses]
+	sizes  = [np.power(3.e3*mass, 1./2.) for mass in masses]
 	############################################################################
 	plt.scatter(xs, zs, s=sizes)
 	plt.xlabel(r'x')
@@ -195,7 +201,7 @@ def scatterPlotXY(do, n, figNum=0):
 	xs     = do.peakArrayList[n][:, 4]
 	ys     = do.peakArrayList[n][:, 5]
 	zs     = do.peakArrayList[n][:, 6]
-	sizes  = [np.power(1.e8*mass, 1./2.) for mass in masses]
+	sizes  = [np.power(3.e3*mass, 1./2.) for mass in masses]
 	############################################################################
 	plt.scatter(xs, ys, s=sizes)
 	plt.xlabel(r'x')
@@ -211,7 +217,7 @@ def scatterPlotXYZ(do, n, figNum=0):
 	xs     = do.peakArrayList[n][:, 4]
 	ys     = do.peakArrayList[n][:, 5]
 	zs     = do.peakArrayList[n][:, 6]
-	sizes  = [np.power(1.e8*mass, 1./2.) for mass in masses]
+	sizes  = [np.power(3.e3*mass, 1./2.) for mass in masses]
 	fig = plt.figure(figNum)
 	ax = fig.add_subplot(111, projection='3d')
 	ax.scatter(ys, xs, zs, s=sizes)
@@ -225,13 +231,16 @@ def scatterPlotXYZ(do, n, figNum=0):
 
 def get_p(do, n):
 	nplan   = do.nClumpsList[n]
-	minMass = min(do.peakArrayList[n][:,2])
-	sum     = 0
-	for mass in do.peakArrayList[n][:,2]:
-		sum += np.log(mass / minMass)
-	p   = 1 + nplan * np.power(sum, -1)
-	err = (p-1)/np.sqrt(nplan)
-	return p, err
+	if nplan > 2:
+		minMass = np.amin(do.peakArrayList[n][:,2])
+		sum     = 0
+		for mass in do.peakArrayList[n][:,2]:
+			sum += np.log(mass / minMass)
+		p   = 1 + nplan * np.power(sum, -1)
+		err = (p-1)/np.sqrt(nplan)
+		return p, err
+	else:
+		return 0.0, 0.0
 
 def get_p_avg(do, nStart=None, nEnd=None):
 	if nStart is None: nStart = do.nt-100

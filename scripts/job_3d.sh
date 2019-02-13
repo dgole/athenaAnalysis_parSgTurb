@@ -10,11 +10,11 @@
 #module load gcc python3
 
 #export DIR=$SCRATCH/parSgTurb/data/newBCs_turbScaling/run22/bin/
-export DIR=../../data/fullPhysicsTest/run64/
-python3 plots3d.py   $DIR
+export DIR=../../data/kspaceTest/run31/
+#python3 plots3d.py   $DIR
 python3 pspec.py     $DIR
 python3 acf.py       $DIR
-python3 slices3d.py  $DIR
+#python3 slices3d.py  $DIR
 
 
 

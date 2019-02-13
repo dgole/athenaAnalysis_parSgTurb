@@ -35,11 +35,6 @@ plots slices every 10 dumps for most quantities and every dump for dpar
 args: <path to dir with 3d dir inside>
 saves plots in dir slices
 
-# sloshChecker.py
-makes several plots related to looking for vertical sloshing mostions
-args: <path to dir with 3d dir inside>
-saves plots in dir sloshChecker
-
 ####################################################################
 MULTIPLE RUNS
 ####################################################################

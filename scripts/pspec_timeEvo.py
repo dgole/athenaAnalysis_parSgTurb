@@ -13,7 +13,8 @@ import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
 pathBase = str(sys.argv[1])
-ms = 2
+ms   = 2
+nEnd = 50
 ################################################################################
 path3d   = pathBase + '3d/'
 pathSave = pathBase + 'plots/pspec/'
@@ -26,23 +27,18 @@ def addFiveThirdsToFig():
         plt.loglog(freqs, 10**i*np.power(freqs, -5.0/3.0), color='tab:gray',
                    linestyle='--', linewidth=0.5)
 ################################################################################
-psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoVx')
-psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoVy')
-psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoVz')
-psk  = psk_vx  + psk_vy  + psk_vz
-plt.loglog(freqs, psk/psk[1], 'ko', markersize=ms)#, label='normal')
-################################################################################
-#psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx')
-#psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy')
-#psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz')
-#psk  = psk_vx  + psk_vy  + psk_vz
-#plt.loglog(freqs, psk/psk[1], 'bo', markersize=ms, label='pert')
+for n in range(0, nEnd, 1):
+    psk_vx, freqs = reader3d.psProfiles(do3d, 'rootRhoVx', n)
+    psk_vy, freqs = reader3d.psProfiles(do3d, 'rootRhoVy', n)
+    psk_vz, freqs = reader3d.psProfiles(do3d, 'rootRhoVz', n)
+    psk  = psk_vx  + psk_vy  + psk_vz
+    plt.loglog(freqs, psk/psk[1], color=tools.getColor(n, 0, nEnd), label='n='+str(n))
 ################################################################################
 plt.xlabel(r'$|\mathbf{k}|$')
 plt.ylabel('Power')
 addFiveThirdsToFig()
-plt.legend()
-tools.saveAndClear(pathSave + 'keSpec.png', figNum=0)
+#plt.legend(loc=(1.01,0.0))
+tools.saveAndClear(pathSave + 'keSpec_timeEvo.png', figNum=0)
 
 
 

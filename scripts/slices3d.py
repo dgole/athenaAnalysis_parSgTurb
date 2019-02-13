@@ -21,12 +21,12 @@ do3d = reader3d.Data3d(path3d)
 ################################################################################
 # midplane slices
 for key in ['drho', 'rho', 'vx', 'vy', 'vz']:
-    for n in range(10, do3d.nt, 10):
+    for n in range(0, do3d.nt, 1):
         reader3d.slicePlot(do3d, key, n=n, figNum=0)
         tools.saveAndClear(pathSave + 'midplaneSlice_' + key + '_' + str(n) + '.png', figNum=0)
 ################################################################################
 for key in ['dpar']:
-    for n in range(10, do3d.nt, 1):
+    for n in range(0, do3d.nt, 1):
         reader3d.slicePlot(do3d, key, n=n, figNum=0)
         tools.saveAndClear(pathSave + 'midplaneSlice_' + key + '_' + str(n) + '.png', figNum=0)
 

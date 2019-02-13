@@ -43,6 +43,7 @@ class DataPhst:
 		#self.header  = {'rho'     : r"$\rho$",
 		#				'reynolds': r"$\rho v_x \delta v_y$"}
 		self.t      = self.data['t']
+		self.nt     = len(self.t)
 		print("phst data of length " + str(self.data['xavg'].shape) + " imported")
 	def gettindex(self, t):
 		return (np.abs(self.t-t)).argmin()
