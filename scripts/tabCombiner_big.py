@@ -9,13 +9,14 @@ import resource
 import time
 import multiprocessing as mp
 ################################################################################
-nProcNow=0
-nProcTot=0
+myNPC    = int(sys.argv[1])
+path     = str(sys.argv[2])
+baseName = "Par_Strat3d"
+outDir   = path+'3d/'
+if not os.path.exists(outDir): os.makedirs(outDir)
+
 ################################################################################
-def getFileNames(baseName, n, npc):
-	names = [("id"+str(i)+"/"+baseName+"-id" + str(i) + "." + tools.getTimeStepString(n) + ".tab") for i in range(npc)]
-	names[0] = "id0/"+baseName+"."+tools.getTimeStepString(n)+".tab"
-	return names
+
 def getFile(path, name, resultList):
 	print('reading in ' + path + name)
 	sys.stdout.flush()
@@ -32,38 +33,13 @@ def assignToArray(file, fileNum, resultList):
 		indicies=[(np.abs(coordsListArray[j]-file[i,3+j])).argmin() for j in range(3)]
 		masterArray[indicies[0],indicies[1],indicies[2]]=file[i,3:cols]
 	resultList.append(masterArray)
-def getNpc(path):
-	contentsList = os.listdir(path)
-	npc=0
-	for item in contentsList:
-		if item[:2]=='id': npc+=1
-	return npc
-def getnAvail(path):
-	contentsList = os.listdir(path+'id0/')
-	ntAvail = 0
-	for item in contentsList:
-		if item[-4:]=='.tab': ntAvail+=1
-	return ntAvail
-def getnDone(path):
-	contentsList = os.listdir(outDir)
-	ntDone = 0
-	for item in contentsList:
-		if item[-4:]=='.npy': ntDone+=1
-	return ntDone
-################################################################################
 
 ################################################################################
-myNPC = int(sys.argv[1])
-path  = str(sys.argv[2])
-baseName="Par_Strat3d"
-outDir = path+'3d/'
-if not os.path.exists(outDir): os.makedirs(outDir)
-npc    = getNpc(path)
-################################################################################
+
 while True:
-	npc    = getNpc(path)
-	nAvail = getnAvail(path)
-	nDone  = getnDone(path)
+	npc    = tools.getNpc(path)
+	nAvail = tools.getnAvail(path)
+	nDone  = tools.getnDone(path)
 	print('checking ' + path)
 	print(str(nAvail) + ' time steps available')
 	print(str(nDone) + ' time steps already done')
@@ -72,7 +48,7 @@ while True:
 		n = nDone
 		########################################################################
 		# read in files (parallel)
-		fileNames = getFileNames(baseName, n, npc)
+		fileNames = tools.getFileNames(baseName, n, npc)
 		manager   = mp.Manager()
 		files     = manager.list()
 		jobs=[]
@@ -86,6 +62,7 @@ while True:
 			for n1 in range(myNPC):
 				jobs[nRead+n1].join()
 			nRead+=myNPC
+		tools.printMem('files are read in')
 		########################################################################
 		# set-up (serial)
 		res             = abs(1.0/(files[0][0,3]-files[0][1,3]))
@@ -98,6 +75,7 @@ while True:
 									coordsListArray[2].shape[0],
 									cols-3])
 		masterLength    = len(files)*files[0].shape[0];
+		tools.printMem('master array is set up')
 		########################################################################
 		# assign data to 3d array
 		manager = mp.Manager()
@@ -117,6 +95,7 @@ while True:
 			for result in resultList:
 				masterArray+=result
 			nRead+=myNPC
+		tools.printMem('master array is assigned')
 		########################################################################
 		print('writing master file')
 		sys.stdout.flush()
