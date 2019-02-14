@@ -62,6 +62,7 @@ while True:
 			for n1 in range(myNPC):
 				jobs[nRead+n1].join()
 			nRead+=myNPC
+			tools.printMem('reading in...')
 		tools.printMem('files are read in')
 		########################################################################
 		# set-up (serial)
@@ -95,6 +96,7 @@ while True:
 			for result in resultList:
 				masterArray+=result
 			nRead+=myNPC
+			tools.printMem('assigning...')
 		tools.printMem('master array is assigned')
 		########################################################################
 		print('writing master file')
