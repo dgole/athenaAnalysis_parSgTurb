@@ -68,7 +68,7 @@ def makeAnimFrame(n):
 	ax[axNum].semilogy(tPlot[:n], alphazAvg[:n], 'k', linewidth=2)
 	ax[axNum].semilogy(tPlot[n],  alphazAvg[n], 'bo', markersize=5, label=r'$\alpha_z$')
 	ax[axNum].axhline(y=alpha_in, linestyle=':', color='k', label=r'$\alpha_{in}$')
-	ax[axNum].set_ylim(3.e-2*alpha_in, 2.0*alpha_in)
+	ax[axNum].set_ylim(1.e-1*alpha_in, 3.0*alpha_in)
 	ax[axNum].set_ylabel(r'$\alpha$')
 	ax[axNum].set_xlabel(r'$t\Omega$')
 	#ax[axNum].legend()

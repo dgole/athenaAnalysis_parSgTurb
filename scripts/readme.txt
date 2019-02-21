@@ -20,6 +20,11 @@ power spectrum calculations from 3d files
 args: <path to dir with 3d dir inside>
 saves plots in dir pspec
 
+# pspec_timeEvo.py
+power spectrum over time calculations from 3d files
+args: <path to dir with 3d dir inside>
+saves plots in dir pspec
+
 # acf.py
 acf calculations from 3d files
 args: <path to dir with 3d dir inside>
