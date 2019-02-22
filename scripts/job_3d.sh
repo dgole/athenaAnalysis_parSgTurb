@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH -J 3d
-#SBATCH --time=1:00:00
+#SBATCH --time=2:00:00
 #SBATCH -N 1
 #SBATCH --ntasks 64
 #SBATCH -p development
@@ -11,12 +11,14 @@ module load gcc
 module load python3
 
 export DIR=$SCRATCH/parSgTurb/data/prodRuns/run10/bin/
-python3 plots3d.py   $DIR
-python3 pspec.py     $DIR
-python3 pspec_timeEvo.py $DIR
-python3 acf.py       $DIR
-python3 slices3d.py  $DIR
-python3 gas_multiPanelAnimation.py $DIR 1.e-4
+python3 plots3d_multiPanel.py 64 False $DIR
+#python3 plots3d_par.py 64 $DIR
+#python3 plots3d.py   $DIR
+#python3 pspec.py     $DIR
+#python3 pspec_timeEvo.py $DIR
+#python3 acf.py       $DIR
+#python3 slices3d.py  $DIR
+#python3 gas_multiPanelAnimation.py $DIR 1.e-4
 
 
 
