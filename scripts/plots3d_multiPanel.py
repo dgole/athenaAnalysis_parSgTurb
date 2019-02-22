@@ -40,7 +40,8 @@ if parInitProc=='True':
 		print(len(jobList))
 		theseJobs = []
 		for n in range(myNpc):
-			theseJobs.append(jobList.pop(0))
+			try: theseJobs.append(jobList.pop(0))
+			except: a=1
 		for job in theseJobs:
 			job.start()
 		for job in theseJobs:
@@ -98,8 +99,9 @@ def makeAnimFrame(self, n):
 		ax[axNum].semilogy(do3d.t[n:], plotData[n:], 'gray', linewidth=1)
 		ax[axNum].semilogy(do3d.t[:n+1], plotData[:n+1], colors[key], linewidth=2)
 		ax[axNum].semilogy(do3d.t[n], plotData[n], colors[key]+'o', markersize=5, label=do3d.header[key])
-	limBase = np.mean(plotData[do3d.nt//2:])
-	ax[axNum].set_ylim(limBase/10.0, limBase*2.0)
+	#limBase = np.mean(plotData[do3d.nt//2:])
+	limBase  = 1.e-2
+	ax[axNum].set_ylim(limBase/10.0, limBase*3.3)
 	ax[axNum].legend(loc=(0.90,0.05))
 
 	axNumDict = {'vx':0, 'vy':1, 'vz':2}
@@ -113,9 +115,9 @@ def makeAnimFrame(self, n):
 		extent = [-do3d.xmax, do3d.xmax, -do3d.ymax, do3d.ymax]
 		aspect  = 0.85
 		plotData = np.transpose(np.fliplr(data2d))
-		plotData = np.clip(plotData, -limBase*2.0, limBase*2.0)
-		plotData[0,0] = -limBase*2.0
-		plotData[0,1] =  limBase*2.0
+		plotData = np.clip(plotData, -limBase*5.0, limBase*5.0)
+		plotData[0,0] = -limBase*5.0
+		plotData[0,1] =  limBase*5.0
 		cmapType = 'coolwarm'
 		ax[axNum].imshow(plotData, extent=extent, aspect=aspect, cmap=plt.get_cmap(cmapType))
 
@@ -130,11 +132,29 @@ def makeAnimFrame(self, n):
 		extent = [-do3d.xmax, do3d.xmax, -do3d.zmax, do3d.zmax]
 		aspect  = 0.85
 		plotData = np.transpose(np.fliplr(data2d))
-		plotData = np.clip(plotData, -limBase*2.0, limBase*2.0)
-		plotData[0,0] = -limBase*2.0
-		plotData[0,1] =  limBase*2.0
+		plotData = np.clip(plotData, -limBase*5.0, limBase*5.0)
+		plotData[0,0] = -limBase*5.0
+		plotData[0,1] =  limBase*5.0
 		cmapType = 'coolwarm'
 		ax[axNum].imshow(plotData, extent=extent, aspect=aspect, cmap=plt.get_cmap(cmapType))
+
+	axNumDict = {'dvx':6, 'dvy':7, 'dvz':8}
+	for key in ['dvx', 'dvy', 'dvz']:
+		axNum = axNumDict[key]
+		ax[axNum].set_xlabel(r'$z/h$')
+		ax[axNum].set_ylabel(do3d.header[key])
+		plotData = np.mean(np.absolute(do3d.get3d(key, n)), axis=(0,1))
+		ax[axNum].semilogy(do3d.z, plotData, 'k')
+		ax[axNum].set_ylim(limBase/10.0, 3.0*limBase)
+
+	axNumDict = {'vx':9, 'vy':10, 'vz':11}
+	for key in ['vx', 'vy', 'vz']:
+		axNum = axNumDict[key]
+		ax[axNum].set_xlabel(r'$z/h$')
+		ax[axNum].set_ylabel(do3d.header[key])
+		plotData = np.mean(do3d.get3d(key, n), axis=(0,1))
+		ax[axNum].plot(do3d.z, plotData, 'k')
+		ax[axNum].set_ylim(-limBase*2.0, limBase*5.0)
 
 	axNum = 13
 	key   = 'dpar'
@@ -146,9 +166,9 @@ def makeAnimFrame(self, n):
 	extent = [-do3d.xmax, do3d.xmax, -do3d.ymax, do3d.ymax]
 	aspect  = 0.85
 	plotData = np.transpose(np.fliplr(data2d))
-	plotData = np.clip(plotData, 1.e-10, 2.0)
-	plotData[0,0] = 1.e-10
-	plotData[0,1] = 2.0
+	plotData = np.clip(plotData, 1.e-1, 3.0)
+	plotData[0,0] = 1.e-1
+	plotData[0,1] = 3.0
 	cmapType = 'viridis'
 	ax[axNum].imshow(plotData, extent=extent, aspect=aspect, cmap=plt.get_cmap(cmapType))
 
@@ -162,29 +182,11 @@ def makeAnimFrame(self, n):
 	extent = [-do3d.xmax, do3d.xmax, -do3d.zmax, do3d.zmax]
 	aspect  = 0.85
 	plotData = np.transpose(np.fliplr(data2d))
-	plotData = np.clip(plotData, 1.e-10, 5.0)
-	plotData[0,0] = 1.e-10
-	plotData[0,1] = 5.0
+	plotData = np.clip(plotData, 1.e-1, 6.0)
+	plotData[0,0] = 1.e-1
+	plotData[0,1] = 6.0
 	cmapType = 'viridis'
 	ax[axNum].imshow(plotData, extent=extent, aspect=aspect, cmap=plt.get_cmap(cmapType))
-
-	axNumDict = {'dvx':6, 'dvy':7, 'dvz':8}
-	for key in ['dvx', 'dvy', 'dvz']:
-		axNum = axNumDict[key]
-		ax[axNum].set_xlabel(r'$z/h$')
-		ax[axNum].set_ylabel(do3d.header[key])
-		plotData = np.mean(np.absolute(do3d.get3d(key, n)), axis=(0,1))
-		ax[axNum].semilogy(do3d.z, plotData, 'k')
-		ax[axNum].set_ylim(limBase/10.0, limBase)
-
-	axNumDict = {'vx':9, 'vy':10, 'vz':11}
-	for key in ['vx', 'vy', 'vz']:
-		axNum = axNumDict[key]
-		ax[axNum].set_xlabel(r'$z/h$')
-		ax[axNum].set_ylabel(do3d.header[key])
-		plotData = np.mean(do3d.get3d(key, n), axis=(0,1))
-		ax[axNum].plot(do3d.z, plotData, 'k')
-		ax[axNum].set_ylim(-limBase*0.5, limBase*2.0)
 
 
 
@@ -202,7 +204,8 @@ for n in range(0, do3d.nt):
 while len(jobList)>0:
 	theseJobs = []
 	for n in range(myNpc):
-		theseJobs.append(jobList.pop(0))
+		try: theseJobs.append(jobList.pop(0))
+		except: a=1
 	for job in theseJobs:
 		job.start()
 	for job in theseJobs:
