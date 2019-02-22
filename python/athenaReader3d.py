@@ -188,7 +188,6 @@ def timeEvo(do, key, figNum=0, legendLabel=None, absAvg=1, absPlot=1, color='b')
 	for n in range(0, do.nt):
 		if absAvg==1: plotData[n] = np.mean(np.absolute(do.get3d(key, n)))
 		else:         plotData[n] = np.mean(            do.get3d(key, n))
-	plotData /= do.nt
 	title = do.header[key]
 	if absPlot==1:
 		plt.semilogy(do.t, np.absolute(plotData), label=legendLabel, color=color)

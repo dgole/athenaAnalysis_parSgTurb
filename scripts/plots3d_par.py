@@ -22,24 +22,25 @@ do3d = reader3d.Data3d(path3d)
 ################################################################################
 # simple averages of quantities
 def realAvgProfile(do3d, key, pathSave):
-    reader3d.profile(do3d, key, figNum=0, absAvg=0, absPlot=0)
-    tools.saveAndClear(pathSave + 'profileRealAvg_' + key + '.png', figNum=0)
+	reader3d.profile(do3d, key, figNum=0, absAvg=0, absPlot=0)
+	tools.saveAndClear(pathSave + 'profileRealAvg_' + key + '.png', figNum=0)
 def realAvgTimeEvo(do3d, key, pathSave):
-    reader3d.timeEvo(do3d, key, figNum=0, absAvg=0, absPlot=0)
-    tools.saveAndClear(pathSave + 'timeEvoRealAvg_' + key + '.png', figNum=0)
+	reader3d.timeEvo(do3d, key, figNum=0, absAvg=0, absPlot=0)
+	tools.saveAndClear(pathSave + 'timeEvoRealAvg_' + key + '.png', figNum=0)
 def absAvgProfile(do3d, key, pathSave):
-    reader3d.profile(do3d, key, figNum=0)
-    tools.saveAndClear(pathSave + 'profileAbsAvg_' + key + '.png', figNum=0)
+	reader3d.profile(do3d, key, figNum=0)
+	tools.saveAndClear(pathSave + 'profileAbsAvg_' + key + '.png', figNum=0)
 def absAvgTimeEvo(do3d, key, pathSave):
-    reader3d.timeEvo(do3d, key, figNum=0)
-    tools.saveAndClear(pathSave + 'timeEvoAbsAvg_' + key + '.png', figNum=0)
+	reader3d.timeEvo(do3d, key, figNum=0)
+	tools.saveAndClear(pathSave + 'timeEvoAbsAvg_' + key + '.png', figNum=0)
 def pertProfile(do3d, key, pathSave):
-    reader3d.profile(do3d, key, figNum=0)
-    tools.saveAndClear(pathSave + 'profilePert_' + key + '.png', figNum=0)
+	reader3d.profile(do3d, key, figNum=0)
+	tools.saveAndClear(pathSave + 'profilePert_' + key + '.png', figNum=0)
 def pertTimeEvo(do3d, key, pathSave):
-    reader3d.timeEvo(do3d, key, figNum=0)
-    tools.saveAndClear(pathSave + 'timeEvoPert_' + key + '.png', figNum=0)
+	reader3d.timeEvo(do3d, key, figNum=0)
+	tools.saveAndClear(pathSave + 'timeEvoPert_' + key + '.png', figNum=0)
 ################################################################################
+
 jobList = []
 for key in ['vx', 'vy', 'vz']:
 	job = mp.Process(target=realAvgProfile, args=(do3d, key, pathSave))
@@ -61,7 +62,14 @@ for job in jobList:
 	job.start()
 
 
-
+reader3d.profile(do3d, 'dvz', figNum=0, absAvg=1, absPlot=1)
+tools.saveAndClear(pathSave + 'testing1.png', figNum=0)
+plotData = np.zeros(do3d.nt)
+for n in range(len(plotData)):
+	data = do3d.get3d('dvz', n)
+	plotData[n] = np.mean(np.absolute(data))
+plt.plot(do3d.t, plotData)
+tools.saveAndClear(pathSave + 'testing2.png', figNum=0)
 
 
 
@@ -83,10 +91,6 @@ for job in jobList:
     #tools.saveAndClear(pathSave + 'timeEvoPertNorm_' + key + '.png', figNum=0)
 ################################################################################
 
-
-
-
-p = mp.Process(target=combTabs, args=(basename, path, npc, timeStep))
 
 
 
