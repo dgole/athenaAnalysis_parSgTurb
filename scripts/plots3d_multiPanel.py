@@ -13,8 +13,9 @@ import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 import multiprocessing as mp
 ################################################################################
-myNpc    = int(sys.argv[1])
-pathBase = str(sys.argv[2])
+myNpc       = int(sys.argv[1])
+parInitProc = str(sys.argv[2])
+pathBase  	= str(sys.argv[3])
 ################################################################################
 path3d   = pathBase + '3d/'
 pathSave = pathBase + 'plots/plots3dAnim/'
@@ -23,33 +24,37 @@ do3d = reader3d.Data3d(path3d)
 ################################################################################
 #plotDataDict = {}
 
-manager     = mp.Manager()
-dataDict    = manager.dict()
-for key in ['dvx', 'dvy', 'dvz', 'dv']:
-	dataDict[key] = manager.list(range(do3d.nt))
+if parInitProc=='True':
+	manager     = mp.Manager()
+	dataDict    = manager.dict()
+	for key in ['dvx', 'dvy', 'dvz', 'dv']:
+		dataDict[key] = manager.list(range(do3d.nt))
+	def processOne(do3d, key, n, result):
+		result[n] = np.mean(np.absolute(do3d.get3d(key, n)))
+	jobList = []
+	for key in ['dvx', 'dvy', 'dvz', 'dv']:
+		for n in range(do3d.nt):
+			job = mp.Process(target=processOne, args=(do3d, key, n, dataDict[key]))
+			jobList.append(job)
+	while len(jobList)>0:
+		print(len(jobList))
+		theseJobs = []
+		for n in range(myNpc):
+			theseJobs.append(jobList.pop(0))
+		for job in theseJobs:
+			job.start()
+		for job in theseJobs:
+			job.join()
+	plotDataDict = {}
+	for key in ['dvx', 'dvy', 'dvz', 'dv']:
+		plotDataDict[key] = np.asarray(dataDict[key])
+else:
+	plotDataDict = {}
+	for key in ['dvx', 'dvy', 'dvz', 'dv']:
+		plotDataDict[key] = np.zeros(do3d.nt)
+		for n in range(do3d.nt):
+			plotDataDict[key][n] = np.mean(np.absolute(do3d.get3d(key, n)))
 
-def processOne(do3d, key, n, result):
-	result[n] = np.mean(np.absolute(do3d.get3d(key, n)))
-
-jobList = []
-for key in ['dvx', 'dvy', 'dvz', 'dv']:
-	for n in range(do3d.nt):
-		job = mp.Process(target=processOne, args=(do3d, key, n, dataDict[key]))
-		jobList.append(job)
-
-while len(jobList)>0:
-	print(len(jobList))
-	theseJobs = []
-	for n in range(myNpc):
-		theseJobs.append(jobList.pop(0))
-	for job in theseJobs:
-		job.start()
-	for job in theseJobs:
-		job.join()
-
-plotDataDict = {}
-for key in ['dvx', 'dvy', 'dvz', 'dv']:
-	plotDataDict[key] = np.asarray(dataDict[key])
 
 ################################################################################
 
