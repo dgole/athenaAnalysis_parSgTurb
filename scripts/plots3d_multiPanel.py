@@ -70,7 +70,7 @@ def makeAnimFrame(self, n):
 		ax[axNum].semilogy(do3d.t[n:], plotData[n:], 'gray', linewidth=1)
 		ax[axNum].semilogy(do3d.t[:n+1], plotData[:n+1], colors[key], linewidth=2)
 		ax[axNum].semilogy(do3d.t[n], plotData[n], colors[key]+'o', markersize=5, label=do3d.header[key])
-	limBase = np.mean(plotData)
+	limBase = np.mean(plotData[do3d.nt//2:])
 	ax[axNum].set_ylim(limBase/10.0, limBase*2.0)
 	ax[axNum].legend(loc=(0.90,0.05))
 
