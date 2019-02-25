@@ -14,7 +14,9 @@ from matplotlib.backends.backend_pdf import PdfPages
 import multiprocessing as mp
 ################################################################################
 myNpc       = int(sys.argv[1])
-parInitProc = str(sys.argv[2])
+#parInitProc = str(sys.argv[2])
+parInitProc = 'False'
+alphaDesired = float(sys.argv[2])
 pathBase  	= str(sys.argv[3])
 ################################################################################
 path3d   = pathBase + '3d/'
@@ -51,10 +53,27 @@ if parInitProc=='True':
 		plotDataDict[key] = np.asarray(dataDict[key])
 else:
 	plotDataDict = {}
+	avgDataDict  = {}
 	for key in ['dvx', 'dvy', 'dvz', 'dv']:
 		plotDataDict[key] = np.zeros(do3d.nt)
+		avgDataDict[key]  = np.zeros(do3d.nz)
+		nAvg = 0
 		for n in range(do3d.nt):
-			plotDataDict[key][n] = np.mean(np.absolute(do3d.get3d(key, n)))
+			data = do3d.get3d(key, n)
+			plotDataDict[key][n] = np.mean(np.absolute(data))
+			if n >= do3d.nt-10:
+				avgDataDict[key]+= np.mean(np.absolute(data), axis=(0,1))
+				nAvg+=1
+		avgDataDict[key]/=nAvg
+	for key in ['vx', 'vy', 'vz']:
+		avgDataDict[key]  = np.zeros(do3d.nz)
+		nAvg = 0
+		for n in range(do3d.nt-10, do3d.nt):
+			data = do3d.get3d(key, n)
+			avgDataDict[key]+= np.mean(data, axis=(0,1))
+			nAvg+=1
+		avgDataDict[key]/=nAvg
+
 
 
 ################################################################################
@@ -101,7 +120,8 @@ def makeAnimFrame(self, n):
 		ax[axNum].semilogy(do3d.t[n], plotData[n], colors[key]+'o', markersize=5, label=do3d.header[key])
 	#limBase = np.mean(plotData[do3d.nt//2:])
 	limBase  = 1.e-2
-	ax[axNum].set_ylim(limBase/10.0, limBase*3.3)
+	ax[axNum].axhline(y=np.sqrt(alphaDesired), linestyle='--', color='gray')
+	ax[axNum].set_ylim(limBase/30.0, limBase*5.0)
 	ax[axNum].legend(loc=(0.90,0.05))
 
 	axNumDict = {'vx':0, 'vy':1, 'vz':2}
@@ -144,8 +164,10 @@ def makeAnimFrame(self, n):
 		ax[axNum].set_xlabel(r'$z/h$')
 		ax[axNum].set_ylabel(do3d.header[key])
 		plotData = np.mean(np.absolute(do3d.get3d(key, n)), axis=(0,1))
-		ax[axNum].semilogy(do3d.z, plotData, 'k')
-		ax[axNum].set_ylim(limBase/10.0, 3.0*limBase)
+		ax[axNum].semilogy(do3d.z, plotData, 'k', linewidth=2)
+		ax[axNum].semilogy(do3d.z, avgDataDict[key], 'gray', linewidth=1)
+		ax[axNum].set_ylim(limBase/30.0, 3.0*limBase)
+		ax[axNum].axhline(y=np.sqrt(alphaDesired/3.0), linestyle='--', color='gray')
 
 	axNumDict = {'vx':9, 'vy':10, 'vz':11}
 	for key in ['vx', 'vy', 'vz']:
@@ -153,7 +175,8 @@ def makeAnimFrame(self, n):
 		ax[axNum].set_xlabel(r'$z/h$')
 		ax[axNum].set_ylabel(do3d.header[key])
 		plotData = np.mean(do3d.get3d(key, n), axis=(0,1))
-		ax[axNum].plot(do3d.z, plotData, 'k')
+		ax[axNum].plot(do3d.z, plotData, 'k', linewidth=2)
+		ax[axNum].plot(do3d.z, avgDataDict[key], 'gray', linewidth=1)
 		ax[axNum].set_ylim(-limBase*2.0, limBase*5.0)
 
 	axNum = 13

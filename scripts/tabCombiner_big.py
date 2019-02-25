@@ -18,7 +18,7 @@ if not os.path.exists(outDir): os.makedirs(outDir)
 ################################################################################
 
 def processFile(path, name, resultList):
-	print('processing ' + path + name)
+	#print('processing ' + path + name)
 	sys.stdout.flush()
 	file = np.loadtxt(path+name)
 	coordsList      = file[:,3:6]

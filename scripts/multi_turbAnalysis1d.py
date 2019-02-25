@@ -36,6 +36,14 @@ elif str(sys.argv[1])=='mix':
 	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
 	pathSave = pathBase + 'plots/turbAnalysisMix/'
 ################################################################################
+elif str(sys.argv[1])=='60':
+	pathBase = '../../data/prodRuns/'
+	runNameList = ['run60','run61','run62','run63']
+	alphaInList = [1.e-3, 1.e-4, 1.e-5, 0.0]
+	tsList      = [0.3, 0.3, 0.3, 0.3]
+	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
+	pathSave = pathBase + 'plots/turbAnalysis60/'
+################################################################################
 
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 
