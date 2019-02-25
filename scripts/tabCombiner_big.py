@@ -47,6 +47,8 @@ while True:
 		n = nDone
 		########################################################################
 		# read in files (parallel)
+		print('processing tables for time step ' + str(n))
+		sys.stdout.flush()
 		fileNames   = tools.getFileNames(baseName, n, npc)
 		manager     = mp.Manager()
 		resultsList = manager.list()
@@ -59,7 +61,6 @@ while True:
 			for n1 in range(myNPC): jobs[nRead+n1].start()
 			for n1 in range(myNPC): jobs[nRead+n1].join()
 			nRead+=myNPC
-			tools.printMem('reading in...')
 		tools.printMem('files are read in')
 		########################################################################
 		# finish up (serial)
