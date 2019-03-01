@@ -20,7 +20,7 @@ if str(sys.argv[1])=='10':
 	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
 	pathSave = pathBase + 'plots/turbAnalysis10/'
 ################################################################################
-elif str(sys.argv[1])=='20':
+elif str(sys.argv[1])=='2?':
 	pathBase = '../../data/prodRuns/'
 	runNameList = ['run20','run21','run22','run23']
 	alphaInList = [1.e-3, 1.e-4, 1.e-5, 9.e-6]
@@ -36,13 +36,38 @@ elif str(sys.argv[1])=='mix':
 	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
 	pathSave = pathBase + 'plots/turbAnalysisMix/'
 ################################################################################
-elif str(sys.argv[1])=='60':
+elif str(sys.argv[1])=='6?':
 	pathBase = '../../data/prodRuns/'
 	runNameList = ['run60','run61','run62','run63']
 	alphaInList = [1.e-3, 1.e-4, 1.e-5, 0.0]
 	tsList      = [0.3, 0.3, 0.3, 0.3]
 	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
 	pathSave = pathBase + 'plots/turbAnalysis60/'
+################################################################################
+elif str(sys.argv[1])=='7?':
+	pathBase = '../../data/prodRuns/'
+	runNameList = ['run70','run71','run72']
+	alphaInList = [1.e-3, 1.e-3, 1.e-3]
+	tsList      = [0.3, 0.3, 0.3]
+	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
+	pathSave = pathBase + 'plots/turbAnalysis70/'
+################################################################################
+elif str(sys.argv[1])=='8?':
+	pathBase = '../../data/prodRuns/'
+	runNameList = ['run80','run81','run82']
+	alphaInList = [1.e-3, 1.e-3, 1.e-3]
+	tsList      = [0.3, 0.3, 0.3]
+	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
+	pathSave = pathBase + 'plots/turbAnalysis80/'
+################################################################################
+elif str(sys.argv[1])=='7and8':
+	pathBase = '../../data/prodRuns/'
+	runNameList = ['run70', 'run80', 'run71', 'run81', 'run72', 'run82']
+	alphaInList = [1.e-3, 1.e-3, 1.e-3, 1.e-3, 1.e-3, 1.e-3]
+	tsList      = [0.3, 0.3, 0.3, 0.3, 0.3, 0.3]
+	a           = 0.4
+	colorList   = [(1,0,0,1), (1,0,0,a), (0.5,1,0,1), (0.5,1,0,a), (0,0,1,1), (0,0,1,a)]
+	pathSave = pathBase + 'plots/turbAnalysis7and8/'
 ################################################################################
 
 if not os.path.exists(pathSave): os.makedirs(pathSave)
@@ -66,10 +91,10 @@ for n in range(len(runNameList)):
 # plot dv over time vs expected value based on alpha_in
 key = 'dv'
 for n in range(len(do1dList)):
-	do      = do1dList[n]
-	alphaIn = alphaInList[n]
-	color   = colorList[n]
-	reader1d.timeEvo(do, key, legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
+	do        = do1dList[n]
+	alphaIn   = alphaInList[n]
+	color     = colorList[n]
+	reader1d.timeEvo(do, key, legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1, color=color)
 	plt.axhline(y=np.sqrt(alphaIn), linestyle='--', color=color)
 plt.legend()
 tools.saveAndClear(pathSave + "gas_timeEvo_" + key + ".png")
@@ -77,11 +102,11 @@ tools.saveAndClear(pathSave + "gas_timeEvo_" + key + ".png")
 # plot dv at midplane over time vs expected value based on alpha_in
 key = 'dv'
 for n in range(len(do1dList)):
-	do      = do1dList[n]
-	alphaIn = alphaInList[n]
-	color   = colorList[n]
+	do        = do1dList[n]
+	alphaIn   = alphaInList[n]
+	color     = colorList[n]
 	reader1d.timeEvo(do, key, z1=-do.zmax/4.0, z2=do.zmax/4.0,
-					 legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
+					 legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1, color=color)
 	plt.axhline(y=np.sqrt(alphaIn), linestyle='--', color=color)
 plt.legend()
 tools.saveAndClear(pathSave + "gas_timeEvo_mid_" + key + ".png")
@@ -93,10 +118,10 @@ tools.saveAndClear(pathSave + "gas_timeEvo_mid_" + key + ".png")
 # plot dvz over time vs expected value based on alpha_in
 key = 'dvz'
 for n in range(len(do1dList)):
-	do      = do1dList[n]
-	alphaIn = alphaInList[n]
-	color   = colorList[n]
-	reader1d.timeEvo(do, key, legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
+	do        = do1dList[n]
+	alphaIn   = alphaInList[n]
+	color     = colorList[n]
+	reader1d.timeEvo(do, key, legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1, color=color)
 	plt.axhline(y=np.sqrt(alphaIn), linestyle='--', color=color)
 plt.legend()
 tools.saveAndClear(pathSave + "gas_timeEvo_" + key + ".png")
@@ -104,11 +129,11 @@ tools.saveAndClear(pathSave + "gas_timeEvo_" + key + ".png")
 # plot dvz at midplane over time vs expected value based on alpha_in
 key = 'dvz'
 for n in range(len(do1dList)):
-	do      = do1dList[n]
-	alphaIn = alphaInList[n]
-	color   = colorList[n]
+	do        = do1dList[n]
+	alphaIn   = alphaInList[n]
+	color     = colorList[n]
 	reader1d.timeEvo(do, key, z1=-do.zmax/4.0, z2=do.zmax/4.0,
-					 legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1)
+					 legendLabel=r'$\alpha_{in}=$'+str(alphaIn), logForce=1, color=color)
 	plt.axhline(y=np.sqrt(alphaIn), linestyle='--', color=color)
 plt.legend()
 tools.saveAndClear(pathSave + "gas_timeEvo_mid_" + key + ".png")

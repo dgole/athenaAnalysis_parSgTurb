@@ -447,7 +447,7 @@ def rootRhoDvz(do, n):
 # PSPEC STUFF
 #########################################################################
 
-def calcPs(do, key, n, unsheared=True):
+def calcPs(do, key, n, unsheared=False):
 	if unsheared: data = do.get3d_unsheared(key, n)
 	else:         data = do.get3d(key, n)
 	freqs      = np.fft.fftfreq(data.shape[0], d=do.dx)
@@ -457,7 +457,7 @@ def calcPs(do, key, n, unsheared=True):
 	ps         = np.square(np.absolute(fft))
 	return ps, freqs
 
-def psProfiles(do, key, n, unsheared=True):
+def psProfiles(do, key, n, unsheared=False):
 	ps, freqs = calcPs(do, key, n, unsheared=unsheared)
 	psk       = np.zeros(ps.shape[0])
 	count     = np.zeros_like(psk)
@@ -472,9 +472,9 @@ def psProfiles(do, key, n, unsheared=True):
 	psk /= count
 	return psk, freqs
 
-def psProfileMean(do, key, nStart=None, nEnd=None, unsheared=True):
+def psProfileMean(do, key, nStart=None, nEnd=None, unsheared=False):
 	#if nStart is None: nStart = do.nt // 2
-	if nStart is None: nStart = do.nt // 2
+	if nStart is None: nStart = do.nt - 10*int(1.0/do.dt)
 	if nEnd   is None: nEnd   = do.nt
 	pskList = []
 	count   = 0

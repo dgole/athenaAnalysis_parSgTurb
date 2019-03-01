@@ -7,5 +7,5 @@
 #convert -loop 0 -delay 10 ${DIR}anim_*.png ${DIR}1anim.gif
 
 
-DIR='../../data/fullPhysicsTest/run51_hc/plots/plan/anim1'
+DIR='../../data/fullPhysicsTest/run51_hc/plots/masterAnim'
 ffmpeg -framerate 10 -i $DIR/anim_%000d.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p $DIR/anim.mp4

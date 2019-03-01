@@ -166,7 +166,7 @@ def makeAnimFrame(self, n):
 		plotData = np.mean(np.absolute(do3d.get3d(key, n)), axis=(0,1))
 		ax[axNum].semilogy(do3d.z, plotData, 'k', linewidth=2)
 		ax[axNum].semilogy(do3d.z, avgDataDict[key], 'gray', linewidth=1)
-		ax[axNum].set_ylim(limBase/30.0, 3.0*limBase)
+		ax[axNum].set_ylim(limBase/15.0, 3.0*limBase)
 		ax[axNum].axhline(y=np.sqrt(alphaDesired/3.0), linestyle='--', color='gray')
 
 	axNumDict = {'vx':9, 'vy':10, 'vz':11}
@@ -178,7 +178,7 @@ def makeAnimFrame(self, n):
 		ax[axNum].plot(do3d.z, plotData, 'k', linewidth=2)
 		ax[axNum].plot(do3d.z, avgDataDict[key], 'gray', linewidth=1)
 		ax[axNum].set_ylim(-limBase*2.0, limBase*5.0)
-
+	'''
 	axNum = 13
 	key   = 'dpar'
 	ax[axNum].set_xlabel(r'$x/h$')
@@ -194,7 +194,8 @@ def makeAnimFrame(self, n):
 	plotData[0,1] = 3.0
 	cmapType = 'viridis'
 	ax[axNum].imshow(plotData, extent=extent, aspect=aspect, cmap=plt.get_cmap(cmapType))
-
+	'''
+	'''
 	axNum = 14
 	key   = 'dpar'
 	ax[axNum].set_xlabel(r'$x/h$')
@@ -210,6 +211,19 @@ def makeAnimFrame(self, n):
 	plotData[0,1] = 6.0
 	cmapType = 'viridis'
 	ax[axNum].imshow(plotData, extent=extent, aspect=aspect, cmap=plt.get_cmap(cmapType))
+	'''
+
+	axNum = 13
+	psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoVx')
+	psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoVy')
+	psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoVz')
+	psk  = psk_vx  + psk_vy  + psk_vz
+	ax[axNum].set_xlabel(r'$$')
+	ax[axNum].set_ylabel(do3d.header[key])
+	plotData = np.mean(do3d.get3d(key, n), axis=(0,1))
+	ax[axNum].plot(do3d.z, plotData, 'k', linewidth=2)
+	ax[axNum].plot(do3d.z, avgDataDict[key], 'gray', linewidth=1)
+	ax[axNum].set_ylim(-limBase*2.0, limBase*5.0)
 
 
 
