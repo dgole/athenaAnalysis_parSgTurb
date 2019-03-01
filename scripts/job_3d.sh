@@ -11,16 +11,7 @@ module load gcc
 module load python3
 
 export DIR=$SCRATCH/parSgTurb/data/prodRuns/run10/bin/
-python3 plots3d_multiPanel.py 1 False $DIR
-
-export DIR=$SCRATCH/parSgTurb/data/prodRuns/run11/bin/
-python3 plots3d_multiPanel.py 1 False $DIR
-
-export DIR=$SCRATCH/parSgTurb/data/prodRuns/run12/bin/
-python3 plots3d_multiPanel.py 1 False $DIR
-
-export DIR=$SCRATCH/parSgTurb/data/prodRuns/run13/bin/
-python3 plots3d_multiPanel.py 1 False $DIR
+python3 plots3d_multiPanel.py 1.e-3 0.1 $DIR
 
 
 

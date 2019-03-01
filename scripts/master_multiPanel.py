@@ -17,15 +17,15 @@ import multiprocessing as mp
 ################################################################################
 myNpc        = int(sys.argv[1])
 alphaDesired = float(sys.argv[2])
+G            = float(sys.argv[3])
 pathBase     = str(sys.argv[4])
-dt3d         = 0.1
+dt3d         = 1.0
 nAvgEnd      = 10*int(1.0/dt3d)
 ################################################################################
 path3d   = pathBase + '3d/'
 pathSave = pathBase + 'plots/masterAnim/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3d = reader3d.Data3d(path3d, dt=dt3d)
-G        = float(sys.argv[3])
 pathPlan = pathBase + 'planOutput/'
 ################################################################################
 # 1    2    3      4    5    6
