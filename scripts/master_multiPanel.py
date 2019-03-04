@@ -386,7 +386,7 @@ def makeAnimFrame(self, n):
 
 ################################################################################
 jobList = []
-for n in range(0, doPlan.nt, 1):
+for n in range(0, do3d.nt, 1):
 	job = mp.Process(target=makeAnimFrame, args=(do3d, n))
 	jobList.append(job)
 
