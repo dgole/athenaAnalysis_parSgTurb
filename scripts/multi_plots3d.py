@@ -12,19 +12,13 @@ import athenaReader3d as reader3d
 import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
-#pathBase = '../../data/turbTest/'
-#runNameList = ['run36', 'run35', 'run30', 'run31', 'run32', 'run33', 'run34']
-#alphaInList = [1.e0,     1.e-1,   1.e-2,   1.e-3,   1.e-4,   1.e-5,   1.e-6 ]
-#tsList      = [1.e-1,    1.e-1,   1.e-1,   1.e-1,   1.e-1,   1.e-1,   1.e-1 ]
-#colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple', 'tab:brown', 'tab:pink'  ]
-#pathSave = pathBase + 'plots/3danalysis30/'
-
-pathBase = '../../data/turbTest/'
-runNameList = ['run30', 'run34']
-alphaInList = [1.e-2,   1.e-6 ]
-tsList      = [1.e-1,   1.e-1 ]
-colorList   = ['b',  'tab:orange', 'g',    'r',     'tab:purple', 'tab:brown', 'tab:pink'  ]
-pathSave = pathBase + 'plots/3danalysis30/'
+if str(sys.argv[1])=='11?':
+	pathBase = '../../data/prodRuns/'
+	runNameList = ['run110','run111','run112']
+	labelList   = ['64','128','256']
+	tsList      = [0.3, 0.3, 0.3]
+	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
+	pathSave = pathBase + 'plots/turbAnalysis110/'
 ################################################################################
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3dList    = []
@@ -32,11 +26,42 @@ for n in range(len(runNameList)):
 	path3d     = pathBase + runNameList[n] + '/3d/'
 	do3dList.append(reader3d.Data3d(path3d))
 ################################################################################
-# simple averages of quantities
-key = 'vz'
+key = 'dvx'
 for n in range(len(runNameList)):
-    reader3d.profile(do3dList[n], key, figNum=0, absAvg=0, absPlot=0,
-    legendLabel = r'$\alpha_{in}=$'+str(alphaInList[n]), color=colorList[n])
+    reader3d.profile(do3dList[n], key, figNum=0, absAvg=1, absPlot=1,
+    legendLabel = labelList[n], color=colorList[n])
 plt.legend()
-plt.ylim(-1.e-2,1.e-2)
-tools.saveAndClear(pathSave + 'profileRealAvg_' + key + '.png', figNum=0)
+plt.ylim(1.e-3,1.e-1)
+tools.saveAndClear(pathSave + 'profile_' + key + '.png', figNum=0)
+################################################################################
+key = 'dvy'
+for n in range(len(runNameList)):
+    reader3d.profile(do3dList[n], key, figNum=0, absAvg=1, absPlot=1,
+    legendLabel = labelList[n], color=colorList[n])
+plt.legend()
+plt.ylim(1.e-3,1.e-1)
+tools.saveAndClear(pathSave + 'profile_' + key + '.png', figNum=0)
+################################################################################
+key = 'dvz'
+for n in range(len(runNameList)):
+    reader3d.profile(do3dList[n], key, figNum=0, absAvg=1, absPlot=1,
+    legendLabel = labelList[n], color=colorList[n])
+plt.legend()
+plt.ylim(1.e-3,1.e-1)
+tools.saveAndClear(pathSave + 'profile_' + key + '.png', figNum=0)
+################################################################################
+key = 'dv'
+for n in range(len(runNameList)):
+    reader3d.profile(do3dList[n], key, figNum=0, absAvg=1, absPlot=1,
+    legendLabel = labelList[n], color=colorList[n])
+plt.legend()
+plt.ylim(1.e-3,1.e-1)
+tools.saveAndClear(pathSave + 'profile_' + key + '.png', figNum=0)
+################################################################################
+key = 'dv'
+for n in range(len(runNameList)):
+    reader3d.timeEvo(do3dList[n], key, figNum=0, absAvg=1, absPlot=1,
+    legendLabel = labelList[n], color=colorList[n])
+plt.legend()
+plt.ylim(1.e-3,1.e-1)
+tools.saveAndClear(pathSave + 'timeEvo_' + key + '.png', figNum=0)
