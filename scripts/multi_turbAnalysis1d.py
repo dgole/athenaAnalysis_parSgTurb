@@ -60,6 +60,22 @@ elif str(sys.argv[1])=='8?':
 	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
 	pathSave = pathBase + 'plots/turbAnalysis80/'
 ################################################################################
+elif str(sys.argv[1])=='9?':
+	pathBase = '../../data/prodRuns/'
+	runNameList = ['run90','run91']#,'run92']
+	alphaInList = [1.e-3, 1.e-3]#, 1.e-3]
+	tsList      = [0.3, 0.3]#, 0.3]
+	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
+	pathSave = pathBase + 'plots/turbAnalysis90/'
+################################################################################
+elif str(sys.argv[1])=='11?':
+	pathBase = '../../data/prodRuns/'
+	runNameList = ['run110','run111','run112']
+	alphaInList = [1.e-3, 1.e-3, 1.e-3]
+	tsList      = [0.3, 0.3, 0.3]
+	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
+	pathSave = pathBase + 'plots/turbAnalysis110/'
+################################################################################
 elif str(sys.argv[1])=='7and8':
 	pathBase = '../../data/prodRuns/'
 	runNameList = ['run70', 'run80', 'run71', 'run81', 'run72', 'run82']

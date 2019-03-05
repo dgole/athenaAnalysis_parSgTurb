@@ -20,8 +20,8 @@ class Data1d:
 		sys.stdout.flush()
 		self.path    = path
 		fileList     = os.listdir(self.path)
-		nFiles       = len(fileList);
-		if nFiles>1000: nFiles=1000
+		nFiles       = len(fileList)-1;
+		#if nFiles>1000: nFiles=1000
 		names        = [baseName + "." + tools.getTimeStepString(n) + ".1d" for n in range(nFiles)]
 		files        = [np.loadtxt(path+names[n]) for n in range(nFiles)]
 		dataArray    = np.asarray(files)
