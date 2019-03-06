@@ -87,17 +87,17 @@ while True:
 		########################################################################
 		# check if any of the x coordinates are zero (they shouldn't be)
 		if np.any(masterArray[:,:,:,0]==0.0) or np.any(masterArray[:,:,:,1]==0.0) or np.any(masterArray[:,:,:,2]==0.0):
-                     	print("PROBLEM FOUND!, not writing output ###################################")
-		else:
-                        print('writing master file')
-                        sys.stdout.flush()
-                        np.save(outDir+baseName+"."+tools.getTimeStepString(n)+".npy", masterArray)
-                        print('writing is done')
-                        sys.stdout.flush()
-                        del masterArray, resultsList
-                        time.sleep(1)
-
 			print("PROBLEM FOUND!, not writing output ###################################")
+			del masterArray, resultsList
+			time.sleep(1)
+		else:
+			print('writing master file')
+			sys.stdout.flush()
+			np.save(outDir+baseName+"."+tools.getTimeStepString(n)+".npy", masterArray)
+			print('writing is done')
+			sys.stdout.flush()
+			del masterArray, resultsList
+			time.sleep(1)
 	else:
 		print('all avaliable output is done')
 		sys.stdout.flush()
