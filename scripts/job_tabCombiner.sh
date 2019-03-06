@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH -J tcAll
-#SBATCH --time=2:00:00
+#SBATCH --time=6:00:00
 #SBATCH -N 1
 #SBATCH --ntasks 64
-#SBATCH -p development
+#SBATCH -p normal 
 
 # The following commands will be executed when this script is run.
 

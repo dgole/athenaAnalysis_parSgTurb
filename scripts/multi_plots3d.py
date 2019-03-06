@@ -13,8 +13,8 @@ import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
 if str(sys.argv[1])=='11?':
-	pathBase = '../../data/prodRuns/'
-	runNameList = ['run110','run111','run112']
+	pathBase    = str(sys.argv[2]) 
+	runNameList = ['run110/bin','run111/bin','run112/bin']
 	labelList   = ['64','128','256']
 	tsList      = [0.3, 0.3, 0.3]
 	colorList   = ['tab:blue', 'tab:orange', 'g', 'r']
@@ -31,7 +31,7 @@ for n in range(len(runNameList)):
     reader3d.profile(do3dList[n], key, figNum=0, absAvg=1, absPlot=1,
     legendLabel = labelList[n], color=colorList[n])
 plt.legend()
-plt.ylim(1.e-3,1.e-1)
+plt.ylim(1.e-3,1.e0)
 tools.saveAndClear(pathSave + 'profile_' + key + '.png', figNum=0)
 ################################################################################
 key = 'dvy'
@@ -39,7 +39,7 @@ for n in range(len(runNameList)):
     reader3d.profile(do3dList[n], key, figNum=0, absAvg=1, absPlot=1,
     legendLabel = labelList[n], color=colorList[n])
 plt.legend()
-plt.ylim(1.e-3,1.e-1)
+plt.ylim(1.e-3,1.e0)
 tools.saveAndClear(pathSave + 'profile_' + key + '.png', figNum=0)
 ################################################################################
 key = 'dvz'
@@ -55,7 +55,7 @@ for n in range(len(runNameList)):
     reader3d.profile(do3dList[n], key, figNum=0, absAvg=1, absPlot=1,
     legendLabel = labelList[n], color=colorList[n])
 plt.legend()
-plt.ylim(1.e-3,1.e-1)
+plt.ylim(1.e-3,1.e0)
 tools.saveAndClear(pathSave + 'profile_' + key + '.png', figNum=0)
 ################################################################################
 key = 'dv'
@@ -63,5 +63,5 @@ for n in range(len(runNameList)):
     reader3d.timeEvo(do3dList[n], key, figNum=0, absAvg=1, absPlot=1,
     legendLabel = labelList[n], color=colorList[n])
 plt.legend()
-plt.ylim(1.e-3,1.e-1)
+plt.ylim(1.e-3,1.e0)
 tools.saveAndClear(pathSave + 'timeEvo_' + key + '.png', figNum=0)
