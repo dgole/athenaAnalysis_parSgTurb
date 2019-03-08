@@ -154,7 +154,7 @@ class Data3d:
 # Plots
 #########################################################################
 
-def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None, absAvg=1, absPlot=1, color='b'):
+def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None, absAvg=1, absPlot=1, color='b', linestyle='-'):
 	print(do.path + ": making profile plot for key " + key)
 	sys.stdout.flush()
 	plt.figure(figNum)
@@ -173,7 +173,7 @@ def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None, absAvg=
 	plotData /= nCount
 	title = do.header[key]
 	if absPlot==1:
-		plt.semilogy(do.z, np.absolute(plotData), label=legendLabel, color=color)
+		plt.semilogy(do.z, np.absolute(plotData), label=legendLabel, color=color, linestyle=linestyle)
 	else:
 		plt.plot(do.z, plotData , label=legendLabel, color=color)
 	plt.ylabel(do.header[key]);

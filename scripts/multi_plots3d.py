@@ -28,7 +28,7 @@ for n in range(len(runNameList)):
 key = 'dv'
 for n in range(len(runNameList)):
     reader3d.profile(do3dList[n], key, figNum=0, absAvg=1, absPlot=1,
-    legendLabel = labelList[n], color=colorList[n])
+    legendLabel = labelList[n], color=colorList[n], linestyle=styleList[n])
 plt.legend()
 plt.ylim(1.e-3,1.e0)
 tools.saveAndClear(pathSave + 'profile_' + key + '.png', figNum=0)
