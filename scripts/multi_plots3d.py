@@ -16,7 +16,7 @@ pathBase    = str(sys.argv[1])
 runNameList = ['run220/bin', 'run221/bin', 'run222/bin', 'run223/bin', 'run224/bin']
 labelList   = ['64_1_32', '128_1_32', '64_1_64', '128_1_64', '128_1_128']
 colorList   = ['b', 'r', 'b', 'r', 'b']
-sytleList   = ['-', '-', '--', '--', ':']
+styleList   = ['-', '-', '--', '--', ':']
 pathSave = pathBase + 'plots/multiPlots3d_220/'
 ################################################################################
 if not os.path.exists(pathSave): os.makedirs(pathSave)
