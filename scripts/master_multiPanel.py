@@ -20,13 +20,14 @@ alphaDesired = float(sys.argv[2])
 G            = float(sys.argv[3])
 pathBase     = str(sys.argv[4])
 dt3d         = 1.0
-nAvgEnd      = 10*int(1.0/dt3d)
 ################################################################################
 path3d   = pathBase + '3d/'
 pathSave = pathBase + 'plots/masterAnim/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3d = reader3d.Data3d(path3d, dt=dt3d)
 pathPlan = pathBase + 'planOutput/'
+if do3d.nt > 15: nAvgEnd = 10*int(1.0/dt3d)
+else:            nAvgEnd = 5
 ################################################################################
 # 1    2    3      4    5    6
 # npar mass r_hill xcom ycom zcom
@@ -162,7 +163,7 @@ def makeAnimFrame(self, n):
 		plotData = np.mean(np.absolute(do3d.get3d(key, n)), axis=(0,1))
 		ax[axNum].semilogy(do3d.z, plotData, 'k', linewidth=2)
 		ax[axNum].semilogy(do3d.z, avgDataDict[key], 'gray', linewidth=1)
-		ax[axNum].set_ylim(limBase/15.0, 3.0*limBase)
+		ax[axNum].set_ylim(limBase/5.0, 5.0*limBase)
 		ax[axNum].axhline(y=np.sqrt(alphaDesired/3.0), linestyle='--', color='gray')
 
 	axNumDict = {'vx':9, 'vy':10, 'vz':11}
@@ -173,7 +174,7 @@ def makeAnimFrame(self, n):
 		plotData = np.mean(do3d.get3d(key, n), axis=(0,1))
 		ax[axNum].plot(do3d.z, plotData, 'k', linewidth=2)
 		ax[axNum].plot(do3d.z, avgDataDict[key], 'gray', linewidth=1)
-		ax[axNum].set_ylim(-limBase*2.0, limBase*5.0)
+		ax[axNum].set_ylim(-limBase*5.0, limBase*5.0)
 
 	axNum = 12
 	ax[axNum].set_xlabel(r'$t \Omega$')
@@ -185,7 +186,7 @@ def makeAnimFrame(self, n):
 		ax[axNum].semilogy(do3d.t[:n+1], plotData[:n+1], colors[key], linewidth=2)
 		ax[axNum].semilogy(do3d.t[n], plotData[n], colors[key]+'o', markersize=5, label=do3d.header[key])
 	ax[axNum].axhline(y=np.sqrt(alphaDesired), linestyle='--', color='gray')
-	ax[axNum].set_ylim(limBase/10.0, limBase*5.0)
+	ax[axNum].set_ylim(limBase/10.0, limBase*10.0)
 	ax[axNum].set_xlim(0.0, np.amax(do3d.t))
 	ax[axNum].legend(loc=(0.5,0.05), ncol=4)
 
@@ -220,7 +221,7 @@ def makeAnimFrame(self, n):
 	plotData = np.mean(np.absolute(do3d.get3d(key, n)), axis=(0,1))
 	ax[axNum].semilogy(do3d.z, plotData, 'k', linewidth=2)
 	ax[axNum].semilogy(do3d.z, avgDataDict[key], 'gray', linewidth=1)
-	ax[axNum].set_ylim(limBase/15.0, 3.0*limBase)
+	ax[axNum].set_ylim(limBase/10.0, 2.0*limBase)
 
 	axNum  = 16
 	nPspec = int((n//2)*2.0)
