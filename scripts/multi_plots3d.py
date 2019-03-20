@@ -13,11 +13,18 @@ import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
 pathBase    = str(sys.argv[1])
-runNameList = ['run220/bin', 'run221/bin', 'run222/bin', 'run223/bin', 'run224/bin']
-labelList   = ['64_1_32', '128_1_32', '64_1_64', '128_1_64', '128_1_128']
-colorList   = ['b', 'r', 'b', 'r', 'b']
-styleList   = ['-', '-', '--', '--', ':']
-pathSave = pathBase + 'plots/multiPlots3d_220/'
+runNameList = ['run310',  'run311',   'run312']#,  'run313']
+labelList   = ['64_1_32', '128_1_64', '256_128']#, '512_256']
+colorList   = ['b', 'r', 'g', 'k']
+styleList   = ['-', '-', '-', '-']
+pathSave = pathBase + 'plots/multiPlots3d_310/'
+################################################################################
+#pathBase    = str(sys.argv[1])
+#runNameList = ['run320',  'run321',   'run322',  'run323', 'run324']
+#labelList   = ['-5/3', '-2/3','1/3','4/3','7/3']
+#colorList   = ['b', 'r', 'g', 'k', 'm']
+#styleList   = ['-', '-', '-', '-','-']
+#pathSave = pathBase + 'plots/multiPlots3d_320/'
 ################################################################################
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3dList    = []

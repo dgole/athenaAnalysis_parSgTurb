@@ -12,15 +12,16 @@ import athenaReader3d as reader3d
 import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
-pathBase    = '../../data/kspaceTest/'
-runNameList = ['run30', 'run31', 'run32']
-kHighList   = [32, 16, 8]
-colorList   = ['ko', 'bo', 'go', 'ro']
-colorList2  = ['k', 'b', 'g']
-pathSave    = pathBase + 'plots/'
-ms = 2
+pathBase    = '../../data/prodRuns/'
+runNameList = ['run320', 'run321', 'run322', 'run323', 'run324']
+colorList   = ['r', 'g', 'b', 'k', 'm']
+pathSave = pathBase + 'plots/pspec_320/'
 ################################################################################
-pathSave = pathBase + 'plots/pspec/'
+#pathBase    = '../../data/prodRuns/'
+#runNameList = ['run310', 'run311', 'run312']
+#colorList   = ['r', 'g', 'b', 'k', 'm']
+#pathSave = pathBase + 'plots/pspec_310/'
+################################################################################
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 plt.figure(0)
 ################################################################################
@@ -33,26 +34,14 @@ do3dList = []
 for n in range(len(runNameList)):
 	path3d     = pathBase + runNameList[n] + '/3d/'
 	do3dList.append(reader3d.Data3d(path3d))
-
-kFactor = 5
 for n in range(len(do3dList)):
 	do3d    = do3dList[n]
 	color   = colorList[n]
-	kHigh   = kHighList[n] * kFactor
-	psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoVx')
-	psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoVy')
-	psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoVz')
+	psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx')
+	psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy')
+	psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz')
 	psk  = psk_vx  + psk_vy  + psk_vz
-	plt.loglog(freqs, psk/psk[1], color, markersize=ms, label=runNameList[n])
-	plt.axvline(x=kHigh, color=colorList2[n])
-	#plt.axvline(x=kIn[0]*(6.28/0.2), color=color)
-	#plt.axvline(x=kIn[1]*(6.28/0.2), color=color)
-	################################################################################
-	#psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx')
-	#psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy')
-	#psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz')
-	#psk  = psk_vx  + psk_vy  + psk_vz
-	#plt.loglog(freqs, psk/psk[1], 'bo', markersize=ms, label='pert')
+	plt.loglog(freqs, psk/psk[1], color, label=runNameList[n])
 	################################################################################
 plt.xlabel(r'$|\mathbf{k}|$')
 plt.ylabel('Power')

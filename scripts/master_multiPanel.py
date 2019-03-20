@@ -27,7 +27,7 @@ if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3d = reader3d.Data3d(path3d, dt=dt3d)
 pathPlan = pathBase + 'planOutput/'
 if do3d.nt > 15: nAvgEnd = 10*int(1.0/dt3d)
-else:            nAvgEnd = 5
+else:            nAvgEnd = 2
 ################################################################################
 # 1    2    3      4    5    6
 # npar mass r_hill xcom ycom zcom
@@ -76,9 +76,9 @@ for key in ['vx', 'vy', 'vz']:
 		nAvg+=1
 	avgDataDict[key]/=nAvg
 key = 'pspec'
-psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoVx')
-psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoVy')
-psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoVz')
+psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx', nStart=do3d.nt-nAvgEnd)
+psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy', nStart=do3d.nt-nAvgEnd)
+psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz', nStart=do3d.nt-nAvgEnd)
 psk  = psk_vx  + psk_vy  + psk_vz
 avgDataDict[key] = psk/psk[1]
 
@@ -88,7 +88,7 @@ def makeAnimFrame(self, n):
 	print('saving anim frame for n = ' + str(n))
 	limBase  = 1.e-2
 	sizeFactor = 2.5
-	fig = plt.figure(figsize=(8.545*sizeFactor, 5*sizeFactor), dpi=80)
+	fig = plt.figure(figsize=(8.545*sizeFactor, 5*sizeFactor), dpi=120)
 	ax = []
 
 	ax.append(plt.subplot2grid((5, 7), (0, 0), rowspan=1)) # row 1 first 3
@@ -236,18 +236,24 @@ def makeAnimFrame(self, n):
 
 	axNum  = 17
 	key    = 'pspec'
-	psk_vx, freqs = reader3d.psProfiles(do3d, 'rootRhoVx', n=nPspec)
-	psk_vy, freqs = reader3d.psProfiles(do3d, 'rootRhoVy', n=nPspec)
-	psk_vz, freqs = reader3d.psProfiles(do3d, 'rootRhoVz', n=nPspec)
+	psk_vx, freqs = reader3d.psProfiles(do3d, 'rootRhoDvx', n=nPspec)
+	psk_vy, freqs = reader3d.psProfiles(do3d, 'rootRhoDvy', n=nPspec)
+	psk_vz, freqs = reader3d.psProfiles(do3d, 'rootRhoDvz', n=nPspec)
 	psk  = psk_vx  + psk_vy  + psk_vz
 	ax[axNum].set_xlabel(r'$k$')
 	ax[axNum].set_ylabel('Power')
 	ax[axNum].loglog(freqs[1:], psk[1:]/psk[1], 'k', linewidth=2)
 	ax[axNum].loglog(freqs[1:], avgDataDict[key][1:], 'gray', linewidth=1)
-	for factor in [1.e-4, 1.e-2, 1.e0, 1.e2, 1.e4, 1.e6]:
+	for i in range(-20,20):
+		factor = np.power(10.0,float(i)*0.5)
+		ax[axNum].loglog(freqs[1:], factor*np.power(freqs[1:], -2./3.),
+						 color=(1,0,0,0.3), linewidth=1, linestyle='-')
 		ax[axNum].loglog(freqs[1:], factor*np.power(freqs[1:], -5./3.),
-						 'gray', linewidth=1, linestyle='--')
-	ax[axNum].set_ylim(1.e-6, 3.e0)
+						 color=(0,1,0,0.3), linewidth=1, linestyle='-')
+		ax[axNum].loglog(freqs[1:], factor*np.power(freqs[1:], -8./3.),
+						 color=(0,0,1,0.3), linewidth=1, linestyle='-')
+	ax[axNum].set_ylim(0.8*np.amin(avgDataDict[key][1:]), 2.0)
+	ax[axNum].set_xlim(freqs[1], freqs[-1])
 
 	#nPlan = int(n//10)
 
