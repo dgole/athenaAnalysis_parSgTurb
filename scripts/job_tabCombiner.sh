@@ -1,46 +1,51 @@
 #!/bin/bash
 
 #SBATCH -J tcAll
-#SBATCH --time=6:00:00
+#SBATCH --time=2:00:00
 #SBATCH -N 1
 #SBATCH --ntasks 64
-#SBATCH -p normal 
+#SBATCH -p development
 
 # The following commands will be executed when this script is run.
 
-export DIR=$SCRATCH/parSgTurb/data/prodRuns
+export DIR=$SCRATCH/parSgTurb/data/kspaceTest
 
 module load gcc
 module load python3
 
 while true
 do
-	python3 tabCombiner_big.py 64 $DIR/run100/bin/
+	python3 tabCombiner_big.py 64 $DIR/run120/bin/
+        python3 tabCombiner_big.py 64 $DIR/run121/bin/
+        python3 tabCombiner_big.py 64 $DIR/run122/bin/
+        python3 tabCombiner_big.py 64 $DIR/run123/bin/
 
-	python3 tabCombiner_big.py 64 $DIR/run60/bin/ 
-	python3 tabCombiner_big.py 64 $DIR/run61/bin/ 
-	python3 tabCombiner_big.py 64 $DIR/run62/bin/
-	python3 tabCombiner_big.py 64 $DIR/run63/bin/  	
+        python3 tabCombiner_big.py 64 $DIR/run150/bin/
+        python3 tabCombiner_big.py 64 $DIR/run151/bin/
+        python3 tabCombiner_big.py 64 $DIR/run152/bin/
+        python3 tabCombiner_big.py 64 $DIR/run153/bin/
+        python3 tabCombiner_big.py 64 $DIR/run154/bin/
 
-	python3 tabCombiner_big.py 64 $DIR/run70/bin/
-	python3 tabCombiner_big.py 64 $DIR/run71/bin/
-	python3 tabCombiner_big.py 64 $DIR/run72/bin/
+        python3 tabCombiner_big.py 64 $DIR/run160/bin/
+        python3 tabCombiner_big.py 64 $DIR/run161/bin/
+        python3 tabCombiner_big.py 64 $DIR/run162/bin/
+        python3 tabCombiner_big.py 64 $DIR/run163/bin/
+        python3 tabCombiner_big.py 64 $DIR/run164/bin/
 
-	python3 tabCombiner_big.py 64 $DIR/run80/bin/
-	python3 tabCombiner_big.py 64 $DIR/run81/bin/
-	python3 tabCombiner_big.py 64 $DIR/run82/bin/
+        python3 tabCombiner_big.py 64 $DIR/run170/bin/
+        python3 tabCombiner_big.py 64 $DIR/run171/bin/
+        python3 tabCombiner_big.py 64 $DIR/run172/bin/
+        python3 tabCombiner_big.py 64 $DIR/run173/bin/
+        python3 tabCombiner_big.py 64 $DIR/run174/bin/
 
-        python3 tabCombiner_big.py 64 $DIR/run90/bin/
-        python3 tabCombiner_big.py 64 $DIR/run91/bin/
-        python3 tabCombiner_big.py 64 $DIR/run92/bin/
+        python3 tabCombiner_big.py 64 $DIR/run180/bin/
+        python3 tabCombiner_big.py 64 $DIR/run181/bin/
+        python3 tabCombiner_big.py 64 $DIR/run182/bin/
+        python3 tabCombiner_big.py 64 $DIR/run183/bin/
+        python3 tabCombiner_big.py 64 $DIR/run184/bin/
 
-        python3 tabCombiner_big.py 64 $DIR/run110/bin/
-        python3 tabCombiner_big.py 64 $DIR/run111/bin/
-        python3 tabCombiner_big.py 64 $DIR/run112/bin/
+
 
 done
-
-
-
 
 #

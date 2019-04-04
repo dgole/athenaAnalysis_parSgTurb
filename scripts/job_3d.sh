@@ -10,11 +10,12 @@
 module load gcc
 module load python3
 
-export DIR=$SCRATCH/parSgTurb/data/prodRuns/
+export DIR=$SCRATCH/parSgTurb/data/kspaceTest/
 
-python3 multi_plots3d.py 11? $DIR
+python3 multi_plots3d.py $DIR
 
-#python3 plots3d_multiPanel.py 1.e-3 0.1 $DIR
+#python3 master_multiPanel.py 1 1.e-3 0.1 $DIR
+
 #python3 plots3d_par.py 64 $DIR
 #python3 plots3d.py   $DIR
 #python3 pspec.py     $DIR
