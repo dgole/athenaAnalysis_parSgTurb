@@ -28,53 +28,46 @@ def addFiveThirdsToFig():
         plt.loglog(freqs, 10**i*np.power(freqs, -5.0/3.0), color='tab:gray',
                    linestyle='--', linewidth=0.5)
 ################################################################################
-powerSum = []
-keSum = []
-ratio = []
-ps3d_vz, freqs = reader3d.calcPs(do3d, 'rootRhoVz', 10)
-dkVol = np.power(freqs[1]-freqs[0],3)
-for n in range(30,80,4):
-    ps3d_vz, freqs = reader3d.calcPs(do3d, 'rootRhoDVz', n)
-    kez            = np.square(do3d.get3d('rootRhoDvz', n))
-    powerSum.append(np.sum(ps3d_vz*dkVol))
-    keSum.append   (np.sum(kez))
-    ratio.append   (np.sum(ps3d_vz*dkVol)/np.sum(kez))
-print(powerSum)
+powerSum  = []
+powerSum2 = []
+keSum     = []
+dVol = do3d.dx*do3d.dx*do3d.dx
+key = 'rootRhoVx'
+for n in range(2,11,2):
+    data       = do3d.get3d(key, n)
+    totKez     = np.sum(np.square(data)*dVol)
+    keSum.append(np.sum(totKez))
+    # linear FFT
+    freqs      = np.fft.fftfreq(data.shape[0], d=do3d.dx)
+    dk3        = np.power(freqs[1]-freqs[0],3)
+    fft        = np.fft.fftn(data*dVol)
+    ps3d       = np.square(np.absolute(fft))*dk3
+    totPower   = np.sum(ps3d)
+    powerSum.append(totPower)
+    # spherical FFT
+    psk       = np.zeros(int(ps3d.shape[0]*np.sqrt(3.0))+1)
+    count     = np.zeros_like(psk)
+    for i in range(ps3d.shape[0]):
+        for j in range(ps3d.shape[1]):
+            for k in range(ps3d.shape[2]):
+                dist        = np.sqrt(i*i+j*j+k*k)
+                index       = int(np.floor(dist))
+                psk[index] += ps3d[i,j,k]
+                count[index] += 1
+    totPower2 = np.sum(psk)
+    powerSum2.append(totPower2)
+    psk /= count
+
 print(keSum)
-print(ratio)
+print(powerSum)
+print(powerSum2)
 ################################################################################
-#plt.semilogy(range(30,80,4), powerSum)
-#plt.semilogy(range(30,80,4), keSum)
-#tools.saveAndClear(pathSave + 'keSpec_energyIntegrator.png', figNum=0)
-#plt.semilogy(range(30,80,4), ratio)
-#tools.saveAndClear(pathSave + 'keSpec_ratio.png', figNum=0)
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-#plt.xlabel(r'$|\mathbf{k}|$')
-#plt.ylabel('Power')
-#tools.saveAndClear(pathSave + 'keSpec_energyIntegrator.png', figNum=0)
-################################################################################
-#print(np.sum(kez))
-#print(np.sum(psk_vz*dk))
-#print(np.sum(np.sqrt(psk_vz)*dk))
-#print(np.sum(np.sqrt(psk_vz*dk)))
-#print(np.sum(psk_vz))
 
 
 

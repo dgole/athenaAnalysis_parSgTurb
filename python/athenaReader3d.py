@@ -154,14 +154,12 @@ class Data3d:
 # Plots
 #########################################################################
 
-def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None, absAvg=1, absPlot=1, color='b', linestyle='-'):
+def profile(do, key, figNum=0, nStart=None, nEnd=None, legendLabel=None, absAvg=1, absPlot=1, color='b', linestyle='-'):
 	print(do.path + ": making profile plot for key " + key)
 	sys.stdout.flush()
 	plt.figure(figNum)
-	if tStart == None: tStart = do.t[-1]/2.0
-	if tEnd   == None: tEnd   = do.t[-1]
-	nStart   = do.gettindex(tStart)
-	nEnd     = do.gettindex(tEnd)
+	if nStart == None: nStart = do.nt // 2
+	if nEnd   == None: nEnd   = do.nt
 	plotData = np.zeros(do.nz)
 	nCount   = 0
 	for n in range(nStart, nEnd):
@@ -179,6 +177,7 @@ def profile(do, key, figNum=0, tStart=None, tEnd=None, legendLabel=None, absAvg=
 	plt.ylabel(do.header[key]);
 	plt.xlabel(r"$z/H$");
 	plt.tight_layout()
+	print('mean dv is ' + str(np.mean(np.absolute(plotData))))
 
 def timeEvo(do, key, figNum=0, legendLabel=None, absAvg=1, absPlot=1, color='b'):
 	print(do.path + ": making timeEvo plot for key " + key)
@@ -453,13 +452,17 @@ def calcPs(do, key, n, unsheared=False):
 	freqs      = np.fft.fftfreq(data.shape[0], d=do.dx)
 	nFreqs     = freqs.shape[0]//2
 	freqs      = freqs[:nFreqs]
-	fft        = np.fft.fftn(data)[:nFreqs,:nFreqs,:nFreqs]
+	fft        = np.fft.fftn(data*np.power(do.dx,3))[:nFreqs,:nFreqs,:nFreqs]
 	ps         = np.square(np.absolute(fft))
 	return ps, freqs
 
-def psProfiles(do, key, n, unsheared=False):
+def psProfile(do, key, n, norm=False, unsheared=False):
 	ps, freqs = calcPs(do, key, n, unsheared=unsheared)
+	dk        = freqs[1]-freqs[0]
+	#psk       = np.zeros(int(ps.shape[0]*np.sqrt(3))+1)
+	#freqs     = np.arange(0,dk*len(psk),dk)
 	psk       = np.zeros(ps.shape[0])
+	freqs     = np.arange(0,dk*len(psk),dk)
 	count     = np.zeros_like(psk)
 	for i in range(ps.shape[0]):
 		for j in range(ps.shape[1]):
@@ -469,10 +472,10 @@ def psProfiles(do, key, n, unsheared=False):
 				if index < freqs.shape[0]:
 					psk[index]   += ps[i,j,k]
 					count[index] += 1
-	psk /= count
+	if norm==True: psk /= count
 	return psk, freqs
 
-def psProfileMean(do, key, nStart=None, nEnd=None, unsheared=False):
+def psProfileMean(do, key, nStart=None, nEnd=None, unsheared=False, norm=False):
 	#if nStart is None: nStart = do.nt // 2
 	if nStart is None: nStart = do.nt - 10*int(1.0/do.dt)
 	if nEnd   is None: nEnd   = do.nt
@@ -480,10 +483,10 @@ def psProfileMean(do, key, nStart=None, nEnd=None, unsheared=False):
 	count   = 0
 	for n in range(nStart, nEnd):
 		if np.mod(do.t[n], do.shearTime)<1.e-8:
-			psk, freqs = psProfiles(do, key, n, unsheared=unsheared)
+			psk, freqs = psProfile(do, key, n, unsheared=unsheared, norm=norm)
 			pskList.append(psk)
 			count += 1
-	psk = np.asarray(np.mean(pskList,  axis=0))/float(count)
+	psk = np.asarray(np.sum(pskList,  axis=0))/float(count)
 	return psk, freqs
 
 

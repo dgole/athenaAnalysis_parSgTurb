@@ -29,9 +29,9 @@ def addFiveThirdsToFig():
                    linestyle='--', linewidth=0.5)
 ################################################################################
 for n in range(nStart, nEnd, 2):
-    psk_vx, freqs = reader3d.psProfiles(do3d, 'rootRhoVx', n)
-    psk_vy, freqs = reader3d.psProfiles(do3d, 'rootRhoVy', n)
-    psk_vz, freqs = reader3d.psProfiles(do3d, 'rootRhoVz', n)
+    psk_vx, freqs = reader3d.psProfile(do3d, 'rootRhoVx', n)
+    psk_vy, freqs = reader3d.psProfile(do3d, 'rootRhoVy', n)
+    psk_vz, freqs = reader3d.psProfile(do3d, 'rootRhoVz', n)
     psk  = psk_vx  + psk_vy  + psk_vz
     plt.loglog(freqs, psk/psk[1], color=tools.getColor(n, 0, nEnd), label='n='+str(n))
 ################################################################################

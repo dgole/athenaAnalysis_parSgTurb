@@ -12,42 +12,60 @@ import athenaReader3d as reader3d
 import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
-pathBase    = '../../data/prodRuns/'
-runNameList = ['run320', 'run321', 'run322', 'run323', 'run324']
-colorList   = ['r', 'g', 'b', 'k', 'm']
-pathSave = pathBase + 'plots/pspec_320/'
+#pathBase    = '../../data/kspaceTest/'
+#runNameList = ['run150', 'run151', 'run152', 'run153', 'run154']
+#colorList   = ['r', 'g', 'm', 'b', 'k']
+#pathSave = pathBase + 'plots/pspec_150/'
 ################################################################################
-#pathBase    = '../../data/prodRuns/'
-#runNameList = ['run310', 'run311', 'run312']
-#colorList   = ['r', 'g', 'b', 'k', 'm']
-#pathSave = pathBase + 'plots/pspec_310/'
+pathBase    = '../../data/kspaceTest/'
+runNameList = ['run160', 'run161', 'run162']#, 'run163', 'run164']
+colorList   = ['r', 'g', 'm', 'b', 'k']
+pathSave = pathBase + 'plots/pspec_160/'
 ################################################################################
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 plt.figure(0)
 ################################################################################
-def addFiveThirdsToFig():
-	for i in range(-2, 3):
-		plt.loglog(freqs, 10**i*np.power(freqs, -5.0/3.0), color='tab:gray',
- 				   linestyle='--', linewidth=0.5)
-################################################################################
 do3dList = []
 for n in range(len(runNameList)):
-	path3d     = pathBase + runNameList[n] + '/3d/'
-	do3dList.append(reader3d.Data3d(path3d))
+    path3d     = pathBase + runNameList[n] + '/3d/'
+    do3dList.append(reader3d.Data3d(path3d))
+################################################################################
+vExpo = -1.33
+eExpo = 2.0*(vExpo)+1.0
+nStart = 2
+nEnd   = 5
+
 for n in range(len(do3dList)):
-	do3d    = do3dList[n]
-	color   = colorList[n]
-	psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx')
-	psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy')
-	psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz')
-	psk  = psk_vx  + psk_vy  + psk_vz
-	plt.loglog(freqs, psk/psk[1], color, label=runNameList[n])
-	################################################################################
+    do3d    = do3dList[n]
+    color   = colorList[n]
+    psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx', nStart=nStart, nEnd=nEnd)
+    psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy', nStart=nStart, nEnd=nEnd)
+    psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz', nStart=nStart, nEnd=nEnd)
+    psk  = psk_vx  + psk_vy  + psk_vz
+    psk*=np.power(freqs, -eExpo)
+    psk/=np.mean(psk)
+    plt.loglog(freqs, psk, color=color, label=runNameList[n])
 plt.xlabel(r'$|\mathbf{k}|$')
 plt.ylabel('Power')
-addFiveThirdsToFig()
+plt.ylim(1.e-3,1.e3)
+plt.xlim(freqs[1],freqs[-1])
 plt.legend()
-tools.saveAndClear(pathSave + 'multi_keSpec.png', figNum=0)
+
+index = 2
+for prefactor in np.arange(-10,10,0.5):
+    plt.plot(freqs, np.power(10,prefactor)*np.power(freqs, index), color=(1,0,0,0.2))
+index = 1
+for prefactor in np.arange(-10,10,0.5):
+    plt.plot(freqs, np.power(10,prefactor)*np.power(freqs, index), color=(0,1,0,0.2))
+index = -1
+for prefactor in np.arange(-10,10,0.5):
+    plt.plot(freqs, np.power(10,prefactor)*np.power(freqs, index), color=(0,0,1,0.2))
+index = -2
+for prefactor in np.arange(-10,10,0.5):
+    plt.plot(freqs, np.power(10,prefactor)*np.power(freqs, index), color=(0,0,0,0.2))
+
+
+tools.saveAndClear(pathSave + 'adjustedPspecSpheresSumPerts.png', figNum=0)
 
 
 
