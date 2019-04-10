@@ -24,13 +24,13 @@ class DataPlan:
 		for item in contentsList:
 			if item[:5]=='peaks': self.peakFileNameList.append(item)
 		print('finding ' + str(len(self.peakFileNameList)) + ' peak files')
-		self.peakArrayList = [0 for n in range(len(self.peakFileNameList))]
+		self.peakArrayList = [0 for n in range(len(self.peakFileNameList)-1)]
 		self.timeList = []
 		n = 0
 		for peakFileName in self.peakFileNameList:
 			n1   = int(peakFileName[9:12])
 			n2   = int(peakFileName[13])
-			time = float(n1) + dt * float(n2)
+			time = float(n1) + 1.0 * float(n2)* 0.1
 			n    = int(np.round(time/dt))
 			n    = min(n, len(self.peakArrayList)-1)
 			print(n)

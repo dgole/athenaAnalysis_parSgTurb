@@ -27,7 +27,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 #styleList   = ['-', '-', '-', '-', '-']
 ################################################################################
 pathBase    = '../../data/kspaceTest/'
-runNameList = ['run160', 'run161', 'run162']#, 'run163', 'run164']
+runNameList = ['run160', 'run161', 'run162', 'run163', 'run164']
 labelList   = ['dedt=1.e-8', 'dedt=1.e-7', 'dedt=1.e-6', 'dedt=1.e-5', 'dedt=1.e-4']
 colorList   = ['r', 'g', 'm', 'b', 'k']
 pathSave = pathBase + 'plots/multiPlots3d_160/'
