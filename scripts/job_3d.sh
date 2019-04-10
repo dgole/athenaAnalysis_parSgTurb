@@ -13,6 +13,7 @@ module load python3
 export DIR=$SCRATCH/parSgTurb/data/kspaceTest/
 
 python3 multi_plots3d.py $DIR
+python3 multi_pspec.py $DIR
 
 #python3 master_multiPanel.py 1 1.e-3 0.1 $DIR
 
