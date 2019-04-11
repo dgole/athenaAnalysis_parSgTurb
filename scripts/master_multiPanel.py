@@ -330,17 +330,15 @@ def makeAnimFrame(self, n):
 		axNum = 22
 		key   = 'dpar'
 		data3d = do3d.get3d(key, n)
-		i1=-8; i2=4;
+		i1=-4; i2=4;
 		bins = np.logspace(i1,i2,num=200)
 		ax[axNum].hist(data3d.flatten(), bins=bins,
-					   log=True, color=(0,0,0,0.3), density=True)
+					   log=True, color=(0,0,0,0.3))#, density=True)
 		ax[axNum].set_xscale('log')
 		ax[axNum].set_xlim(10**i1,10**i2)
-		ax[axNum].set_ylim(1.e-8, 1.e6)
-		ax[axNum].set_ylabel('Prob. Density')
+		ax[axNum].set_ylim(1.0, 1.e3*do3d.nx*do3d.ny*do3d.nz/(64.*64.*64.))
+		ax[axNum].set_ylabel('# of cells')
 		ax[axNum].set_xlabel(do3d.header[key])
-		#max0 = np.amax(data3d)
-		#ax[axNum].axvline(x=max0, color='k')
 
 		axNum = 18
 		key = 'dpar'
@@ -350,7 +348,7 @@ def makeAnimFrame(self, n):
 		ax[axNum].semilogy(do3d.t[n:], plotData[n:], 'gray', linewidth=1)
 		ax[axNum].semilogy(do3d.t[:n+1], plotData[:n+1], 'k', linewidth=2)
 		ax[axNum].semilogy(do3d.t[n], plotData[n], 'k'+'o', markersize=5)
-		ax[axNum].set_ylim(1.e0, 1.e6)
+		ax[axNum].set_ylim(1.e0, 1.e5)
 		ax[axNum].set_xlim(0.0, np.amax(do3d.t))
 
 
@@ -473,10 +471,17 @@ def makeAnimFrame(self, n):
 
 ################################################################################
 jobList = []
-print(do3d.nt)
-for n in range(0, do3d.nt-2, 1):
-	job = mp.Process(target=makeAnimFrame, args=(do3d, n))
-	jobList.append(job)
+
+if sys.argv.shape[0] > 4:
+	nStart = int(sys.argv[4])
+	nEnd   = int(sys.argv[5])
+	for n in range(nStart, nEnd+1):
+		job = mp.Process(target=makeAnimFrame, args=(do3d, n))
+		jobList.append(job)
+else:
+	for n in range(0, do3d.nt-2):
+		job = mp.Process(target=makeAnimFrame, args=(do3d, n))
+		jobList.append(job)
 
 while len(jobList)>0:
 	theseJobs = []
