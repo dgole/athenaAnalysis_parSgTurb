@@ -57,7 +57,7 @@ class Data3d:
 						'rootRhoVx' : rootRhoVx,
 						'rootRhoVy' : rootRhoVy,
 						'rootRhoVz' : rootRhoVz,
-						'rootRhoDvx': rootRhoVx,
+						'rootRhoDvx': rootRhoDvx,
 						'rootRhoDvy': rootRhoDvy,
 						'rootRhoDvz': rootRhoDvz
 									         	}
@@ -177,7 +177,9 @@ def profile(do, key, figNum=0, nStart=None, nEnd=None, legendLabel=None, absAvg=
 	plt.ylabel(do.header[key]);
 	plt.xlabel(r"$z/H$");
 	plt.tight_layout()
-	print('mean dv is ' + str(np.mean(np.absolute(plotData))))
+	meanDv = np.mean(np.absolute(plotData))
+	print('mean dv is ' + str(meanDv))
+	return meanDv
 
 def timeEvo(do, key, figNum=0, legendLabel=None, absAvg=1, absPlot=1, color='b'):
 	print(do.path + ": making timeEvo plot for key " + key)

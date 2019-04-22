@@ -12,15 +12,16 @@ import athenaReader3d as reader3d
 import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
-pathBase = '../../data/kspaceTest/run140/'
+pathBase = '../../data/kspaceTest/run141/'
 pathSave = pathBase + 'plots/turbForcingDump/'
+vPertSlope = 5./6.
 fileName = 'out_dump.txt'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 plt.figure(0)
 nx=32;ny=32;nz=32;
 nGz = 5
-setupPlots = True
-amplPlots  = True
+setupPlots = False
+amplPlots  = False
 ################################################################################
 def getData(pathBase, fileName, lookupStr, gzOffset, ind):
     inFile   = open(pathBase+fileName, 'r')
@@ -29,9 +30,9 @@ def getData(pathBase, fileName, lookupStr, gzOffset, ind):
     for line in inFile:
         if line[0:len(lookupStr)] == lookupStr:
             split=line.split()
-            if count%1.e0==0:
-                print(split)
-                print(count/(nx*ny*nz))
+            #if count%1.e0==0:
+                #print(split)
+                #print(count/(nx*ny*nz))
             i=int(split[1])-gzOffset
             j=int(split[2])-gzOffset
             k=int(split[3])-gzOffset
@@ -41,8 +42,10 @@ def getData(pathBase, fileName, lookupStr, gzOffset, ind):
     return data1
 ################################################################################
 def addFiveThirdsToFig():
-    for i in np.arange(-20, 20,0.5):
-        plt.loglog(freqs, 10**i*np.power(freqs, -5.0/3.0), color='tab:gray',
+    thisSlope = 2*(vPertSlope-1.)
+    print(-thisSlope)
+    for i in np.arange(-20, 20, 0.5):
+        plt.loglog(freqs, 10**i*np.power(freqs, -thisSlope), color='tab:gray',
                    linestyle='--', linewidth=0.5)
 ################################################################################
 if setupPlots == True:
@@ -105,7 +108,10 @@ for j in range(0,ny):
     fft    = np.fft.fftn(data[:,j,0])[:nFreqs]
     ps    += np.square(np.absolute(fft))
     count += 1
-plt.loglog(freqs, ps/float(count));
+plt.loglog(freqs[3:], ps[3:]/float(count), 'ko')
+addFiveThirdsToFig()
+plt.ylim(1.e-7,1.e-2)
+plt.xlim(freqs[3],freqs[-1])
 tools.saveAndClear(pathSave + '1testPlot.png', figNum=0)
 
 
@@ -138,12 +144,13 @@ plt.tight_layout()
 tools.saveAndClear(pathSave + 'pspec_colorMap.png', figNum=0)
 # spherical shells
 #plt.loglog(freqs, psk/count)
-plt.loglog(freqs, psk)
+plt.loglog(freqs[3:], psk[3:], 'ko')
 plt.xlabel(r'$|\mathbf{k}|$')
 plt.ylabel('Power')
-plt.ylim(1.e-2,1.e6)
+plt.ylim(1.e0,1.e4)
+plt.xlim(freqs[3],freqs[-1])
 addFiveThirdsToFig()
-tools.saveAndClear(pathSave + 'pspecShellsNorm.png', figNum=0)
+tools.saveAndClear(pathSave + 'pspecShells.png', figNum=0)
 # slice
 data2d = data[:, :, nz//2]
 extent = [-0.2, 0.2, -0.2, 0.2]

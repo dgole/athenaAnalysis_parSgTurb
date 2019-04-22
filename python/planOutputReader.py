@@ -15,6 +15,7 @@ import athenaTools as tools
 class DataPlan:
 	def __init__(self, path, dt=0.1, nPar=3.e5, G=0.05):
 		print("initializing PLAN data structure from " + path)
+		self.dt    = dt
 		self.path  = path
 		self.nPar  = nPar
 		self.G     = G

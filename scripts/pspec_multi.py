@@ -17,10 +17,15 @@ from matplotlib.backends.backend_pdf import PdfPages
 #colorList   = ['r', 'g', 'm', 'b', 'k']
 #pathSave = pathBase + 'plots/pspec_150/'
 ################################################################################
+#pathBase    = '../../data/kspaceTest/'
+#runNameList = ['run160', 'run161', 'run162', 'run163', 'run164']
+#colorList   = ['r', 'g', 'm', 'b', 'k']
+#pathSave = pathBase + 'plots/pspec_160/'
+################################################################################
 pathBase    = '../../data/kspaceTest/'
-runNameList = ['run160', 'run161', 'run162', 'run163', 'run164']
+runNameList = ['run300', 'run301', 'run302', 'run303']
 colorList   = ['r', 'g', 'm', 'b', 'k']
-pathSave = pathBase + 'plots/pspec_160/'
+pathSave = pathBase + 'plots/pspec_300/'
 ################################################################################
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 plt.figure(0)
@@ -30,17 +35,16 @@ for n in range(len(runNameList)):
     path3d     = pathBase + runNameList[n] + '/3d/'
     do3dList.append(reader3d.Data3d(path3d))
 ################################################################################
-vExpo = -1.33
-eExpo = 2.0*(vExpo)+1.0
+vExpo = -1.833
+eExpo = 2.0*(vExpo)+2.0
 nStart = 2
-nEnd   = 5
 
 for n in range(len(do3dList)):
     do3d    = do3dList[n]
     color   = colorList[n]
-    psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx', nStart=nStart, nEnd=nEnd)
-    psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy', nStart=nStart, nEnd=nEnd)
-    psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz', nStart=nStart, nEnd=nEnd)
+    psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx', nStart=nStart)
+    psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy', nStart=nStart)
+    psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz', nStart=nStart)
     psk  = psk_vx  + psk_vy  + psk_vz
     psk*=np.power(freqs, -eExpo)
     psk/=np.mean(psk)

@@ -7,6 +7,7 @@ import matplotlib.colors as colors
 import os
 import math
 import sys
+import time
 sys.path.append('../python')
 import athenaReader3d as reader3d
 import athenaTools as tools
@@ -31,10 +32,11 @@ else:            nAvgEnd = 2
 # 1    2    3      4    5    6
 # npar mass r_hill xcom ycom zcom
 planPlots = True
-try:
-	doPlan = readerPlan.DataPlan(pathPlan, G=G, dt=1.0)
-except:
-	planPlots = False
+doPlan = readerPlan.DataPlan(pathPlan, G=G, dt=0.1)
+#try:
+	#doPlan = readerPlan.DataPlan(pathPlan, G=G, dt=0.1)
+#except:
+	#planPlots = False
 if np.sum(do3d.get3d('dpar', 0)) > 1.e-20:
 	dparPlots = True
 else:
@@ -217,7 +219,7 @@ def makeAnimFrame(self, n):
 	psk_vy, freqs = reader3d.psProfile(do3d, 'rootRhoDvy', n=nPspec)
 	psk_vz, freqs = reader3d.psProfile(do3d, 'rootRhoDvz', n=nPspec)
 	psk  = psk_vx  + psk_vy  + psk_vz
-	i1 = 2; i2 = int(len(psk)*0.5);
+	i1 = 2; i2 = np.argmin(np.absolute(freqs-100.));
 	slope = np.log10(psk[i2]/psk[i1])/np.log10(freqs[i2]/freqs[i1])
 	ax[axNum].set_title('PL index: ' + str(np.round(slope,3)))
 	ax[axNum].axvline(x=freqs[i1], linestyle='--', color=(0,0,0,0.2))
@@ -228,7 +230,7 @@ def makeAnimFrame(self, n):
 	psk /= np.mean(psk)
 	ax[axNum].loglog(freqs[1:], psk[1:], 'k', linewidth=2)
 	ax[axNum].loglog(freqs[1:], avgDataDict[key][1:], 'gray', linewidth=1)
-	ax[axNum].set_ylim(0.3*np.amin(avgDataDict[key][1:]), 3.0*np.amax(avgDataDict[key][1:]))
+	ax[axNum].set_ylim(0.5*np.amin(avgDataDict[key][1:]), 3.0*np.amax(avgDataDict[key][1:]))
 	ax[axNum].set_xlim(freqs[1], freqs[-1])
 
 
@@ -336,7 +338,7 @@ def makeAnimFrame(self, n):
 					   log=True, color=(0,0,0,0.3))#, density=True)
 		ax[axNum].set_xscale('log')
 		ax[axNum].set_xlim(10**i1,10**i2)
-		ax[axNum].set_ylim(1.0, 1.e3*do3d.nx*do3d.ny*do3d.nz/(64.*64.*64.))
+		ax[axNum].set_ylim(1.0, 1.e4*do3d.nx*do3d.ny*do3d.nz/(64.*64.*64.))
 		ax[axNum].set_ylabel('# of cells')
 		ax[axNum].set_xlabel(do3d.header[key])
 
@@ -357,8 +359,8 @@ def makeAnimFrame(self, n):
 	#nPlan = int(n//10)
 
 	nOG  = n
-	#n   *= 10
 	if planPlots:
+		n *= int(1./float(doPlan.dt))
 		# p
 		axNum = 27
 		#ax[axNum].plot(tPlot[n:], pArr[n:], 'gray', linewidth=1)
@@ -389,7 +391,7 @@ def makeAnimFrame(self, n):
 		ax[axNum].plot(doPlan.timeList[:n+1], mFracList[:n+1], 'k', linewidth=2)
 		ax[axNum].plot(doPlan.timeList[n], mFracList[n], 'ro', markersize=5)
 		#ax[axNum].get_xaxis().set_visible(False)
-		ax[axNum].set_ylim(-0.05, 1.02)
+		ax[axNum].set_ylim(-0.05, 5.02)
 		ax[axNum].set_ylabel(r'$M_{plan} / M_{par}$')
 		ax[axNum].set_xlim(0, doPlan.timeList[-1])
 
@@ -472,7 +474,7 @@ def makeAnimFrame(self, n):
 ################################################################################
 jobList = []
 
-if sys.argv.shape[0] > 4:
+if len(sys.argv) > 4:
 	nStart = int(sys.argv[4])
 	nEnd   = int(sys.argv[5])
 	for n in range(nStart, nEnd+1):
@@ -488,10 +490,21 @@ while len(jobList)>0:
 	for n in range(myNpc):
 		try: theseJobs.append(jobList.pop(0))
 		except: a=1
+	print('')
+	print('###################################################################')
+	t0 = time.time()
+	print('starting up ' + str(myNpc) + ' processes')
+	sys.stdout.flush()
 	for job in theseJobs:
 		job.start()
 	for job in theseJobs:
 		job.join()
+	t1 = time.time() - t0
+	sys.stdout.flush()
+	print('these ' + str(myNpc) + ' processes are ending after ' + str(t1))
+	print('###################################################################')
+	print('')
+	sys.stdout.flush()
 
 
 
