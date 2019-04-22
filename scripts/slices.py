@@ -7,6 +7,7 @@ import matplotlib.colors as colors
 import os
 import math
 import sys
+import time
 sys.path.append('../python')
 import athenaReader3d as reader3d
 import athenaTools as tools
@@ -23,9 +24,11 @@ plt.figure(0)
 # midplane slices
 for key in ['drho','dpar','dvx','dvy','dvz']:
     for n in range(10, do3d.nt, 2):
+        t0 = time.time()
         reader3d.slicePlot(do3d, key, n=n, figNum=0)
         tools.saveAndClear(pathSave + 'midplaneSlice_' + key + '_' + str(n) + '.png', figNum=0)
-
+        t = np.round(time.time() - t0, 2)
+        print('this plot took ' + str(t) + 's')
 
 
 
