@@ -32,11 +32,9 @@ def getColor(n, nStart, nEnd):
 
 def printMem(marker=None):
 	if marker is not None: print(marker)
-	print("total MB of memory used: " +
-		  str(float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1000.0))
-
-
-
+	gb = float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)/1.e6
+	print("total GB of memory used: " +  str(gb))
+	return gb
 
 def getFileNames(baseName, n, npc):
 	names = [("id"+str(i)+"/"+baseName+"-id" + str(i) + "."
