@@ -3,3 +3,5 @@ python/__pycache__/*
 *.out
 scripts/plan/*
 scripts/planJake/*
+scripts/planNew/*
+scripts/stats/*
