@@ -1,7 +1,8 @@
 #!/home1/06407/tg857068/.py3/bin/python
+# note that this code was created by Rixin Li's and is not my own work.
 """
     Run this script to read in a clump ParList output by PLAN and then track all the particles at different snapshots.
-    
+
     usage: track_particles.py [-h] [-c CLUMP] [-i DATA_DIR] [-b BASENAME]
                           [-p POSTNAME] [-f DUMP_ID [DUMP_ID ...]]
                           [-o OUT_DIR] [--Combined]
@@ -18,7 +19,7 @@
         -p POSTNAME
             the id name used in Athena's LIS output, default: ds
         -f DUMP_ID [DUMP_ID ...]
-            the dump ID of snapshot(s) to track particles, 
+            the dump ID of snapshot(s) to track particles,
             e.g., '-f 270', '-f 270 277', or '-f 250 270 10'
         -o OUT_DIR
             directory path to output new particle lists,
@@ -96,8 +97,6 @@ if __name__ == '__main__':
         tmp_pos = selected_par['pos']
         tmp_vel = selected_par['vel']
         new_par_list = np.hstack([np.atleast_2d(par_list.id).T, tmp_pos, tmp_vel, np.atleast_2d(par_list.m).T])
-        
+
         np.savetxt(args.out_dir+"at_"+dump+".txt", new_par_list, fmt = "%16d"+"%24.16f"*7)
         print("...finished")
-        
-        
