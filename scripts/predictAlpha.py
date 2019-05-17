@@ -20,8 +20,15 @@ plt.figure(0)
 #dedt = np.asarray([1.e-8,1.e-7,1.e-6,1.e-5,1.e-4])
 #dv   = np.asarray([0.001244,0.003755,0.01085,0.02836,0.06710])
 
-dedt    = np.asarray([1.e-7,   1.e-6,  1.e-5,  1.e-4])
-dv      = np.asarray([0.00659, 0.0168, 0.0391, 0.0864])
+#dedt    = np.asarray([1.e-7,   1.e-6,  1.e-5,  1.e-4])
+#dv      = np.asarray([0.00659, 0.0168, 0.0391, 0.0864])
+
+#dedt    = np.asarray([1.e-7,  1.e-6,  1.e-5,  1.e-4, 1.e-3])
+#dv      = np.asarray([0.00126, 0.00374, 0.0107, 0.0285, 0.071])
+
+dedt    = np.asarray([1.e-7,  1.e-6,  1.e-5,  1.e-4])
+dv      = np.asarray([0.00185, 0.00549, 0.0154, 0.0399])
+
 dedtLog = np.log10(dedt)
 dvLog   = np.log10(dv)
 

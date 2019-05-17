@@ -34,7 +34,7 @@ def oneSlice(do3d, key, n):
     sys.stdout.flush()
 ################################################################################
 jobList = []
-for key in ['drho','dpar','dvx','dvy','dvz']:
+for key in ['dpar','drho','dvx','dvy','dvz']:
     for n in range(0, do3d.nt-1, 1):
         job = mp.Process(target=oneSlice, args=(do3d, key, n))
         jobList.append(job)

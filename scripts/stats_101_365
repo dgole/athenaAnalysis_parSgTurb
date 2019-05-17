@@ -1,0 +1,87 @@
+initializing PLAN data structure from ../../data/prodRuns/run101/planOutput/
+###################################################
+looking for peak file for n=365
+read in file named peaks_at_036.500.txt
+20 clumps found
+Computing fit_spl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 0.001
+n = 40 of 100, average time per sample = 0.001
+n = 60 of 100, average time per sample = 0.001
+n = 80 of 100, average time per sample = 0.001
+Computing fit_stpl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 0.009
+n = 40 of 100, average time per sample = 0.009
+n = 60 of 100, average time per sample = 0.009
+n = 80 of 100, average time per sample = 0.009
+Computing fit_vtpl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 0.137
+n = 40 of 100, average time per sample = 0.136
+n = 60 of 100, average time per sample = 0.134
+n = 80 of 100, average time per sample = 0.136
+Computing fit_bcpl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 0.114
+n = 40 of 100, average time per sample = 0.112
+n = 60 of 100, average time per sample = 0.109
+n = 80 of 100, average time per sample = 0.109
+Computing fit_tpl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 0.084
+n = 40 of 100, average time per sample = 0.082
+n = 60 of 100, average time per sample = 0.081
+n = 80 of 100, average time per sample = 0.08
+Computing fit_bpl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 0.134
+n = 40 of 100, average time per sample = 0.134
+n = 60 of 100, average time per sample = 0.134
+n = 80 of 100, average time per sample = 0.134
+########################################################
+Nclumps: 20
+########################################################
+Single PL MLE Slope
+1.629 pm 0.141
+########################################################
+Single PL Direct Fit
+1.487 pm 0.0
+########################################################
+SPL
+alpha    = 0.716 p 0.1 m 0.04
+ln(like) = -25.065
+DBIC     = 0.698
+DAIC     = 4.947
+########################################################
+STPL
+alpha    = 0.38 p 0.214 m 0.29
+x_exp    = 2.48 p 0.683 m 0.906
+ln(like) = -22.361
+DBIC     = 1.071
+DAIC     = 1.539
+########################################################
+VTPL
+alpha    = -0.108 p 1.132 m 0.269
+beta     = 0.476 p 0.05 m 0.923
+x_exp    = 0.0 p 0.5 m 0.18
+ln(like) = -22.462
+DBIC     = 7.054
+DAIC     = 3.741
+########################################################
+BCPL
+alpha1   = 0.448 p 3.969 m 0.187
+alpha2   = 1.74 p 2.126 m 1.22
+x_br     = 1.532 p 0.89 m 1.242
+ln(like) = -20.591
+DBIC     = 3.313
+DAIC     = 0.0
+########################################################
+TPL
+alpha    = 0.399 p 0.179 m 0.279
+x_tr     = 3.658 p 0.033 m 0.973
+ln(like) = -21.825
+DBIC     = 0.0
+DAIC     = 0.468
+########################################################
+BPL
+alpha1   = -0.38 p 0.653 m 0.78
+alpha2   = 1.42 p 2.106 m 0.835
+x_br     = 1.584 p 1.068 m 0.308
+ln(like) = -21.522
+DBIC     = 5.174
+DAIC     = 1.861

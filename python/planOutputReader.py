@@ -8,119 +8,523 @@ import matplotlib.colors as colors
 import sys
 sys.path.append('../python')
 import athenaTools as tools
-
+import numpy.polynomial.polynomial as poly
+import emcee
+import time
 ################################################################################
 # Data class ###################################################################
 ################################################################################
 class DataPlan:
-	def __init__(self, path, dt=0.1, nPar=3.e5, G=0.05):
+	def __init__(self, path, dt=0.1, nPar=128*128*128, G=0.1, nStart=200, nTot=500, tSg=20.0):
 		print("initializing PLAN data structure from " + path)
-		self.dt    = dt
-		self.path  = path
-		self.nPar  = nPar
-		self.G     = G
+
+		# housekeeping
+		self.strBase  = 'peaks_at_'
+		self.strEnd   = '.txt'
+		self.nStart   = nStart
+		self.nTot     = nTot
+		self.dt       = dt
+		self.path     = path
+		self.nPar     = nPar
+		self.G        = G
 		self.m0_ceres = G * (720.0/0.05)
-		contentsList = os.listdir(path)
-		self.peakFileNameList = []
-		for item in contentsList:
-			if item[:5]=='peaks': self.peakFileNameList.append(item)
-		print('finding ' + str(len(self.peakFileNameList)) + ' peak files')
-		self.peakArrayList = [0 for n in range(len(self.peakFileNameList)-1)]
-		self.timeList = []
-		n = 0
-		for peakFileName in self.peakFileNameList:
-			n1   = int(peakFileName[9:12])
-			n2   = int(peakFileName[13])
-			time = float(n1) + 1.0 * float(n2)* 0.1
-			n    = int(np.round(time/dt))
-			n    = min(n, len(self.peakArrayList)-1)
-			print(n)
-			temp = np.loadtxt(self.path+peakFileName)
+		self.timeList = [n*self.dt for n in range(self.nTot)]
+		self.tMax     = self.dt * nTot - tSg
+		self.mg       = 9.766e-6
+
+		# read in each peak file and save as an array in a list
+		self.peakArrayList = [None for n in range(self.nTot)]
+		self.nClumpsList   = [0    for n in range(self.nTot)]
+		for n in range(self.nStart, self.nTot):
+			# read in propper peak file
+			print('###################################################')
+			print('looking for peak file for n=' + str(n))
+			t  = n*self.dt
+			n1 = int(np.floor(t))
+			n2 = np.int(np.floor(n-(1.0/self.dt)*n1))
+			if   len(str(n1)) == 3: str1=str(n1)
+			elif len(str(n1)) == 2: str1='0'+str(n1)
+			elif len(str(n1)) == 1: str1='00'+str(n1)
+			try:
+				str2 = str(n2)+'00'
+				fileName = self.strBase+str1+'.'+str2+self.strEnd
+				temp     = np.loadtxt(self.path+fileName)
+			except:
+				str2 = str(n2)+'01'
+				fileName = self.strBase+str1+'.'+str2+self.strEnd
+				temp     = np.loadtxt(self.path+fileName)
+			print('read in file named ' + fileName)
+			# assign data to array / list
 			if len(temp.shape) == 2:
 				self.peakArrayList[n] = temp
-			elif len(temp.shape) == 1 and temp.shape[0] == 13:
-				self.peakArrayList[n] = temp.reshape((1, 13))
-			else:
-				self.peakArrayList[n] = np.zeros((1,13))
-		self.peakArrayList = self.peakArrayList[:-1]
-		for n in range(len(self.peakArrayList)):
-			self.peakArrayList[n][:,2] *= self.m0_ceres
-		self.timeList = [n*dt for n in range(0,len(self.peakArrayList))]
-		self.nClumpsList = []
-		for arr in self.peakArrayList:
-			if arr[0,0] == 0 and arr[0,1] == 0:
-				self.nClumpsList.append(0)
-			else:
-				self.nClumpsList.append(arr.shape[0])
-			n+=1
-		print('number of clumps found at each data dump: ')
-		print(self.nClumpsList)
+			elif len(temp.shape) == 1 and temp.shape[0] == 19:
+				self.peakArrayList[n] = temp.reshape((1, 19))
+			try:
+				self.nClumpsList[n] = (self.peakArrayList[n]).shape[0]
+				print(str(self.nClumpsList[n]) + ' clumps found')
+				self.peakArrayList[n][:,2] *= self.m0_ceres
+			except:
+				print('no clumps found')
+
 		self.nClumps = np.asarray(self.nClumpsList)
-		self.time    = np.asarray(self.timeList)
+		self.time    = np.asarray(self.timeList) - tSg
+
 		if np.sum(self.nClumps)==0: print('NO CLUMPS AT ANY TIME!')
 		mTestPar = self.peakArrayList[-1][0,2]
 		nTestPar = self.peakArrayList[-1][0,1]
 		self.mParTot = self.nPar * (mTestPar/nTestPar)
-		for n in range(0,10000):
-			if self.nClumps[n]>0:
-				self.nFirstClump = n
-				break
-		self.nt = len(self.timeList)
 
-def getCumMassHist(do, n, spacing=0.05):
+
+def getMasses(do, n):
 	if do.nClumps[n] != 0:
 		masses = []
 		for mass in do.peakArrayList[n][:,2]:
 			masses.append(mass)
-		masses     = np.asarray(masses)
-		indexStart = -4
-		indexEnd   = 1
-		lLimList   = [np.power(10,index) for index in np.arange(indexStart, indexEnd, spacing)]
-		nBins      = len(lLimList)
-		massHist   = np.zeros(nBins)
-		for mass in masses:
-			for n in range(nBins):
-				if lLimList[n] < mass:
-					massHist[n]+=1
-		return lLimList, massHist
-	else:
-		print('no partilce found in this output')
-		return 0, 0
+		masses.sort()
+		return masses
+'''
+class Clump:
+	def __init__(self, do):
+		print("initializing a clump data structure...")
+		self.initMass =
+		self.curMass  =
+		self.initPos  =
+		self.curPos   =
+		self.curVel   =
+	def predictLoc(self, a):
+		a=1
+		return a
+'''
 
-def getDiffMassHist(do, n, spacing=0.05):
+def getDiffMassHist(do, n):
+	masses = getMasses(do, n)
+	if masses is not None:
+		dndmpList  = []
+		mpList     = []
+		for i in range(1, len(masses)-1):
+			mp = masses[i]
+			mpList.append(mp)
+			dndmpList.append(2.0/(masses[i+1] - masses[i-1]))
+		return mpList, dndmpList
+
+def getCumMassHist(do, n):
 	if do.nClumps[n] != 0:
-		masses = []
-		for mass in do.peakArrayList[n][:,2]:
-			masses.append(mass)
-		masses     = np.asarray(masses)
-		indexStart = -4
-		indexEnd   = 1
-		lLimList   = [np.power(10.0,index) for index in np.arange(indexStart, indexEnd, spacing)]
-		uLimList   = [np.power(10.0,index+spacing) for index in np.arange(indexStart, indexEnd, spacing)]
-		avgMassList= [np.power(10.0,index+spacing/2.0) for index in np.arange(indexStart, indexEnd, spacing)]
-		nBins      = len(lLimList)
-		dm         = np.zeros(nBins)
-		dn         = np.zeros(nBins)
-		for mass in masses:
-			for n in range(nBins):
-				if lLimList[n] < mass < uLimList[n]:
-					dn[n]+=1
-		for n in range(nBins): dm[n] = uLimList[n] - lLimList[n]
-		return avgMassList, dn/dm
+		masses  = getMasses(do, n)
+		masses  = np.asarray(masses)
+		nMasses = masses.shape[0]
+		ngtm   = np.zeros_like(masses)
+		for n in range(nMasses):
+			ngtm[n] = nMasses - n
+		return masses, ngtm
 	else:
 		print('no partilce found in this output')
-		return 0, 0
+
+
+################################################################################
+# modeling
+################################################################################
+
+def get_p_mle(do, n):
+	nplan   = do.nClumpsList[n]
+	if nplan > 3:
+		minMass = np.amin(do.peakArrayList[n][:,2])
+		sum     = 0
+		for mass in do.peakArrayList[n][:,2]:
+			sum += np.log(mass / minMass)
+		p   = 1 + nplan * np.power(sum, -1)
+		err = (p-1)/np.sqrt(nplan)
+		return p, err
+
+def get_p_fit(do, n):
+	nplan   = do.nClumpsList[n]
+	if nplan > 3:
+		mp, dndmp = getDiffMassHist(do, n)
+		mp = np.asarray(mp); dndmp = np.asarray(dndmp);
+		x = np.log10(mp); y = np.log10(dndmp);
+		coefs, stats = poly.polyfit(x, y, 1, full=True)
+		this_p = -coefs[1]; this_c = np.power(10,coefs[0])
+		return this_p, 0.0, this_c
+
+def convert_to_x(masses):
+	return np.log(masses/np.amin(masses))
+
+def pdf_to_dndmp(nRealMasses, masses, pdf):
+	nMasses = masses.shape[0]
+	dlnm  = np.zeros_like(masses)
+	for n in range(masses.shape[0]-1):
+		dlnm[n] = np.log(masses[n+1]/masses[n])
+	dlnm[-1]=dlnm[-2]
+	dm    = np.zeros_like(masses)
+	for n in range(masses.shape[0]-1):
+		dm[n] = masses[n+1]-masses[n]
+	dm[-1]=dm[-2]
+	dndmp = pdf * dlnm/dm * nRealMasses
+	return dndmp
+
+def gridSearch1d(funcName, mp, p1min, p1max, p1step):
+	#print("performing grid search...")
+	maxLike = -1.e10
+	p1 = np.arange(p1min, p1max, p1step)
+	grid = np.zeros(p1.shape[0])
+	for n1 in range(p1.shape[0]):
+		params      = (p1[n1])
+		lnLike      = funcName(mp, params)
+		grid[n1] = lnLike
+		if lnLike > maxLike:
+			maxLike     = lnLike
+			paramsOfMax = params
+			#print("#######################################")
+			#print("new max found: " + str(maxLike))
+			#print("params:        " + str(params))
+	return paramsOfMax, maxLike
+
+def gridSearch2d(funcName, mp, p1min, p1max, p1step, p2min, p2max, p2step):
+	#print("performing grid search...")
+	maxLike = -1.e10
+	p1 = np.arange(p1min, p1max, p1step)
+	p2 = np.arange(p2min, p2max, p2step)
+	grid = np.zeros((p1.shape[0], p2.shape[0]))
+	for n1 in range(p1.shape[0]):
+		for n2 in range(p2.shape[0]):
+			params      = (p1[n1], p2[n2])
+			lnLike      = funcName(mp, params)
+			grid[n1,n2] = lnLike
+			if lnLike > maxLike:
+				maxLike     = lnLike
+				paramsOfMax = params
+				#print("#######################################")
+				#print("new max found: " + str(maxLike))
+				#print("params:        " + str(params))
+	return paramsOfMax, maxLike
+
+def gridSearch3d(funcName, mp, p1min, p1max, p1step, p2min, p2max, p2step, p3min, p3max, p3step):
+	#print("performing grid search...")
+	maxLike = -1.e10
+	p1 = np.arange(p1min, p1max, p1step)
+	p2 = np.arange(p2min, p2max, p2step)
+	p3 = np.arange(p3min, p3max, p3step)
+	grid = np.zeros((p1.shape[0], p2.shape[0], p3.shape[0]))
+	for n1 in range(p1.shape[0]):
+		for n2 in range(p2.shape[0]):
+			for n3 in range(p3.shape[0]):
+				params         = (p1[n1], p2[n2], p3[n3])
+				lnLike         = funcName(mp, params)
+				grid[n1,n2,n3] = lnLike
+				if lnLike > maxLike:
+					maxLike     = lnLike
+					paramsOfMax = params
+					#print("#######################################")
+					#print("new max found: " + str(maxLike))
+					#print("params:        " + str(params))
+	return paramsOfMax, maxLike
+
+def bootstrap(mp, funcName, nParams, nb=100, sampleFactor=1.0):
+	print("Computing " + str(funcName.__name__)
+		+ " fit for " + str(nb) + " subsamples...")
+	paramsAll  =  np.zeros([nb, nParams])
+	maxLikeAll = np.zeros(nb)
+	t0 = time.time()
+	for n in range(nb):
+		if n%20==0 and n>0:
+			str1 = "n = " + str(n) + " of " + str(nb)
+			str2 = "average time per sample = " + str(np.round((time.time()-t0)/n,3))
+			print(str1 + ", " + str2)
+		sample          = np.random.choice(mp,size=int(sampleFactor*mp.shape[0]),replace=True)
+		params, maxLike = funcName(sample)
+		paramsAll[n]    = params
+	means           = np.median(paramsAll, axis=0)
+	errsPlus        = np.percentile(paramsAll, 84, axis=0) - means
+	errsMinus       = means - np.percentile(paramsAll, 16, axis=0)
+	params, maxLike = funcName(mp)
+	return params, errsPlus, errsMinus, maxLike
+
+
+# SPL FITTING
+def p_spl(masses, params):
+	alpha  = params
+	xArr   = convert_to_x(masses)
+	return alpha * np.exp(-alpha*xArr)
+def P_spl(masses, params):
+	alpha   = params
+	minMass = np.amin(masses)
+	nMasses = masses.shape[0]
+	ngtm    = np.power(masses/minMass, -alpha)
+	return ngtm
+def lnlike_spl(masses, params):
+	pArr = p_spl(masses, params)
+	sum  = np.sum(np.log(pArr))
+	return sum
+def fit_spl(mp):
+	a = 5.0
+	minMass = np.amin(mp); maxMass = np.amax(mp)
+	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
+	paramsOfMax, grid1 = gridSearch1d(lnlike_spl, mp,
+									  p1ll, p1ul, p1step)
+	p1 = paramsOfMax
+	paramsOfMax, grid2 = gridSearch1d(lnlike_spl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a)
+	p1 = paramsOfMax
+	p1step /= a;
+	paramsOfMax, grid2 = gridSearch1d(lnlike_spl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a)
+	p1step /= a;
+	paramsOfMax, grid2 = gridSearch1d(lnlike_spl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a)
+	return paramsOfMax, grid1
+
+# STPL FITTING
+def p_stpl(masses, params):
+	alpha, x_exp = params
+	xArr   = convert_to_x(masses)
+	top    = alpha + np.exp(-x_exp) * np.exp(xArr)
+	bottom = np.exp( alpha*xArr + np.exp(-x_exp)*(np.exp(xArr)-1.0) )
+	return top/bottom
+def P_stpl(masses, params):
+	alpha, x_exp = params
+	minMass = np.amin(masses)
+	mExp    = np.exp(x_exp)*minMass
+	nMasses = masses.shape[0]
+	ngtm    = np.power(masses/minMass, -alpha) * np.exp(-(masses-minMass)/mExp)
+	return ngtm
+def lnlike_stpl(masses, params):
+	pArr = p_stpl(masses, params)
+	sum  = np.sum(np.log(pArr))
+	return sum
+def fit_stpl(mp):
+	a = 5.0
+	minMass = np.amin(mp); maxMass = np.amax(mp)
+	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
+	p2ll = 0.0;  p2ul = np.log(maxMass/minMass); p2step = 0.5;
+	paramsOfMax, grid1 = gridSearch2d(lnlike_stpl, mp,
+									  p1ll, p1ul, p1step,
+									  p2ll, p2ul, p2step)
+	p1, p2  = paramsOfMax
+	paramsOfMax, grid2 = gridSearch2d(lnlike_stpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
+	p1, p2  = paramsOfMax
+	p1step /= a; p2step /= a;
+	paramsOfMax, grid2 = gridSearch2d(lnlike_stpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
+	p1step /= a; p2step /= a;
+	paramsOfMax, grid2 = gridSearch2d(lnlike_stpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
+	return paramsOfMax, grid1
+
+# VTPL FITTING
+def p_vtpl(masses, params):
+	alpha, beta, x_exp = params
+	xArr   = convert_to_x(masses)
+	top    = alpha + beta*np.exp(beta*(x_exp +xArr))
+	bottom = np.exp( alpha*xArr + np.exp(beta*x_exp)*(np.exp(beta*xArr)-1.0) )
+	return top/bottom
+def P_vtpl(masses, params):
+	alpha, beta, x_exp = params
+	minMass = np.amin(masses)
+	mExp    = np.exp(x_exp)*minMass
+	nMasses = masses.shape[0]
+	part1   = np.power(masses/minMass, -alpha)
+	part2   = np.exp(-(np.power(masses,beta)-np.power(minMass,beta))/np.power(mExp,beta))
+	ngtm    = part1*part2
+	return ngtm
+def lnlike_vtpl(masses, params):
+	pArr = p_vtpl(masses, params)
+	sum  = np.sum(np.log(pArr))
+	return sum
+def fit_vtpl(mp):
+	a = 5.0
+	minMass = np.amin(mp); maxMass = np.amax(mp)
+	#p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
+	#p2ll = -5.0; p2ul = 5.0; p2step = 0.5;
+	#p3ll = 0.0;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
+	p1ll = 0.0; p1ul = 5.0; p1step = 0.5;
+	p2ll = -5.0; p2ul = 5.0; p2step = 0.5;
+	p3ll = 0.0;  p3ul = np.log(maxMass/minMass); p3step = 0.1;
+	paramsOfMax, grid1 = gridSearch3d(lnlike_vtpl, mp,
+									  p1ll, p1ul, p1step,
+									  p2ll, p2ul, p2step,
+									  p3ll, p3ul, p3step)
+	p1, p2, p3 = paramsOfMax
+	paramsOfMax, grid2 = gridSearch3d(lnlike_vtpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
+	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
+	p1, p2, p3 = paramsOfMax
+	p1step /= a; p2step /= a; p3step /= a;
+	paramsOfMax, grid2 = gridSearch3d(lnlike_vtpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
+	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
+	p1, p2, p3 = paramsOfMax
+	p1step /= a; p2step /= a; p3step /= a;
+	paramsOfMax, grid2 = gridSearch3d(lnlike_vtpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
+	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
+	return paramsOfMax, grid1
+
+# BCPL FITTING
+def p_bcpl(masses, params):
+	a1, a2, xb = params
+	xArr   = convert_to_x(masses)
+	ltxbr  = np.where(xArr <= xb, 1.0, 0.0)
+	gtxbr  = np.where(xArr >  xb, 1.0, 0.0)
+	ltxbr *= a1 * np.exp(-a1 * xArr)
+	gtxbr *= a2 * np.exp((a2-a1)*xb - a2*xArr)
+	return gtxbr + ltxbr
+def P_bcpl(masses, params):
+	a1, a2, xb = params
+	minMass = np.amin(masses)
+	mb      = np.exp(xb)*minMass
+	nMasses = masses.shape[0]
+	ltxbr  = np.where(masses <= mb, 1.0, 0.0)
+	gtxbr  = np.where(masses >  mb, 1.0, 0.0)
+	ltxbr *= np.power(masses/minMass, -a1)
+	gtxbr *= np.power(masses, -a2)/(np.power(mb,a1-a2)*np.power(minMass,-a1))
+	ngtm    = (ltxbr+gtxbr)
+	return ngtm
+def lnlike_bcpl(masses, params):
+	pArr = p_bcpl(masses, params)
+	sum  = np.sum(np.log(pArr))
+	return sum
+def fit_bcpl(mp):
+	a = 5.0
+	minMass = np.amin(mp); maxMass = np.amax(mp)
+	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
+	p2ll = 0.0;  p2ul = 5.0; p2step = 0.5;
+	p3ll = 0.0;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
+	paramsOfMax, grid1 = gridSearch3d(lnlike_bcpl, mp,
+									  p1ll, p1ul, p1step,
+									  p2ll, p2ul, p2step,
+									  p3ll, p3ul, p3step)
+	p1, p2, p3 = paramsOfMax
+	paramsOfMax, grid2 = gridSearch3d(lnlike_bcpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
+	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
+	p1, p2, p3 = paramsOfMax
+	p1step /= a; p2step /= a; p3step /= a;
+	paramsOfMax, grid2 = gridSearch3d(lnlike_bcpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
+	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
+	p1, p2, p3 = paramsOfMax
+	p1step /= a; p2step /= a; p3step /= a;
+	paramsOfMax, grid2 = gridSearch3d(lnlike_bcpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
+	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
+	return paramsOfMax, grid1
+
+# TPL FITTING
+def p_tpl(masses, params):
+	a, xt  = params
+	xArr   = convert_to_x(masses)
+	top    = a * np.exp(-a*xArr)
+	bottom = 1.0 - np.exp(-a*xt)
+	return top/bottom
+def P_tpl(masses, params):
+	a, x_tr = params
+	minMass = np.amin(masses)
+	mTr     = np.exp(x_tr)*minMass
+	nMasses = masses.shape[0]
+	t1      = np.power(masses/minMass, -a)
+	t2      = np.power(mTr/minMass, -a)
+	t3      = np.power(mTr/minMass, -a)
+	ngtm    = (t1-t2)/(1-t3)
+	return ngtm
+def lnlike_tpl(masses, params):
+	pArr = p_tpl(masses, params)
+	sum  = np.sum(np.log(pArr))
+	return sum
+def fit_tpl(mp):
+	a=5.0
+	minMass = np.amin(mp); maxMass = np.amax(mp)
+	p1ll = -5.0; p1ul = 5.0; p1step = 0.1;
+	p2ll = np.log(maxMass/minMass);  p2ul = p2ll*10.0; p2step = (p2ul-p1ul)/50.0;
+	paramsOfMax, grid1 = gridSearch2d(lnlike_tpl, mp,
+									  p1ll, p1ul, p1step,
+									  p2ll, p2ul, p2step)
+	p1, p2  = paramsOfMax
+	paramsOfMax, grid2 = gridSearch2d(lnlike_tpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
+	p1, p2  = paramsOfMax
+	p1step /= a; p2step /= a;
+	paramsOfMax, grid2 = gridSearch2d(lnlike_tpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
+	p1, p2  = paramsOfMax
+	p1step /= a; p2step /= a;
+	paramsOfMax, grid2 = gridSearch2d(lnlike_tpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
+	return paramsOfMax, grid1
+
+# BPL FITTING
+def p_bpl(masses, params):
+	a1, a2, xb = params
+	c0 = np.power((1./a1)+((1./a2)-(1./a1))*np.exp(-a1*xb),-1)
+	xArr   = convert_to_x(masses)
+	ltxbr  = np.where(xArr <= xb, 1.0, 0.0)
+	gtxbr  = np.where(xArr >  xb, 1.0, 0.0)
+	ltxbr *= c0 * np.exp(-a1 * xArr)
+	gtxbr *= c0 * np.exp((a2-a1)*xb - a2*xArr)
+	return gtxbr + ltxbr
+def P_bpl(masses, params):
+	p    = p_bpl(masses, params)
+	xArr = convert_to_x(masses)
+	dx   = np.zeros_like(masses)
+	for i in range(len(dx)-1):
+		dx[i] = xArr[i+1] - xArr[i]
+	dx[-1] = dx[-2]
+	ngtm    = np.zeros_like(dx)
+	for i in range(0, len(dx)):
+		ngtm[i] = np.sum(p[i:-1]*dx[i:-1])
+	return ngtm
+def lnlike_bpl(masses, params):
+	pArr = p_bpl(masses, params)
+	sum  = np.sum(np.log(pArr))
+	return sum
+def fit_bpl(mp):
+	a = 5.0
+	minMass = np.amin(mp); maxMass = np.amax(mp)
+	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
+	p2ll = 0.0;  p2ul = 5.0; p2step = 0.5;
+	p3ll = 0.0;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
+	paramsOfMax, grid1 = gridSearch3d(lnlike_bpl, mp,
+									  p1ll, p1ul, p1step,
+									  p2ll, p2ul, p2step,
+									  p3ll, p3ul, p3step)
+	p1, p2, p3 = paramsOfMax
+	paramsOfMax, grid2 = gridSearch3d(lnlike_bpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
+	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
+	p1, p2, p3 = paramsOfMax
+	p1step /= a; p2step /= a; p3step /= a;
+	paramsOfMax, grid2 = gridSearch3d(lnlike_bpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
+	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
+	p1, p2, p3 = paramsOfMax
+	p1step /= a; p2step /= a; p3step /= a;
+	paramsOfMax, grid2 = gridSearch3d(lnlike_bpl, mp,
+	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
+	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
+	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
+	return paramsOfMax, grid1
+
+def BIC(K, N, lnLike):
+	return 2.0*K*np.log(N)-2.0*lnLike
+def AIC(K, N, lnLike):
+	return 2.0*K-2.0*lnLike
 
 ####################################################################
 # plotting functions ###############################################
 ####################################################################
-def nClumpsTimeEvo(do, figNum=0, colorOption='k'):
-	print('plotting number of clumps vs time for ' + do.path)
-	plt.figure(figNum)
-	plt.plot(do.time, do.nClumps, colorOption)
-	plt.xlabel(r'$t \Omega$')
-	plt.ylabel(r'$N_{clumps}$')
-
 def plotCumMassHist(do, nStart=None, nEnd=None, spacing=0.05, figNum=0, legendLabel=None, colorOption='ko'):
 	print('plotting time-averaged cumulative mass hist for ' + do.path)
 	plt.figure(figNum)
@@ -140,44 +544,6 @@ def plotCumMassHist(do, nStart=None, nEnd=None, spacing=0.05, figNum=0, legendLa
 	plt.loglog(plotBins, masterHist, colorOption, label=legendLabel)
 	plt.xlabel(r'$M_p$')
 	plt.ylabel(r'$N(>M_p)$')
-
-def plotDiffMassHist(do, nStart=None, nEnd=None, spacing=0.05, figNum=0, legendLabel=None, colorOption='ko'):
-	print('plotting time-averaged cumulative mass hist for ' + do.path)
-	plt.figure(figNum)
-	if nStart is None: nStart = do.nt - 100
-	if nEnd   is None: nEnd   = do.nt
-	count=0
-	for n in range(nStart, nEnd):
-		bins, hist = getDiffMassHist(do, n, spacing=spacing)
-		if not isinstance(bins, int):
-			if count==0:
-				masterHist  = hist
-				plotBins    = bins
-			else:
-				masterHist += hist
-			count+=1
-	masterHist /= count
-	plt.loglog(plotBins, masterHist, colorOption, label=legendLabel)
-	plt.xlabel(r'$M_p$')
-	plt.ylabel(r'$dN/dM_p$')
-	minModelErr = 1.e40
-	minModelC   = 10000
-	for c in [np.power(10.0,i) for i in np.arange(-3,0)]:
-		model = c * np.power(bins, -1.6)
-		plt.loglog(bins, model, linestyle='--', color='k')
-
-def planMassFracTimeEvo(do, figNum=0, legendLabel=None, colorOption='k'):
-	print('plotting mass frac in planetesimals for ' + do.path)
-	plt.figure(figNum)
-	mFracList = []
-	for n in range(0, len(do.peakArrayList)):
-		if n < do.nFirstClump: mNow = 0
-		else: mNow = np.sum(do.peakArrayList[n][:,2])
-		mFracNow = mNow / do.mParTot
-		mFracList.append(mFracNow)
-	plt.plot(do.timeList, mFracList, colorOption, label=legendLabel)
-	plt.xlabel(r'$t \Omega$')
-	plt.ylabel(r'$M_{plan} / M_{par}$')
 
 def scatterPlotXZ(do, n, figNum=0):
 	print('plotting XZ scatter plot for ' + do.path + ', n=' +  str(n))
@@ -230,18 +596,8 @@ def scatterPlotXYZ(do, n, figNum=0):
 	ax.set_zlim(-0.1, 0.1)
 	plt.title(r'$t=$' + str(np.round(do.timeList[n],1)))
 
-def get_p(do, n):
-	nplan   = do.nClumpsList[n]
-	if nplan > 2:
-		minMass = np.amin(do.peakArrayList[n][:,2])
-		sum     = 0
-		for mass in do.peakArrayList[n][:,2]:
-			sum += np.log(mass / minMass)
-		p   = 1 + nplan * np.power(sum, -1)
-		err = (p-1)/np.sqrt(nplan)
-		return p, err
-	else:
-		return 0.0, 0.0
+
+
 
 def get_p_avg(do, nStart=None, nEnd=None):
 	if nStart is None: nStart = do.nt-100

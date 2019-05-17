@@ -45,8 +45,11 @@ else:
 if planPlots:
 	pList   = []
 	errList = []
-	for n in range(0, doPlan.nt):
-		p, err = readerPlan.get_p(doPlan, n)
+	for n in range(0, doPlan.nTot):
+		try:
+			p, err = readerPlan.get_p(doPlan, n)
+		except:
+			p=0.0; err=0.0;
 		pList.append(p)
 		errList.append(err)
 	pArr   = np.asarray(pList)
@@ -159,7 +162,7 @@ def makeAnimFrame(self, n):
 		aspect  = 0.84
 		plotData = prepPlotData(data2d, np.amin(data2d), np.amax(data2d))
 		cmapType = 'coolwarm'
-		ax[axNum].imshow(plotData, extent=extent, aspect=aspect, cmap=plt.get_cmap(cmapType))
+		ax[axNum].imshow(plotData, extent=[-10.0,10.0], aspect=aspect, cmap=plt.get_cmap(cmapType))
 
 	axNumDict = {'vx':3, 'vy':4, 'vz':5}
 	for key in ['vx', 'vy', 'vz']:
@@ -383,15 +386,18 @@ def makeAnimFrame(self, n):
 		# mass frac
 		axNum = 28
 		mFracList = []
-		for n1 in range(0, len(doPlan.peakArrayList)):
-			mNow = np.sum(doPlan.peakArrayList[n1][:,2])
+		for item in doPlan.peakArrayList:
+			try:
+				mNow = np.sum(item[:,2])
+			except:
+				mNow = 0.0
 			mFracNow = mNow / doPlan.mParTot
 			mFracList.append(mFracNow)
 		ax[axNum].plot(doPlan.timeList[n:], mFracList[n:], 'gray', linewidth=1)
 		ax[axNum].plot(doPlan.timeList[:n+1], mFracList[:n+1], 'k', linewidth=2)
 		ax[axNum].plot(doPlan.timeList[n], mFracList[n], 'ro', markersize=5)
 		#ax[axNum].get_xaxis().set_visible(False)
-		ax[axNum].set_ylim(-0.05, 5.02)
+		ax[axNum].set_ylim(-0.05, 1.02)
 		ax[axNum].set_ylabel(r'$M_{plan} / M_{par}$')
 		ax[axNum].set_xlim(0, doPlan.timeList[-1])
 
@@ -405,27 +411,31 @@ def makeAnimFrame(self, n):
 		ax[axNum].set_xlim(0, doPlan.timeList[-1])
 
 		# xy and xz scatters
-		masses = doPlan.peakArrayList[n][:, 2]
-		xs     = doPlan.peakArrayList[n][:, 4]
-		ys     = doPlan.peakArrayList[n][:, 5]
-		zs     = doPlan.peakArrayList[n][:, 6]
-		sizes  = [np.power(1.e4*mass, 1./2.) for mass in masses]
-		axNum = 23
-		ax[axNum].scatter(xs, ys, s=sizes)
-		ax[axNum].set_xlabel(r'$r/h$')
-		ax[axNum].set_ylabel(r'y/h')
-		ax[axNum].set_ylim(-do3d.ymax, do3d.ymax)
-		ax[axNum].set_xlim(-do3d.xmax, do3d.xmax)
-		ax[axNum].set_title('Clumps from PLAN')
-		axNum = 24
-		ax[axNum].scatter(xs, zs, s=sizes)
-		ax[axNum].set_xlabel(r'$r/h$')
-		ax[axNum].set_ylabel(r'$z/h$')
-		ax[axNum].set_ylim(-do3d.zmax, do3d.zmax)
-		ax[axNum].set_xlim(-do3d.xmax, do3d.xmax)
-		ax[axNum].set_title('Clumps from PLAN')
+		try:
+			masses = doPlan.peakArrayList[n][:, 2]
+			xs     = doPlan.peakArrayList[n][:, 4]
+			ys     = doPlan.peakArrayList[n][:, 5]
+			zs     = doPlan.peakArrayList[n][:, 6]
+			sizes  = [np.power(1.e4*mass, 1./2.) for mass in masses]
+			axNum = 23
+			ax[axNum].scatter(xs, ys, s=sizes)
+			ax[axNum].set_xlabel(r'$r/h$')
+			ax[axNum].set_ylabel(r'y/h')
+			ax[axNum].set_ylim(-do3d.ymax, do3d.ymax)
+			ax[axNum].set_xlim(-do3d.xmax, do3d.xmax)
+			ax[axNum].set_title('Clumps from PLAN')
+			axNum = 24
+			ax[axNum].scatter(xs, zs, s=sizes)
+			ax[axNum].set_xlabel(r'$r/h$')
+			ax[axNum].set_ylabel(r'$z/h$')
+			ax[axNum].set_ylim(-do3d.zmax, do3d.zmax)
+			ax[axNum].set_xlim(-do3d.xmax, do3d.xmax)
+			ax[axNum].set_title('Clumps from PLAN')
+		except:
+			pass
 
 		# cumulative hist
+		'''
 		axNum = 25
 		bins, hist = readerPlan.getCumMassHist(doPlan, n)
 		if not isinstance(bins, int): ax[axNum].loglog(bins, hist, 'ko', markersize=3)
@@ -435,8 +445,10 @@ def makeAnimFrame(self, n):
 		ax[axNum].set_xscale('log')
 		ax[axNum].set_ylim(8.e-1, 1.1*max(doPlan.nClumpsList))
 		ax[axNum].set_xlim(1.e-4, 1.e1)
+		'''
 
 		# differential hist
+		'''
 		axNum = 26
 		bins, hist = readerPlan.getDiffMassHist(doPlan, n)
 		if not isinstance(bins, int) and np.sum(hist>0)>2:
@@ -465,6 +477,7 @@ def makeAnimFrame(self, n):
 		ax[axNum].set_xscale('log')
 		ax[axNum].set_ylim(1.e-2, 1.e4)
 		ax[axNum].set_xlim(1.e-4, 1.e1)
+		'''
 
 
 	plt.tight_layout()

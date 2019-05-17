@@ -12,17 +12,27 @@ import athenaReader3d as reader3d
 import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
-pathBase    = '../../data/prodRuns/'
-runNameList = ['run301_noPar', 'run302_noPar', 'run303_noPar']
+#pathBase    = '../../data/prodRuns/'
+#runNameList = ['run301_noPar', 'run302_noPar', 'run303_noPar']
+#abelList   = [r'$\alpha_{in}=10^{-3}$',
+	           #r'$\alpha_{in}=10^{-3.5}$',
+			   #r'$\alpha_{in}=10^{-4}$']
+#colorList   = ['r', 'g', 'm', 'b']
+#pathSave = pathBase + 'plots/multiPlots3d_300_noPar/'
+#alphaDesiredList = [1.e-3, 3.2e-4, 1.e-4]
+################################################################################
+pathBase    = '../../data/kspaceTest/'
+runNameList = ['run410', 'run411', 'run412', 'run413']
 labelList   = [r'$\alpha_{in}=10^{-3}$',
+	           r'$\alpha_{in}=10^{-3.5}$',
 	           r'$\alpha_{in}=10^{-3.5}$',
 			   r'$\alpha_{in}=10^{-4}$']
 colorList   = ['r', 'g', 'm', 'b']
-pathSave = pathBase + 'plots/multiPlots3d_300_noPar/'
-alphaDesiredList = [1.e-3, 3.2e-4, 1.e-4]
+pathSave = pathBase + 'plots/multiPlots3d_400/'
+alphaDesiredList = [1.e-3, 3.2e-4, 1.e-4, 1.e-4]
 ################################################################################
-nStart      = 6
-nEnd        = 11
+nStart      = 2
+nEnd        = 7
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3dList    = []
 for n in range(len(runNameList)):

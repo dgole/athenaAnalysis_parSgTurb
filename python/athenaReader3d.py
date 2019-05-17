@@ -229,7 +229,7 @@ def slicePlot(do, key, n=None, figNum=0, axis='z', coord=0.0):
 		#norm     = colors.SymLogNorm(maxVal/100.0, linscale=2.0)
 	else:
 		cmapType = 'viridis'
-		#norm     = colors.LogNorm()
+		norm     = colors.LogNorm()
 	#plt.imshow(plotData, extent=extent, aspect=aspect, cmap=plt.get_cmap(cmapType), norm=norm)
 	plt.imshow(plotData, extent=extent, aspect=aspect, cmap=plt.get_cmap(cmapType))
 	plt.title(title)
