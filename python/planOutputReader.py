@@ -82,19 +82,6 @@ def getMasses(do, n):
 			masses.append(mass)
 		masses.sort()
 		return masses
-'''
-class Clump:
-	def __init__(self, do):
-		print("initializing a clump data structure...")
-		self.initMass =
-		self.curMass  =
-		self.initPos  =
-		self.curPos   =
-		self.curVel   =
-	def predictLoc(self, a):
-		a=1
-		return a
-'''
 
 def getDiffMassHist(do, n):
 	masses = getMasses(do, n)
@@ -294,7 +281,7 @@ def fit_stpl(mp):
 	a = 5.0
 	minMass = np.amin(mp); maxMass = np.amax(mp)
 	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
-	p2ll = 0.0;  p2ul = np.log(maxMass/minMass); p2step = 0.5;
+	p2ll = 0.01;  p2ul = np.log(maxMass/minMass); p2step = 0.5;
 	paramsOfMax, grid1 = gridSearch2d(lnlike_stpl, mp,
 									  p1ll, p1ul, p1step,
 									  p2ll, p2ul, p2step)
@@ -341,7 +328,7 @@ def fit_vtpl(mp):
 	#p3ll = 0.0;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
 	p1ll = 0.0; p1ul = 5.0; p1step = 0.5;
 	p2ll = -5.0; p2ul = 5.0; p2step = 0.5;
-	p3ll = 0.0;  p3ul = np.log(maxMass/minMass); p3step = 0.1;
+	p3ll = 0.01;  p3ul = np.log(maxMass/minMass); p3step = 0.1;
 	paramsOfMax, grid1 = gridSearch3d(lnlike_vtpl, mp,
 									  p1ll, p1ul, p1step,
 									  p2ll, p2ul, p2step,
@@ -394,7 +381,7 @@ def fit_bcpl(mp):
 	minMass = np.amin(mp); maxMass = np.amax(mp)
 	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
 	p2ll = 0.0;  p2ul = 5.0; p2step = 0.5;
-	p3ll = 0.0;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
+	p3ll = 0.01;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
 	paramsOfMax, grid1 = gridSearch3d(lnlike_bcpl, mp,
 									  p1ll, p1ul, p1step,
 									  p2ll, p2ul, p2step,
@@ -493,7 +480,7 @@ def fit_bpl(mp):
 	minMass = np.amin(mp); maxMass = np.amax(mp)
 	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
 	p2ll = 0.0;  p2ul = 5.0; p2step = 0.5;
-	p3ll = 0.0;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
+	p3ll = 0.01;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
 	paramsOfMax, grid1 = gridSearch3d(lnlike_bpl, mp,
 									  p1ll, p1ul, p1step,
 									  p2ll, p2ul, p2step,

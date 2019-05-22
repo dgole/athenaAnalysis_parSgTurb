@@ -17,7 +17,8 @@ import numpy.polynomial.polynomial as poly
 ################################################################################
 # paths and CL args
 pathBase = str(sys.argv[1])
-nTot     = int(sys.argv[2])
+nStart   = int(sys.argv[2])
+nTot     = int(sys.argv[3])
 pathPlan = pathBase + 'planOutput/'
 pathSave = pathBase + 'plots/planAnim/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
@@ -26,7 +27,7 @@ plt.figure(0)
 # set up data object and other params
 # 1    2    3      4    5    6
 # npar mass r_hill xcom ycom zcom
-doPlan1 = readerPlan.DataPlan(pathPlan, nStart=300, nTot=nTot, nPar=512*512*512, dt=0.1)
+doPlan1 = readerPlan.DataPlan(pathPlan, nStart=nStart, nTot=nTot, nPar=512*512*512, dt=0.1)
 p_mle_master   = []
 err_mle_master = []
 p_fit_master   = []
