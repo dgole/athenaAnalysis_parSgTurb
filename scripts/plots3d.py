@@ -13,6 +13,8 @@ import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
 pathBase = str(sys.argv[1])
+nStart   = int(sys.argv[2])
+nEnd     = int(sys.argv[3])
 ################################################################################
 path3d   = pathBase + '3d/'
 pathSave = pathBase + 'plots/plots3d/'
@@ -34,11 +36,11 @@ do3d = reader3d.Data3d(path3d)
     #tools.saveAndClear(pathSave + 'timeEvoAbsAvg_' + key + '.png', figNum=0)
 ################################################################################
 # perts
-for key in ['dv', 'dvx', 'dvy', 'dvz', 'drho']:
-    reader3d.profile(do3d, key, figNum=0)
+for key in ['dv']: #, 'dvx', 'dvy', 'dvz', 'drho']:
+    reader3d.profile(do3d, key, figNum=0, nStart=nStart, nEnd=nEnd)
     tools.saveAndClear(pathSave + 'profilePert_' + key + '.png', figNum=0)
-    reader3d.timeEvo(do3d, key, figNum=0)
-    tools.saveAndClear(pathSave + 'timeEvoPert_' + key + '.png', figNum=0)
+    #reader3d.timeEvo(do3d, key, figNum=0)
+    #tools.saveAndClear(pathSave + 'timeEvoPert_' + key + '.png', figNum=0)
 ################################################################################
 # normalized perts
 #for key in ['drhoNorm', 'dvxNorm', 'dvyNorm', 'dvzNorm', 'dvNorm']:

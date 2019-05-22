@@ -3,16 +3,37 @@
 #SBATCH -J 3d
 #SBATCH --time=2:00:00
 #SBATCH -N 1
-#SBATCH --ntasks 64
+#SBATCH --tasks-per-node 1
 #SBATCH -p development
 
 # The following commands will be executed when this script is run.
 module load gcc
 module load python3
 
-export DIR=$SCRATCH/parSgTurb/data/prodRuns/
 
-python3 plots3d.py $DIR
+DIR=$SCRATCH/parSgTurb/data/prodRuns/run101_noPar/bin/
+python3 plots3d.py $DIR 5 9
+
+DIR=$SCRATCH/parSgTurb/data/prodRuns/run102_noPar/bin/
+python3 plots3d.py $DIR 5 9
+
+DIR=$SCRATCH/parSgTurb/data/prodRuns/run100/bin/
+python3 plots3d.py $DIR 16 20
+
+DIR=$SCRATCH/parSgTurb/data/prodRuns/run101/bin/
+python3 plots3d.py $DIR 16 20
+
+DIR=$SCRATCH/parSgTurb/data/prodRuns/run102/bin/
+python3 plots3d.py $DIR 16 20
+
+DIR=$SCRATCH/parSgTurb/data/prodRuns/run103/bin/
+python3 plots3d.py $DIR 16 20
+
+
+
+
+
+
 #python3 multi_pspec.py $DIR
 
 #python3 master_multiPanel.py 1 1.e-3 0.1 $DIR

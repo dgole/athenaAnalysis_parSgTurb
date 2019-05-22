@@ -12,7 +12,7 @@ module load python3
 
 DIR=$SCRATCH/parSgTurb/data/prodRuns/run100/bin/
 
-python3 slices.py $DIR 64
+python3 slices.py $DIR 2
 
 
 
