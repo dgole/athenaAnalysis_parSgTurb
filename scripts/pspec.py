@@ -13,12 +13,12 @@ import athenaTools as tools
 from matplotlib.backends.backend_pdf import PdfPages
 ################################################################################
 pathBase = str(sys.argv[1])
+nStart   = int(sys.argv[2])
+nEnd     = int(sys.argv[3])
 path3d   = pathBase + '3d/'
 pathSave = pathBase + 'plots/pspec/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3d     = reader3d.Data3d(path3d)
-nStart   = 4
-nEnd     = 10
 plt.figure(0)
 ################################################################################
 vExpo = -1.833

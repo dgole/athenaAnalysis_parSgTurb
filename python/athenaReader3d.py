@@ -68,7 +68,7 @@ class Data3d:
 						'vx'        : r'$v_x$',
 						'vy'        : r'$v_y$',
 						'vz'        : r'$v_z$',
-						'dpar'      : r'$dpar$',
+						'dpar'      : r'$\rho_{par}$',
 						'vxpar'     : r'$v_x_{par}$',
 						'vypar'     : r'$v_y_{par}$',
 						'vypar'     : r'$v_z_{par}$',
@@ -181,10 +181,11 @@ def profile(do, key, figNum=0, nStart=None, nEnd=None, legendLabel=None, absAvg=
 	print('mean dv is ' + str(meanDv))
 	return meanDv
 
-def timeEvo(do, key, figNum=0, legendLabel=None, absAvg=1, absPlot=1, color='b'):
+def timeEvo(do, key, figNum=0, legendLabel=None, absAvg=1, absPlot=1, color='b', nEnd=None):
 	print(do.path + ": making timeEvo plot for key " + key)
 	sys.stdout.flush()
 	plt.figure(figNum)
+	if nEnd is None: nEnd=do.nt
 	plotData = np.zeros(do.nt)
 	for n in range(0, do.nt):
 		if absAvg==1: plotData[n] = np.mean(np.absolute(do.get3d(key, n)))
