@@ -13,8 +13,8 @@ sys.path.append('../python')
 pathBase  = str(sys.argv[1])
 nStart    = int(sys.argv[2])
 nStop     = int(sys.argv[3])
-pathPlan  = pathBase + 'planOutput2/'
-pathSave  = pathBase + 'planOutput2/clumpTracking_' + str(nStart) + '_' + str(nStop) + '/'
+pathPlan  = pathBase
+pathSave  = pathBase + 'clumpTracking_' + str(nStart) + '_' + str(nStop) + '/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 ################################################################################
 
@@ -65,6 +65,7 @@ def matchOneClump(clump, parIdArrList, clumpIdList, verbose=False):
 	if verbose:
 		print("###########################################################")
 		print("matching current clump " + str(clump.idList[-1]) + " to new frame...")
+		sys.stdout.flush()
 	matchFracList = []
 	nNonZero      = 0
 	for parIdArr in parIdArrList:
@@ -79,12 +80,14 @@ def matchOneClump(clump, parIdArrList, clumpIdList, verbose=False):
 			print("found exactly 1 clump with any matching particles")
 			print("matched to clump " + str(clumpIdList[jMax]))
 			print("match fraction was " + str(matchFracMax))
+			sys.stdout.flush()
 		return jMax, clumpIdList[jMax], parIdArrList[jMax]
 	elif nNonZero > 1:
 		if verbose:
 			print("found more than 1 clump with matching particles")
 			print("matching to clump with most overlap: " + str(clumpIdList[jMax]))
 			print("match fraction was " + str(matchFracMax))
+			sys.stdout.flush()
 		return jMax, clumpIdList[jMax], parIdArrList[jMax]
 	elif nNonZero == 0:
 		if verbose:
@@ -95,6 +98,7 @@ def matchOneClump(clump, parIdArrList, clumpIdList, verbose=False):
 
 clumpObjList = []
 print("generating clump objects for starting frame")
+sys.stdout.flush()
 n = nStart
 dirName, fileNameList = get_fileNameList(pathBase, n)
 for fileName in fileNameList:
@@ -106,6 +110,7 @@ for n in range(nStart+1, nStop):
 	print("####################################################################################")
 	print("matching to frame " + str(n))
 	print("reading in all new clump/particle lists...")
+	sys.stdout.flush()
 	dirName, fileNameList = get_fileNameList(pathBase, n)
 	parIdArrList = []
 	clumpIdList  = []
@@ -115,12 +120,14 @@ for n in range(nStart+1, nStop):
 		parIdArrList.append(parIdArr)
 		clumpIdList.append(clumpId)
 	print("looping over all already-existing clumps to find matches...")
+	sys.stdout.flush()
 	claimedClumpsList = []
 	for clump in clumpObjList:
 		jMax, clumpIdMatch, parIdArrMatch = matchOneClump(clump, parIdArrList, clumpIdList)
 		clump.update(clumpIdMatch, parIdArrMatch)
 		claimedClumpsList.append(jMax)
 	print("making new clump objects for unclaimed clumps...")
+	sys.stdout.flush()
 	for j in range(len(fileNameList)):
 		if j not in claimedClumpsList:
 			clumpObjList.append(Clump(clumpIdList[j], parIdArrList[j]))
@@ -134,14 +141,17 @@ for n in range(nStart+1, nStop):
 	print("total clumps:  " + str(totClumps))
 	print("new clumps:    " + str(newClumps))
 	print("failed clumps: " + str(failedClumps))
+	sys.stdout.flush()
 
 print("####################################################################################")
 print("final summary:")
 for clump in clumpObjList:
 	print(clump.idList)
+sys.stdout.flush()
 
 print("####################################################################################")
 print("saving results...")
+sys.stdout.flush()
 i = 0
 for clump in clumpObjList:
 	saveArr = np.asarray(clump.idList)
