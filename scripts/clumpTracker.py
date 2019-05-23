@@ -6,8 +6,8 @@ import os
 import math
 import sys
 sys.path.append('../python')
-import athenaTools as tools
-import planOutputReader as readerPlan
+#import athenaTools as tools
+#import planOutputReader as readerPlan
 ################################################################################
 # paths and CL args
 pathBase  = str(sys.argv[1])
@@ -16,11 +16,17 @@ nStop     = int(sys.argv[3])
 pathPlan  = pathBase + 'planOutput2/'
 pathSave  = pathBase + 'planOutput2/clumpTracking_' + str(nStart) + '_' + str(nStop) + '/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
-plt.figure(0)
 ################################################################################
 
+def get_timeStepString(i):
+	if i > 999:	 zstring = ""
+	elif i > 99: zstring = "0"
+	elif i > 9:  zstring = "00"
+	elif i > -1: zstring = "000"
+	return zstring+str(i)
+
 def get_fileNameList(pathBase, n):
-	nStr         = tools.getTimeStepString(n)
+	nStr         = get_timeStepString(n)
 	dirName      = pathPlan + 'ParList.' + nStr + '/'
 	fileNameList = os.listdir(dirName)
 	idList       = []
@@ -142,20 +148,6 @@ for clump in clumpObjList:
 	fileName = pathSave + str(i) + ".npy"
 	np.save(fileName, saveArr)
 	i+=1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
