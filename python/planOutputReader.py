@@ -62,7 +62,8 @@ class DataPlan:
 			try:
 				self.nClumpsList[n] = (self.peakArrayList[n]).shape[0]
 				print(str(self.nClumpsList[n]) + ' clumps found')
-				self.peakArrayList[n][:,2] *= self.m0_ceres
+				#self.peakArrayList[n][:,2] *= self.m0_ceres
+				self.peakArrayList[n][:,2] *= self.mg
 			except:
 				print('no clumps found')
 
@@ -106,6 +107,14 @@ def getCumMassHist(do, n):
 	else:
 		print('no partilce found in this output')
 
+def getCumMassHist2(masses):
+	masses.sort()
+	masses  = np.asarray(masses)
+	nMasses = masses.shape[0]
+	ngtm   = np.zeros_like(masses)
+	for n in range(nMasses):
+		ngtm[n] = nMasses - n
+	return masses, ngtm
 
 ################################################################################
 # modeling
@@ -121,6 +130,16 @@ def get_p_mle(do, n):
 		p   = 1 + nplan * np.power(sum, -1)
 		err = (p-1)/np.sqrt(nplan)
 		return p, err
+
+def get_p_mle2(sortedMassArr):
+	minMass = np.amin(sortedMassArr)
+	nplan   = sortedMassArr.shape[0]
+	sum     = 0
+	for mass in sortedMassArr:
+		sum += np.log(mass / minMass)
+	p   = 1 + nplan * np.power(sum, -1)
+	err = (p-1)/np.sqrt(nplan)
+	return p, err
 
 def get_p_fit(do, n):
 	nplan   = do.nClumpsList[n]
@@ -326,7 +345,7 @@ def fit_vtpl(mp):
 	#p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
 	#p2ll = -5.0; p2ul = 5.0; p2step = 0.5;
 	#p3ll = 0.0;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
-	p1ll = 0.0; p1ul = 5.0; p1step = 0.5;
+	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
 	p2ll = -5.0; p2ul = 5.0; p2step = 0.5;
 	p3ll = 0.01;  p3ul = np.log(maxMass/minMass); p3step = 0.1;
 	paramsOfMax, grid1 = gridSearch3d(lnlike_vtpl, mp,
@@ -508,6 +527,25 @@ def BIC(K, N, lnLike):
 	return 2.0*K*np.log(N)-2.0*lnLike
 def AIC(K, N, lnLike):
 	return 2.0*K-2.0*lnLike
+
+def reportParams(name, paramNames, means, errsPlus, errsMinus, maxLike, dbic, daic):
+	nParams = len(paramNames)
+	print("########################################################")
+	print(name)
+	if nParams == 1:
+		print(paramNames[0].ljust(8) + " = "
+			+ str(np.round(means,3)) + " p "
+			+ str(np.round(errsPlus[0],3)) + " m "
+			+ str(np.round(errsMinus[0],3)))
+	else:
+		for n in range(nParams):
+			print(paramNames[n].ljust(8) + " = "
+				+ str(np.round(means[n],3)) + " p "
+				+ str(np.round(errsPlus[n],3)) + " m "
+				+ str(np.round(errsMinus[n],3)))
+	print("ln(like) = " + str(np.round(maxLike,3)))
+	print("DBIC     = " + str(np.round(dbic,3)))
+	print("DAIC     = " + str(np.round(daic,3)))
 
 ####################################################################
 # plotting functions ###############################################

@@ -19,7 +19,7 @@ import numpy.polynomial.polynomial as poly
 pathBase = str(sys.argv[1])
 n        = int(sys.argv[2])
 nb       = int(sys.argv[3])
-pathPlan = pathBase + 'planOutput/'
+pathPlan = pathBase + 'planOutput2/'
 pathSave = pathBase + 'plots/plan/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 plt.figure(0)
@@ -145,32 +145,32 @@ report("BPL", ["alpha1", "alpha2", "x_br"],
 # cumulative hist plot
 # SPL
 ngtm_spl = readerPlan.P_spl(mp1, means_spl)
-fac = 1.0
+fac = 1.e5
 plt.loglog(mp1, fac*ngtm, color=(0,0,0,0.2), marker=".", linewidth=5, markersize=2)
 plt.loglog(mp1, nm*fac*ngtm_spl, color=(0,0,0,1), label='SPL', linestyle='--')
 # STPL
 ngtm_stpl = readerPlan.P_stpl(mp1, means_stpl)
-fac *=10
+fac /=10
 plt.loglog(mp1, fac*ngtm, color=(1,0,0,0.2), marker=".", linewidth=5, markersize=2)
 plt.loglog(mp1, nm*fac*ngtm_stpl, color=(1,0,0,1), label='STPL', linestyle='--')
 # VTPL
 ngtm_vtpl = readerPlan.P_vtpl(mp1, means_vtpl)
-fac *=10
+fac /=10
 plt.loglog(mp1, fac*ngtm, color=(0,1,0,0.2), marker=".", linewidth=5, markersize=2)
 plt.loglog(mp1, nm*fac*ngtm_vtpl, color=(0,1,0,1), label='VTPL', linestyle='--')
 # BCPL
 ngtm_bcpl = readerPlan.P_bcpl(mp1, means_bcpl)
-fac *=10
+fac /=10
 plt.loglog(mp1, fac*ngtm, color=(0,0,1,0.2), marker=".", linewidth=5, markersize=2)
 plt.loglog(mp1, nm*fac*ngtm_bcpl, color=(0,0,1,1.0), label='BCPL', linestyle='--')
 # TPL
 ngtm_tpl = readerPlan.P_tpl(mp1, means_tpl)
-fac *=10
+fac /=10
 plt.loglog(mp1, fac*ngtm, color=(1,0,1,0.2), marker=".", linewidth=5, markersize=2)
 plt.loglog(mp1, nm*fac*ngtm_tpl, color=(1,0,1,1), label='TPL', linestyle='--')
 # BPL
 ngtm_bpl = readerPlan.P_bpl(mp1, means_bpl)
-fac *=10
+fac /=10
 plt.loglog(mp1, fac*ngtm, color=(0,1,1,0.2), marker=".", linewidth=5, markersize=2)
 plt.loglog(mp1, nm*fac*ngtm_bpl, color=(0,1,1,1), label='BPL', linestyle='--')
 # plot labels etc.

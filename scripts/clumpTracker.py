@@ -61,7 +61,9 @@ def compare_arrays(a0, a1):
 	fracDup = (aBoth.shape[0] - aUnique.shape[0]) / a0.shape[0]
 	return fracDup
 
+splitterIds = []
 def matchOneClump(clump, parIdArrList, clumpIdList, verbose=False):
+	global splitterIds
 	if verbose:
 		print("###########################################################")
 		print("matching current clump " + str(clump.idList[-1]) + " to new frame...")
@@ -72,9 +74,33 @@ def matchOneClump(clump, parIdArrList, clumpIdList, verbose=False):
 		matchFrac = compare_arrays(clump.currentPars, parIdArr)
 		matchFracList.append(matchFrac)
 		if matchFrac > 0.0: nNonZero+=1
-	matchFracArr = np.asarray(matchFracList)
-	matchFracMax = np.amax(matchFracArr)
-	jMax         = np.argmax(matchFracArr)
+	matchFracArr  = np.asarray(matchFracList)
+	jMax          = np.argmax(matchFracArr)
+	matchFracMax  = np.amax(matchFracArr)
+	try:
+		jMax2         = ((np.argsort(matchFracArr))[::-1])[1]
+		matchFracMax2 = matchFracArr[jMax2]
+	except: pass
+	try:
+		jMax3         = ((np.argsort(matchFracArr))[::-1])[2]
+		matchFracMax3 = matchFracArr[jMax3]
+	except: pass
+	try:
+		jMax4         = ((np.argsort(matchFracArr))[::-1])[3]
+		matchFracMax4 = matchFracArr[jMax4]
+	except: pass
+	try:
+		jMax5         = ((np.argsort(matchFracArr))[::-1])[4]
+		matchFracMax5 = matchFracArr[jMax5]
+	except: pass
+	try:
+		jMax6         = ((np.argsort(matchFracArr))[::-1])[5]
+		matchFracMax6 = matchFracArr[jMax6]
+	except: pass
+	try:
+		jMax7         = ((np.argsort(matchFracArr))[::-1])[6]
+		matchFracMax7 = matchFracArr[jMax7]
+	except: pass
 	if nNonZero == 1:
 		if verbose:
 			print("found exactly 1 clump with any matching particles")
@@ -82,13 +108,114 @@ def matchOneClump(clump, parIdArrList, clumpIdList, verbose=False):
 			print("match fraction was " + str(matchFracMax))
 			sys.stdout.flush()
 		return jMax, clumpIdList[jMax], parIdArrList[jMax]
-	elif nNonZero > 1:
-		if verbose:
-			print("found more than 1 clump with matching particles")
+	elif nNonZero == 2:
+		if verbose or True:
+			print("found 2 clumps with matching particles")
 			print("matching to clump with most overlap: " + str(clumpIdList[jMax]))
 			print("match fraction was " + str(matchFracMax))
+			print("marking the other clump as a splitter: " + str(clumpIdList[jMax2]))
+			print("it's match fraction was " + str(matchFracMax2))
+			splitterIds.append(clumpIdList[jMax2])
 			sys.stdout.flush()
 		return jMax, clumpIdList[jMax], parIdArrList[jMax]
+	elif nNonZero == 3:
+		if verbose or True:
+			print("found 3 clumps with matching particles")
+			print("matching to clump with most overlap: " + str(clumpIdList[jMax]))
+			print("match fraction was " + str(matchFracMax))
+			print("marking the other clump as a splitter: " + str(clumpIdList[jMax2]))
+			print("it's match fraction was " + str(matchFracMax2))
+			splitterIds.append(clumpIdList[jMax2])
+			print("marking the other clump 2 as a splitter: " + str(clumpIdList[jMax3]))
+			print("it's match fraction was " + str(matchFracMax3))
+			splitterIds.append(clumpIdList[jMax3])
+			sys.stdout.flush()
+		return jMax, clumpIdList[jMax], parIdArrList[jMax]
+	elif nNonZero == 4:
+		if verbose or True:
+			print("found 3 clumps with matching particles")
+			print("matching to clump with most overlap: " + str(clumpIdList[jMax]))
+			print("match fraction was " + str(matchFracMax))
+			print("marking the other clump as a splitter: " + str(clumpIdList[jMax2]))
+			print("it's match fraction was " + str(matchFracMax2))
+			splitterIds.append(clumpIdList[jMax2])
+			print("marking the other clump 2 as a splitter: " + str(clumpIdList[jMax3]))
+			print("it's match fraction was " + str(matchFracMax3))
+			splitterIds.append(clumpIdList[jMax3])
+			print("marking the other clump 3 as a splitter: " + str(clumpIdList[jMax4]))
+			print("it's match fraction was " + str(matchFracMax4))
+			splitterIds.append(clumpIdList[jMax4])
+			sys.stdout.flush()
+		return jMax, clumpIdList[jMax], parIdArrList[jMax]
+	elif nNonZero == 5:
+		if verbose or True:
+			print("found 3 clumps with matching particles")
+			print("matching to clump with most overlap: " + str(clumpIdList[jMax]))
+			print("match fraction was " + str(matchFracMax))
+			print("marking the other clump as a splitter: " + str(clumpIdList[jMax2]))
+			print("it's match fraction was " + str(matchFracMax2))
+			splitterIds.append(clumpIdList[jMax2])
+			print("marking the other clump 2 as a splitter: " + str(clumpIdList[jMax3]))
+			print("it's match fraction was " + str(matchFracMax3))
+			splitterIds.append(clumpIdList[jMax3])
+			print("marking the other clump 3 as a splitter: " + str(clumpIdList[jMax4]))
+			print("it's match fraction was " + str(matchFracMax4))
+			splitterIds.append(clumpIdList[jMax4])
+			print("marking the other clump 4 as a splitter: " + str(clumpIdList[jMax5]))
+			print("it's match fraction was " + str(matchFracMax5))
+			splitterIds.append(clumpIdList[jMax5])
+			sys.stdout.flush()
+		return jMax, clumpIdList[jMax], parIdArrList[jMax]
+	elif nNonZero == 6:
+		if verbose or True:
+			print("found 3 clumps with matching particles")
+			print("matching to clump with most overlap: " + str(clumpIdList[jMax]))
+			print("match fraction was " + str(matchFracMax))
+			print("marking the other clump as a splitter: " + str(clumpIdList[jMax2]))
+			print("it's match fraction was " + str(matchFracMax2))
+			splitterIds.append(clumpIdList[jMax2])
+			print("marking the other clump 2 as a splitter: " + str(clumpIdList[jMax3]))
+			print("it's match fraction was " + str(matchFracMax3))
+			splitterIds.append(clumpIdList[jMax3])
+			print("marking the other clump 3 as a splitter: " + str(clumpIdList[jMax4]))
+			print("it's match fraction was " + str(matchFracMax4))
+			splitterIds.append(clumpIdList[jMax4])
+			print("marking the other clump 4 as a splitter: " + str(clumpIdList[jMax5]))
+			print("it's match fraction was " + str(matchFracMax5))
+			splitterIds.append(clumpIdList[jMax5])
+			print("marking the other clump 5 as a splitter: " + str(clumpIdList[jMax6]))
+			print("it's match fraction was " + str(matchFracMax6))
+			splitterIds.append(clumpIdList[jMax6])
+			sys.stdout.flush()
+		return jMax, clumpIdList[jMax], parIdArrList[jMax]
+	elif nNonZero == 7:
+		if verbose or True:
+			print("found 3 clumps with matching particles")
+			print("matching to clump with most overlap: " + str(clumpIdList[jMax]))
+			print("match fraction was " + str(matchFracMax))
+			print("marking the other clump as a splitter: " + str(clumpIdList[jMax2]))
+			print("it's match fraction was " + str(matchFracMax2))
+			splitterIds.append(clumpIdList[jMax2])
+			print("marking the other clump 2 as a splitter: " + str(clumpIdList[jMax3]))
+			print("it's match fraction was " + str(matchFracMax3))
+			splitterIds.append(clumpIdList[jMax3])
+			print("marking the other clump 3 as a splitter: " + str(clumpIdList[jMax4]))
+			print("it's match fraction was " + str(matchFracMax4))
+			splitterIds.append(clumpIdList[jMax4])
+			print("marking the other clump 4 as a splitter: " + str(clumpIdList[jMax5]))
+			print("it's match fraction was " + str(matchFracMax5))
+			splitterIds.append(clumpIdList[jMax5])
+			print("marking the other clump 5 as a splitter: " + str(clumpIdList[jMax6]))
+			print("it's match fraction was " + str(matchFracMax6))
+			splitterIds.append(clumpIdList[jMax6])
+			print("marking the other clump 6 as a splitter: " + str(clumpIdList[jMax7]))
+			print("it's match fraction was " + str(matchFracMax7))
+			splitterIds.append(clumpIdList[jMax7])
+			sys.stdout.flush()
+		return jMax, clumpIdList[jMax], parIdArrList[jMax]
+	elif nNonZero > 7:
+		if verbose or True:
+			print("FOUND MORE THAN 7 CLUMPS WITH MATCHING PARTICLES")
 	elif nNonZero == 0:
 		if verbose:
 			print("did not find any matching clumps")
@@ -122,8 +249,12 @@ for n in range(nStart+1, nStop):
 	print("looping over all already-existing clumps to find matches...")
 	sys.stdout.flush()
 	claimedClumpsList = []
+	nDone = 0; nTot = len(clumpObjList);
 	for clump in clumpObjList:
-		jMax, clumpIdMatch, parIdArrMatch = matchOneClump(clump, parIdArrList, clumpIdList)
+		print("clump " + str(nDone) + " of " + str(nTot))
+		sys.stdout.flush()
+		nDone+=1
+		jMax, clumpIdMatch, parIdArrMatch = matchOneClump(clump, parIdArrList, clumpIdList, verbose=False)
 		clump.update(clumpIdMatch, parIdArrMatch)
 		claimedClumpsList.append(jMax)
 	print("making new clump objects for unclaimed clumps...")
@@ -134,13 +265,17 @@ for n in range(nStart+1, nStop):
 	print("summary of current state:")
 	totClumps    = len(clumpObjList)
 	newClumps    = 0
-	failedClumps = 0
+	deadClumps   = 0
+	liveClumps   = 0
 	for clump in clumpObjList:
-		if clump.idList[-1][0] != n: failedClumps += 1
-		if clump.idList[0][0]  == n: newClumps    += 1
-	print("total clumps:  " + str(totClumps))
-	print("new clumps:    " + str(newClumps))
-	print("failed clumps: " + str(failedClumps))
+		if clump.idList[-1][0] != n: deadClumps += 1
+		else:                        liveClumps += 1
+		if clump.idList[0][0]  == n: newClumps  += 1
+	print("total clumps: " + str(totClumps))
+	print("live clumps:  " + str(liveClumps))
+	print("dead clumps:  " + str(deadClumps))
+	print("new clumps:   " + str(newClumps))
+	print("splitters:    " + str(len(splitterIds)))
 	sys.stdout.flush()
 
 print("####################################################################################")
@@ -158,6 +293,10 @@ for clump in clumpObjList:
 	fileName = pathSave + str(i) + ".npy"
 	np.save(fileName, saveArr)
 	i+=1
+# save splitterIds
+saveArr = np.asarray(splitterIds)
+fileName = pathSave + "splitterIds.npy"
+np.save(fileName, saveArr)
 
 
 

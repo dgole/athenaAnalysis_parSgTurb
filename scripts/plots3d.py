@@ -59,10 +59,12 @@ tools.saveAndClear(pathSave + 'timeEvoPert_alldv.png', figNum=0)
 ################################################################################
 # max dpar
 print("making max dpar plot...")
+sys.stdout.flush()
 key = 'dpar'
 plotDataList = []
 for n in range(do3d.nt):
 	print("reading in time step " + str(n) + "...")
+    sys.stdout.flush()
 	data = do3d.get3d(key, n)
 	plotDataList.append(np.amax(data))
 plotData = np.asarray(plotDataList)

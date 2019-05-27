@@ -17,6 +17,7 @@ import athenaTools as tools
 class Data3d:
 	def __init__(self, path, baseName="Par_Strat3d", dt=1.0):
 		print("initializing 3d data structure from " + path)
+		sys.stdout.flush()
 		self.path    = path
 		fileList     = os.listdir(self.path)
 		nFiles       = len(fileList)
@@ -118,6 +119,7 @@ class Data3d:
 		self.shearTime = 1/(self.q*self.omega)
 		print("data structure initialized pointing to data of shape " + str(dataTemp.shape)
 		      + ' x ' + str(self.nt) + ' time steps')
+		sys.stdout.flush()
 		del dataTemp
 	def get3d(self, key, n, *args, **kwargs):
 		if   key in self.cols:
@@ -126,6 +128,7 @@ class Data3d:
 			returnData = self.funcs[key](self, n)
 		else:
 			print('unknown key given')
+			sys.stdout.flush()
 			returnData = None
 		return returnData
 	def get3d_unsheared(self, key, n, *args, **kwargs):

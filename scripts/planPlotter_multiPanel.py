@@ -19,7 +19,7 @@ import numpy.polynomial.polynomial as poly
 pathBase = str(sys.argv[1])
 nStart   = int(sys.argv[2])
 nTot     = int(sys.argv[3])
-pathPlan = pathBase + 'planOutput/'
+pathPlan = pathBase + 'planOutput2/'
 pathSave = pathBase + 'plots/planAnim/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 plt.figure(0)
