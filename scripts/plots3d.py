@@ -24,6 +24,7 @@ if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3d = reader3d.Data3d(path3d)
 ################################################################################
 # dv profiles, all components on same plot
+'''
 key = 'dv'
 reader3d.profile(do3d, key, color='k', figNum=0, nStart=nStart, nEnd=nEnd, legendLabel=do3d.header[key])
 key = 'dvx'
@@ -37,8 +38,10 @@ plt.axhline(dvBase, color='gray', linestyle='--')
 #plt.axhline(dvBase/np.sqrt(3.), color='gray', linestyle=':')
 plt.legend(loc='best')
 tools.saveAndClear(pathSave + 'profilePert_alldv.png', figNum=0)
+'''
 ################################################################################
 # dv time evo, all components on same plot
+'''
 key = 'dv'
 reader3d.timeEvo(do3d, key, color='k', figNum=0, legendLabel=do3d.header[key])
 key = 'dvx'
@@ -52,16 +55,19 @@ plt.axhline(dvBase, color='gray', linestyle='--')
 #plt.axhline(dvBase/np.sqrt(3.), color='gray', linestyle=':')
 plt.legend(loc='best')
 tools.saveAndClear(pathSave + 'timeEvoPert_alldv.png', figNum=0)
+'''
 ################################################################################
 # max dpar
+print("making max dpar plot...")
 key = 'dpar'
 plotDataList = []
 for n in range(do3d.nt):
+	print("reading in time step " + str(n) + "...")
 	data = do3d.get3d(key, n)
 	plotDataList.append(np.amax(data))
 plotData = np.asarray(plotDataList)
 plt.xlabel(r'$t \Omega$')
-plt.ylabel('MAX()' + do3d.header[key] + ')')
+plt.ylabel('MAX(' + do3d.header[key] + ')')
 plt.semilogy(do3d.t, plotData, color='k')
 plt.axvline(20, color='gray', lineStyle=':')
 plt.axhline(plotData[20], color='gray', lineStyle=':')

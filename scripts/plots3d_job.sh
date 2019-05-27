@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -J 3d
+#SBATCH -J 3d_100
 #SBATCH --time=2:00:00
 #SBATCH -N 1
 #SBATCH --tasks-per-node 1
@@ -11,23 +11,26 @@ module load gcc
 module load python3
 
 
-DIR=$SCRATCH/parSgTurb/data/prodRuns/run101_noPar/bin/
-python3 plots3d.py $DIR 5 9
+#DIR=$SCRATCH/parSgTurb/data/prodRuns/run101_noPar/bin/
+#python3 plots3d.py $DIR 5 9 3.2e-4
 
-DIR=$SCRATCH/parSgTurb/data/prodRuns/run102_noPar/bin/
-python3 plots3d.py $DIR 5 9
+#DIR=$SCRATCH/parSgTurb/data/prodRuns/run102_noPar/bin/
+#python3 plots3d.py $DIR 5 9 1.e-3
+
+#DIR=$SCRATCH/parSgTurb/data/prodRuns/run103_noPar/bin/
+#python3 plots3d.py $DIR 5 9 1.e-4
 
 DIR=$SCRATCH/parSgTurb/data/prodRuns/run100/bin/
-python3 plots3d.py $DIR 16 20
+python3 plots3d.py $DIR 16 20 1.e-5 
 
 DIR=$SCRATCH/parSgTurb/data/prodRuns/run101/bin/
-python3 plots3d.py $DIR 16 20
+python3 plots3d.py $DIR 16 20 3.2e-4
 
-DIR=$SCRATCH/parSgTurb/data/prodRuns/run102/bin/
-python3 plots3d.py $DIR 16 20
+#DIR=$SCRATCH/parSgTurb/data/prodRuns/run102/bin/
+#python3 plots3d.py $DIR 16 20 1.e-3
 
-DIR=$SCRATCH/parSgTurb/data/prodRuns/run103/bin/
-python3 plots3d.py $DIR 16 20
+#DIR=$SCRATCH/parSgTurb/data/prodRuns/run103/bin/
+#python3 plots3d.py $DIR 16 20 1.e-4
 
 
 
