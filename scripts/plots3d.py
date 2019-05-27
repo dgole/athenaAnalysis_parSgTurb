@@ -64,7 +64,7 @@ key = 'dpar'
 plotDataList = []
 for n in range(do3d.nt):
 	print("reading in time step " + str(n) + "...")
-    sys.stdout.flush()
+	sys.stdout.flush()
 	data = do3d.get3d(key, n)
 	plotDataList.append(np.amax(data))
 plotData = np.asarray(plotDataList)
