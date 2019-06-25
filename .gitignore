@@ -6,3 +6,4 @@ scripts/planJake/*
 scripts/planNew/*
 scripts/planNew2/*
 scripts/stats/*
+scripts/*.csv
