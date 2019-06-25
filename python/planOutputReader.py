@@ -63,7 +63,7 @@ class DataPlan:
 				self.nClumpsList[n] = (self.peakArrayList[n]).shape[0]
 				print(str(self.nClumpsList[n]) + ' clumps found')
 				#self.peakArrayList[n][:,2] *= self.m0_ceres
-				self.peakArrayList[n][:,2] *= self.mg
+				self.peakArrayList[n][:,2] /= self.mg
 			except:
 				print('no clumps found')
 
@@ -94,6 +94,17 @@ def getDiffMassHist(do, n):
 			mpList.append(mp)
 			dndmpList.append(2.0/(masses[i+1] - masses[i-1]))
 		return mpList, dndmpList
+
+def getDiffMassHist2(masses):
+	if masses is not None:
+		dndmpList  = []
+		mpList     = []
+		for i in range(1, len(masses)-1):
+			mp = masses[i]
+			mpList.append(mp)
+			dndmpList.append(2.0/(masses[i+1] - masses[i-1]))
+		return mpList, dndmpList
+
 
 def getCumMassHist(do, n):
 	if do.nClumps[n] != 0:
@@ -154,8 +165,26 @@ def get_p_fit(do, n):
 def convert_to_x(masses):
 	return np.log(masses/np.amin(masses))
 
-def pdf_to_dndmp(nRealMasses, masses, pdf):
-	nMasses = masses.shape[0]
+def p_to_P_bpl(masses, p):
+	maxMass = np.amax(masses)
+	elongateMasses = np.logspace(np.log10(maxMass*1.01), np.log10(maxMass*1000), num=1000)
+	longMasses = np.append(masses, elongateMasses)
+
+	nmOG   = masses.shape[0]
+	nmLong = longMasses.shape[0]
+	dm = np.zeros(nmLong)
+	for i in range(1, nmLong-1):
+		dm[i] = (longMasses[i+1] - longMasses[i-1])/ 2.0
+	dm[0]  = dm[1]
+	dm[-1] = dm[-2]
+	dm_times_p = dm*p
+	P  = np.zeros_like(p)
+	for i in range(P.shape[0]):
+		P[i] = np.sum(dm_times_p[i:])
+	return P
+
+
+	'''
 	dlnm  = np.zeros_like(masses)
 	for n in range(masses.shape[0]-1):
 		dlnm[n] = np.log(masses[n+1]/masses[n])
@@ -166,6 +195,9 @@ def pdf_to_dndmp(nRealMasses, masses, pdf):
 	dm[-1]=dm[-2]
 	dndmp = pdf * dlnm/dm * nRealMasses
 	return dndmp
+	'''
+
+
 
 def gridSearch1d(funcName, mp, p1min, p1max, p1step):
 	#print("performing grid search...")
@@ -224,7 +256,7 @@ def gridSearch3d(funcName, mp, p1min, p1max, p1step, p2min, p2max, p2step, p3min
 					#print("params:        " + str(params))
 	return paramsOfMax, maxLike
 
-def bootstrap(mp, funcName, nParams, nb=100, sampleFactor=1.0):
+def bootstrap(mp, funcName, nParams, nb=100, sampleFactor=1.0, pathSave=None):
 	print("Computing " + str(funcName.__name__)
 		+ " fit for " + str(nb) + " subsamples...")
 	paramsAll  =  np.zeros([nb, nParams])
@@ -239,10 +271,34 @@ def bootstrap(mp, funcName, nParams, nb=100, sampleFactor=1.0):
 		params, maxLike = funcName(sample)
 		paramsAll[n]    = params
 	means           = np.median(paramsAll, axis=0)
-	errsPlus        = np.percentile(paramsAll, 84, axis=0) - means
-	errsMinus       = means - np.percentile(paramsAll, 16, axis=0)
 	params, maxLike = funcName(mp)
+	errsPlus        = np.percentile(paramsAll, 84, axis=0) - params
+	errsMinus       = params - np.percentile(paramsAll, 14, axis=0)
+	#print(params)
+	#print(np.percentile(paramsAll, 86, axis=0))
+	#print(np.percentile(paramsAll, 14, axis=0))
+	#print(errsPlus)
+	#print(errsMinus)
+	if pathSave is not None:
+		for i in range(paramsAll.shape[1]):
+			plt.figure(0)
+			nBins = int(max(10.0, nb/50.0))
+			plt.hist(paramsAll[:,i], color='gray', bins=nBins)
+			plt.xlim(np.amin(paramsAll[:,i])-0.1, np.amax(paramsAll[:,i])+0.1)
+			try:
+				plt.axvline(params[i], color='k', linestyle='--')
+				plt.axvline(params[i]+errsPlus[i], color='r', linestyle='--')
+				plt.axvline(params[i]-errsMinus[i], color='b', linestyle='--')
+				plt.title(str(np.round(params[i],4)) + " + " + str(np.round(errsPlus[i],4)) + " - " + str(np.round(errsMinus[i],4)))
+			except:
+				plt.axvline(params, color='k', linestyle='--')
+				plt.axvline(params+errsPlus, color='r', linestyle='--')
+				plt.axvline(params-errsMinus, color='b', linestyle='--')
+				plt.title(str(np.round(params,4)) + " + " + str(np.round(errsPlus[i],4)) + " - " + str(np.round(errsMinus[i],4)))
+			tools.saveAndClear(pathSave + "z_bs_" + str(funcName.__name__) + "_" + str(i) +".png", figNum=0)
 	return params, errsPlus, errsMinus, maxLike
+
+
 
 
 # SPL FITTING
@@ -264,19 +320,16 @@ def fit_spl(mp):
 	a = 5.0
 	minMass = np.amin(mp); maxMass = np.amax(mp)
 	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
-	paramsOfMax, grid1 = gridSearch1d(lnlike_spl, mp,
-									  p1ll, p1ul, p1step)
-	p1 = paramsOfMax
-	paramsOfMax, grid2 = gridSearch1d(lnlike_spl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a)
-	p1 = paramsOfMax
-	p1step /= a;
-	paramsOfMax, grid2 = gridSearch1d(lnlike_spl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a)
-	p1step /= a;
-	paramsOfMax, grid2 = gridSearch1d(lnlike_spl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a)
-	return paramsOfMax, grid1
+	p1, grid1 = gridSearch1d(lnlike_spl, mp,
+							 p1ll, p1ul, p1step)
+	for i in range(5):
+		p1, grid2 = gridSearch1d(lnlike_spl, mp,
+		 						 max(p1-2*p1step,p1ll), min(p1+2*p1step,p1ul), p1step/a)
+		p1step /= a;
+	return p1, grid1
+
+
+
 
 # STPL FITTING
 def p_stpl(masses, params):
@@ -301,23 +354,18 @@ def fit_stpl(mp):
 	minMass = np.amin(mp); maxMass = np.amax(mp)
 	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
 	p2ll = 0.01;  p2ul = np.log(maxMass/minMass); p2step = 0.5;
-	paramsOfMax, grid1 = gridSearch2d(lnlike_stpl, mp,
-									  p1ll, p1ul, p1step,
-									  p2ll, p2ul, p2step)
-	p1, p2  = paramsOfMax
-	paramsOfMax, grid2 = gridSearch2d(lnlike_stpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
-	p1, p2  = paramsOfMax
-	p1step /= a; p2step /= a;
-	paramsOfMax, grid2 = gridSearch2d(lnlike_stpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
-	p1step /= a; p2step /= a;
-	paramsOfMax, grid2 = gridSearch2d(lnlike_stpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
-	return paramsOfMax, grid1
+	(p1, p2), grid1 = gridSearch2d(lnlike_stpl, mp,
+								   p1ll, p1ul, p1step,
+								   p2ll, p2ul, p2step)
+	for i in range(5):
+		(p1, p2), grid2 = gridSearch2d(lnlike_stpl, mp,
+		 							   max(p1-2*p1step,p1ll), min(p1+2*p1step,p1ul), p1step/a,
+		 							   max(p2-2*p2step,p2ll), min(p2+2*p2step,p2ul), p2step/a)
+		p1step /= a; p2step /= a;
+	return (p1, p2), grid1
+
+
+
 
 # VTPL FITTING
 def p_vtpl(masses, params):
@@ -342,34 +390,26 @@ def lnlike_vtpl(masses, params):
 def fit_vtpl(mp):
 	a = 5.0
 	minMass = np.amin(mp); maxMass = np.amax(mp)
-	#p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
-	#p2ll = -5.0; p2ul = 5.0; p2step = 0.5;
-	#p3ll = 0.0;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
 	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
 	p2ll = -5.0; p2ul = 5.0; p2step = 0.5;
-	p3ll = 0.01;  p3ul = np.log(maxMass/minMass); p3step = 0.1;
-	paramsOfMax, grid1 = gridSearch3d(lnlike_vtpl, mp,
+	p3ll = 0.01;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
+	(p1, p2, p3), grid1 = gridSearch3d(lnlike_vtpl, mp,
 									  p1ll, p1ul, p1step,
 									  p2ll, p2ul, p2step,
 									  p3ll, p3ul, p3step)
-	p1, p2, p3 = paramsOfMax
-	paramsOfMax, grid2 = gridSearch3d(lnlike_vtpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
-	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
-	p1, p2, p3 = paramsOfMax
-	p1step /= a; p2step /= a; p3step /= a;
-	paramsOfMax, grid2 = gridSearch3d(lnlike_vtpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
-	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
-	p1, p2, p3 = paramsOfMax
-	p1step /= a; p2step /= a; p3step /= a;
-	paramsOfMax, grid2 = gridSearch3d(lnlike_vtpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
-	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
-	return paramsOfMax, grid1
+	for i in range(5):
+		#print("iteration: " + str(i))
+		(p1, p2, p3), grid2 = gridSearch3d(lnlike_vtpl, mp,
+	 										max(p1-2*p1step,p1ll), min(p1+2*p1step,p1ul), p1step/a,
+	 										max(p2-2*p2step,p2ll), min(p2+2*p2step,p2ul), p2step/a,
+	 										max(p3-2*p3step,p3ll), min(p3+2*p3step,p3ul), p3step/a)
+		#print(p1, p2, p3)
+		#print(p1step, p2step, p3step)
+		p1step /= a; p2step /= a; p3step /= a;
+	return (p1, p2, p3), grid1
+
+
+
 
 # BCPL FITTING
 def p_bcpl(masses, params):
@@ -401,28 +441,20 @@ def fit_bcpl(mp):
 	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
 	p2ll = 0.0;  p2ul = 5.0; p2step = 0.5;
 	p3ll = 0.01;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
-	paramsOfMax, grid1 = gridSearch3d(lnlike_bcpl, mp,
+	(p1, p2, p3), grid1 = gridSearch3d(lnlike_bcpl, mp,
 									  p1ll, p1ul, p1step,
 									  p2ll, p2ul, p2step,
 									  p3ll, p3ul, p3step)
-	p1, p2, p3 = paramsOfMax
-	paramsOfMax, grid2 = gridSearch3d(lnlike_bcpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
-	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
-	p1, p2, p3 = paramsOfMax
-	p1step /= a; p2step /= a; p3step /= a;
-	paramsOfMax, grid2 = gridSearch3d(lnlike_bcpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
-	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
-	p1, p2, p3 = paramsOfMax
-	p1step /= a; p2step /= a; p3step /= a;
-	paramsOfMax, grid2 = gridSearch3d(lnlike_bcpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
-	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
-	return paramsOfMax, grid1
+	for i in range(5):
+		(p1, p2, p3), grid2 = gridSearch3d(lnlike_bcpl, mp,
+	 										max(p1-2*p1step,p1ll), min(p1+2*p1step,p1ul), p1step/a,
+	 										max(p2-2*p2step,p2ll), min(p2+2*p2step,p2ul), p2step/a,
+	 										max(p3-2*p3step,p3ll), min(p3+2*p3step,p3ul), p3step/a)
+		p1step /= a; p2step /= a; p3step /= a;
+	return (p1, p2, p3), grid1
+
+
+
 
 # TPL FITTING
 def p_tpl(masses, params):
@@ -448,31 +480,26 @@ def lnlike_tpl(masses, params):
 def fit_tpl(mp):
 	a=5.0
 	minMass = np.amin(mp); maxMass = np.amax(mp)
+	#print(maxMass)
 	p1ll = -5.0; p1ul = 5.0; p1step = 0.1;
 	p2ll = np.log(maxMass/minMass);  p2ul = p2ll*10.0; p2step = (p2ul-p1ul)/50.0;
-	paramsOfMax, grid1 = gridSearch2d(lnlike_tpl, mp,
-									  p1ll, p1ul, p1step,
-									  p2ll, p2ul, p2step)
-	p1, p2  = paramsOfMax
-	paramsOfMax, grid2 = gridSearch2d(lnlike_tpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
-	p1, p2  = paramsOfMax
-	p1step /= a; p2step /= a;
-	paramsOfMax, grid2 = gridSearch2d(lnlike_tpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
-	p1, p2  = paramsOfMax
-	p1step /= a; p2step /= a;
-	paramsOfMax, grid2 = gridSearch2d(lnlike_tpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a)
-	return paramsOfMax, grid1
+	(p1, p2), grid1 = gridSearch2d(lnlike_tpl, mp,
+								   p1ll, p1ul, p1step,
+								   p2ll, p2ul, p2step)
+	for i in range(5):
+		(p1, p2), grid2 = gridSearch2d(lnlike_tpl, mp,
+		 							   max(p1-2*p1step,p1ll), min(p1+2*p1step,p1ul), p1step/a,
+		 							   max(p2-2*p2step,p2ll), min(p2+2*p2step,p2ul), p2step/a)
+		p1step /= a; p2step /= a;
+	return (p1, p2), grid1
+
+
+
 
 # BPL FITTING
 def p_bpl(masses, params):
 	a1, a2, xb = params
-	c0 = np.power((1./a1)+((1./a2)-(1./a1))*np.exp(-a1*xb),-1)
+	c0     = np.power((1./a1)+((1./a2)-(1./a1))*np.power(np.exp(xb),-a1),-1)
 	xArr   = convert_to_x(masses)
 	ltxbr  = np.where(xArr <= xb, 1.0, 0.0)
 	gtxbr  = np.where(xArr >  xb, 1.0, 0.0)
@@ -480,6 +507,44 @@ def p_bpl(masses, params):
 	gtxbr *= c0 * np.exp((a2-a1)*xb - a2*xArr)
 	return gtxbr + ltxbr
 def P_bpl(masses, params):
+	'''
+	maxMass        = np.amax(masses)
+	elongateMasses = np.logspace(np.log10(maxMass*1.01), np.log10(maxMass*1000), num=1000)
+	longMasses     = np.append(masses, elongateMasses)
+	p              = p_bpl(longMasses, params)
+	nmOG           = masses.shape[0]
+	nmLong         = longMasses.shape[0]
+	dm             = np.zeros(nmLong)
+	for i in range(1, nmLong-1):
+		dm[i] = (longMasses[i+1] - longMasses[i-1])/ 2.0
+	dm[0]  = dm[1]
+	dm[-1] = dm[-2]
+	dm_times_p = dm*p
+	P  = np.zeros_like(p)
+	for i in range(P.shape[0]):
+		P[i] = np.sum(dm_times_p[i:])
+	#plt.figure(1); plt.loglog(longMasses, p); plt.show(1); plt.clf(); plt.figure(0);
+	#plt.figure(1); plt.loglog(longMasses, P); plt.show(1); plt.clf(); plt.figure(0);
+	return P[:nmOG]
+	'''
+
+	maxMass        = np.amax(masses)
+	elongateMasses = np.logspace(np.log10(maxMass*1.01), np.log10(maxMass*1000), num=100)
+	longMasses     = np.append(masses, elongateMasses)
+	p        = p_bpl(longMasses, params)
+	xArr = convert_to_x(longMasses)
+	dx   = np.zeros_like(longMasses)
+	for i in range(len(dx)-1):
+		dx[i] = xArr[i+1] - xArr[i]
+	dx[-1] = dx[-2]
+	print(dx)
+	ngtm    = np.zeros_like(dx)
+	for i in range(0, len(dx)):
+		ngtm[i] = np.sum(p[i:-1]*dx[i:-1])
+	return ngtm[:masses.shape[0]]
+
+
+	'''
 	p    = p_bpl(masses, params)
 	xArr = convert_to_x(masses)
 	dx   = np.zeros_like(masses)
@@ -490,6 +555,8 @@ def P_bpl(masses, params):
 	for i in range(0, len(dx)):
 		ngtm[i] = np.sum(p[i:-1]*dx[i:-1])
 	return ngtm
+	'''
+
 def lnlike_bpl(masses, params):
 	pArr = p_bpl(masses, params)
 	sum  = np.sum(np.log(pArr))
@@ -498,51 +565,55 @@ def fit_bpl(mp):
 	a = 5.0
 	minMass = np.amin(mp); maxMass = np.amax(mp)
 	p1ll = -5.0; p1ul = 5.0; p1step = 0.5;
-	p2ll = 0.0;  p2ul = 5.0; p2step = 0.5;
-	p3ll = 0.01;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
-	paramsOfMax, grid1 = gridSearch3d(lnlike_bpl, mp,
+	p2ll = 0.1;  p2ul = 5.0; p2step = 0.5;
+	p3ll = 0.1;  p3ul = np.log(maxMass/minMass); p3step = 0.5;
+	(p1, p2, p3), grid1 = gridSearch3d(lnlike_bpl, mp,
 									  p1ll, p1ul, p1step,
 									  p2ll, p2ul, p2step,
 									  p3ll, p3ul, p3step)
-	p1, p2, p3 = paramsOfMax
-	paramsOfMax, grid2 = gridSearch3d(lnlike_bpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
-	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
-	p1, p2, p3 = paramsOfMax
-	p1step /= a; p2step /= a; p3step /= a;
-	paramsOfMax, grid2 = gridSearch3d(lnlike_bpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
-	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
-	p1, p2, p3 = paramsOfMax
-	p1step /= a; p2step /= a; p3step /= a;
-	paramsOfMax, grid2 = gridSearch3d(lnlike_bpl, mp,
-	 								  max(p1-p1step,p1ll), min(p1+p1step,p1ul), p1step/a,
-	 								  max(p2-p2step,p2ll), min(p2+p2step,p2ul), p2step/a,
-	 								  max(p3-p3step,p3ll), min(p3+p3step,p3ul), p3step/a)
-	return paramsOfMax, grid1
+	for i in range(5):
+		(p1, p2, p3), grid2 = gridSearch3d(lnlike_bpl, mp,
+	 										max(p1-2*p1step,p1ll), min(p1+2*p1step,p1ul), p1step/a,
+	 										max(p2-2*p2step,p2ll), min(p2+2*p2step,p2ul), p2step/a,
+	 										max(p3-2*p3step,p3ll), min(p3+2*p3step,p3ul), p3step/a)
+		#print("iteration " + str(i))
+		#print(p1, p2, p3)
+		#print(max(p1-2*p1step,p1ll), min(p1+2*p1step,p1ul), p1step/a)
+		#print(max(p2-2*p2step,p2ll), min(p2+2*p2step,p2ul), p2step/a)
+		#print(max(p3-2*p3step,p3ll), min(p3+2*p3step,p3ul), p3step/a)
+		p1step /= a; p2step /= a; p3step /= a;
+	return (p1, p2, p3), grid1
+
+
 
 def BIC(K, N, lnLike):
 	return 2.0*K*np.log(N)-2.0*lnLike
 def AIC(K, N, lnLike):
 	return 2.0*K-2.0*lnLike
 
-def reportParams(name, paramNames, means, errsPlus, errsMinus, maxLike, dbic, daic):
+def reportParams(name, paramNames, means, errsPlus, errsMinus, maxLike, dbic, daic, mp1_min):
 	nParams = len(paramNames)
 	print("########################################################")
 	print(name)
 	if nParams == 1:
 		print(paramNames[0].ljust(8) + " = "
-			+ str(np.round(means,3)) + " p "
-			+ str(np.round(errsPlus[0],3)) + " m "
-			+ str(np.round(errsMinus[0],3)))
+			+ str(np.round(means,4)) + " p "
+			+ str(np.round(errsPlus[0],4)) + " m "
+			+ str(np.round(errsMinus[0],4)))
 	else:
 		for n in range(nParams):
 			print(paramNames[n].ljust(8) + " = "
-				+ str(np.round(means[n],3)) + " p "
-				+ str(np.round(errsPlus[n],3)) + " m "
-				+ str(np.round(errsMinus[n],3)))
+				+ str(np.round(means[n],4)) + " p "
+				+ str(np.round(errsPlus[n],4)) + " m "
+				+ str(np.round(errsMinus[n],4)))
+			if paramNames[n][0]=='x':
+				mExp         = mp1_min*np.exp(means[n])
+				mExpErrPlus  = mp1_min*np.exp(means[n]+errsPlus[n]) - mExp
+				mExpErrMinus = mExp - mp1_min*np.exp(means[n]-errsMinus[n])
+				print(("M_"+paramNames[n][1:]).ljust(8) + " = "
+					+ str(np.round(mExp,6)) + " p "
+					+ str(np.round(mExpErrPlus,6)) + " m "
+					+ str(np.round(mExpErrMinus,6)))
 	print("ln(like) = " + str(np.round(maxLike,3)))
 	print("DBIC     = " + str(np.round(dbic,3)))
 	print("DAIC     = " + str(np.round(daic,3)))

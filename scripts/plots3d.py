@@ -58,6 +58,7 @@ tools.saveAndClear(pathSave + 'timeEvoPert_alldv.png', figNum=0)
 '''
 ################################################################################
 # max dpar
+plt.figure(0)
 print("making max dpar plot...")
 sys.stdout.flush()
 key = 'dpar'
@@ -68,6 +69,7 @@ for n in range(do3d.nt):
 	data = do3d.get3d(key, n)
 	plotDataList.append(np.amax(data))
 plotData = np.asarray(plotDataList)
+print(plotData)
 plt.xlabel(r'$t \Omega$')
 plt.ylabel('MAX(' + do3d.header[key] + ')')
 plt.semilogy(do3d.t, plotData, color='k')

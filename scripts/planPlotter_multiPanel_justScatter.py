@@ -20,7 +20,7 @@ pathBase = str(sys.argv[1])
 nStart   = int(sys.argv[2])
 nTot     = int(sys.argv[3])
 pathPlan = pathBase + 'planOutput/'
-pathSave = pathBase + 'plots/planAnim_thesis/'
+pathSave = pathBase + 'plots/planAnim_scatter/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 plt.figure(0)
 ################################################################################
@@ -57,15 +57,15 @@ def makeAnimFrame(doPlan, n):
 		# Setup
 		print('saving anim frame for n = ' + str(n))
 		fac = 0.6
-		fig = plt.figure(figsize=(19*fac, 22*fac), dpi=120)
+		fig = plt.figure(figsize=(13*fac, 20*fac), dpi=120)
 		ax = []
 		ax.append(plt.subplot2grid((8, 4), (0, 0), rowspan=2, colspan=2)) # 0 row 1 first 3
 		ax.append(plt.subplot2grid((8, 4), (0, 2), rowspan=2, colspan=2)) # 1
-		ax.append(plt.subplot2grid((8, 4), (2, 0), rowspan=2, colspan=2)) # 2
-		ax.append(plt.subplot2grid((8, 4), (2, 2), rowspan=2, colspan=2)) # 3
-		ax.append(plt.subplot2grid((8, 4), (4, 0), colspan=4, rowspan=2)) # 3 3 bottom plots
-		ax.append(plt.subplot2grid((8, 4), (6, 0), colspan=4)) # 4
-		ax.append(plt.subplot2grid((8, 4), (7, 0), colspan=4)) # 5
+		#ax.append(plt.subplot2grid((8, 4), (2, 0), rowspan=2, colspan=2)) # 2
+		#ax.append(plt.subplot2grid((8, 4), (2, 2), rowspan=2, colspan=2)) # 3
+		#ax.append(plt.subplot2grid((8, 4), (4, 0), colspan=4, rowspan=2)) # 3 3 bottom plots
+		#ax.append(plt.subplot2grid((8, 4), (6, 0), colspan=4)) # 4
+		#ax.append(plt.subplot2grid((8, 4), (7, 0), colspan=4)) # 5
 
 		# scatter plots
 		axNum = 0
@@ -73,7 +73,7 @@ def makeAnimFrame(doPlan, n):
 		xs     = doPlan.peakArrayList[n][:, 4]
 		ys     = doPlan.peakArrayList[n][:, 5]
 		zs     = doPlan.peakArrayList[n][:, 6]
-		sizes  = [np.power(1.e4*mass, 1./2.) for mass in masses]
+		sizes  = [np.power(3.e2*mass, 1./2.) for mass in masses]
 		ax[axNum].scatter(xs, ys, s=sizes)
 		ax[axNum].set_xlabel(r'$r/h$')
 		ax[axNum].set_ylabel(r'y/h')
@@ -83,9 +83,10 @@ def makeAnimFrame(doPlan, n):
 		ax[axNum].scatter(xs, zs, s=sizes)
 		ax[axNum].set_xlabel(r'$r/h$')
 		ax[axNum].set_ylabel(r'$z/h$')
-		ax[axNum].set_ylim(-0.1, 0.1)
+		ax[axNum].set_ylim(-0.005, 0.005)
 		ax[axNum].set_xlim(-0.1, 0.1)
 
+		'''
 		# plot histogram
 		axNum = 2
 		mp = np.asarray(mp); dndmp = np.asarray(dndmp);
@@ -278,6 +279,7 @@ def makeAnimFrame(doPlan, n):
 		ax[axNum].set_ylabel(r'$N_{clumps}$')
 		ax[axNum].set_xlabel(r'$t \Omega$')
 		ax[axNum].set_xlim(0.0, doPlan.tMax)
+		'''
 
 		# close and save figure
 		#plt.title("n="+str(n))

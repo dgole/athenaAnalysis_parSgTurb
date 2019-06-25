@@ -1,0 +1,656 @@
+initializing PLAN data structure from ../../data/prodRuns/run101/planOutput2/
+###################################################
+looking for peak file for n=300
+read in file named peaks_at_030.000.txt
+2 clumps found
+###################################################
+looking for peak file for n=301
+read in file named peaks_at_030.100.txt
+3 clumps found
+###################################################
+looking for peak file for n=302
+read in file named peaks_at_030.200.txt
+3 clumps found
+###################################################
+looking for peak file for n=303
+read in file named peaks_at_030.300.txt
+4 clumps found
+###################################################
+looking for peak file for n=304
+read in file named peaks_at_030.400.txt
+5 clumps found
+###################################################
+looking for peak file for n=305
+read in file named peaks_at_030.500.txt
+5 clumps found
+###################################################
+looking for peak file for n=306
+read in file named peaks_at_030.600.txt
+4 clumps found
+###################################################
+looking for peak file for n=307
+read in file named peaks_at_030.700.txt
+4 clumps found
+###################################################
+looking for peak file for n=308
+read in file named peaks_at_030.800.txt
+3 clumps found
+###################################################
+looking for peak file for n=309
+read in file named peaks_at_030.900.txt
+3 clumps found
+###################################################
+looking for peak file for n=310
+read in file named peaks_at_031.000.txt
+3 clumps found
+###################################################
+looking for peak file for n=311
+read in file named peaks_at_031.100.txt
+3 clumps found
+###################################################
+looking for peak file for n=312
+read in file named peaks_at_031.200.txt
+4 clumps found
+###################################################
+looking for peak file for n=313
+read in file named peaks_at_031.300.txt
+4 clumps found
+###################################################
+looking for peak file for n=314
+read in file named peaks_at_031.400.txt
+4 clumps found
+###################################################
+looking for peak file for n=315
+read in file named peaks_at_031.500.txt
+4 clumps found
+###################################################
+looking for peak file for n=316
+read in file named peaks_at_031.600.txt
+4 clumps found
+###################################################
+looking for peak file for n=317
+read in file named peaks_at_031.700.txt
+4 clumps found
+###################################################
+looking for peak file for n=318
+read in file named peaks_at_031.800.txt
+3 clumps found
+###################################################
+looking for peak file for n=319
+read in file named peaks_at_031.900.txt
+3 clumps found
+###################################################
+looking for peak file for n=320
+read in file named peaks_at_032.000.txt
+4 clumps found
+###################################################
+looking for peak file for n=321
+read in file named peaks_at_032.100.txt
+4 clumps found
+###################################################
+looking for peak file for n=322
+read in file named peaks_at_032.200.txt
+5 clumps found
+###################################################
+looking for peak file for n=323
+read in file named peaks_at_032.300.txt
+3 clumps found
+###################################################
+looking for peak file for n=324
+read in file named peaks_at_032.400.txt
+3 clumps found
+###################################################
+looking for peak file for n=325
+read in file named peaks_at_032.500.txt
+2 clumps found
+###################################################
+looking for peak file for n=326
+read in file named peaks_at_032.600.txt
+2 clumps found
+###################################################
+looking for peak file for n=327
+read in file named peaks_at_032.700.txt
+2 clumps found
+###################################################
+looking for peak file for n=328
+read in file named peaks_at_032.800.txt
+2 clumps found
+###################################################
+looking for peak file for n=329
+read in file named peaks_at_032.900.txt
+2 clumps found
+###################################################
+looking for peak file for n=330
+read in file named peaks_at_033.000.txt
+4 clumps found
+###################################################
+looking for peak file for n=331
+read in file named peaks_at_033.100.txt
+2 clumps found
+###################################################
+looking for peak file for n=332
+read in file named peaks_at_033.200.txt
+4 clumps found
+###################################################
+looking for peak file for n=333
+read in file named peaks_at_033.300.txt
+5 clumps found
+###################################################
+looking for peak file for n=334
+read in file named peaks_at_033.400.txt
+4 clumps found
+###################################################
+looking for peak file for n=335
+read in file named peaks_at_033.500.txt
+4 clumps found
+###################################################
+looking for peak file for n=336
+read in file named peaks_at_033.600.txt
+4 clumps found
+###################################################
+looking for peak file for n=337
+read in file named peaks_at_033.700.txt
+5 clumps found
+###################################################
+looking for peak file for n=338
+read in file named peaks_at_033.800.txt
+7 clumps found
+###################################################
+looking for peak file for n=339
+read in file named peaks_at_033.900.txt
+5 clumps found
+###################################################
+looking for peak file for n=340
+read in file named peaks_at_034.000.txt
+5 clumps found
+###################################################
+looking for peak file for n=341
+read in file named peaks_at_034.100.txt
+7 clumps found
+###################################################
+looking for peak file for n=342
+read in file named peaks_at_034.200.txt
+8 clumps found
+###################################################
+looking for peak file for n=343
+read in file named peaks_at_034.300.txt
+5 clumps found
+###################################################
+looking for peak file for n=344
+read in file named peaks_at_034.400.txt
+6 clumps found
+###################################################
+looking for peak file for n=345
+read in file named peaks_at_034.500.txt
+6 clumps found
+###################################################
+looking for peak file for n=346
+read in file named peaks_at_034.600.txt
+11 clumps found
+###################################################
+looking for peak file for n=347
+read in file named peaks_at_034.700.txt
+10 clumps found
+###################################################
+looking for peak file for n=348
+read in file named peaks_at_034.800.txt
+14 clumps found
+###################################################
+looking for peak file for n=349
+read in file named peaks_at_034.900.txt
+13 clumps found
+###################################################
+looking for peak file for n=350
+read in file named peaks_at_035.000.txt
+11 clumps found
+###################################################
+looking for peak file for n=351
+read in file named peaks_at_035.100.txt
+12 clumps found
+###################################################
+looking for peak file for n=352
+read in file named peaks_at_035.200.txt
+12 clumps found
+###################################################
+looking for peak file for n=353
+read in file named peaks_at_035.300.txt
+15 clumps found
+###################################################
+looking for peak file for n=354
+read in file named peaks_at_035.400.txt
+15 clumps found
+###################################################
+looking for peak file for n=355
+read in file named peaks_at_035.500.txt
+17 clumps found
+###################################################
+looking for peak file for n=356
+read in file named peaks_at_035.600.txt
+20 clumps found
+###################################################
+looking for peak file for n=357
+read in file named peaks_at_035.700.txt
+17 clumps found
+###################################################
+looking for peak file for n=358
+read in file named peaks_at_035.800.txt
+17 clumps found
+###################################################
+looking for peak file for n=359
+read in file named peaks_at_035.900.txt
+20 clumps found
+###################################################
+looking for peak file for n=360
+read in file named peaks_at_036.000.txt
+17 clumps found
+###################################################
+looking for peak file for n=361
+read in file named peaks_at_036.100.txt
+19 clumps found
+###################################################
+looking for peak file for n=362
+read in file named peaks_at_036.200.txt
+18 clumps found
+###################################################
+looking for peak file for n=363
+read in file named peaks_at_036.300.txt
+18 clumps found
+###################################################
+looking for peak file for n=364
+read in file named peaks_at_036.400.txt
+16 clumps found
+###################################################
+looking for peak file for n=365
+read in file named peaks_at_036.500.txt
+20 clumps found
+###################################################
+looking for peak file for n=366
+read in file named peaks_at_036.600.txt
+18 clumps found
+###################################################
+looking for peak file for n=367
+read in file named peaks_at_036.700.txt
+20 clumps found
+###################################################
+looking for peak file for n=368
+read in file named peaks_at_036.800.txt
+20 clumps found
+###################################################
+looking for peak file for n=369
+read in file named peaks_at_036.900.txt
+20 clumps found
+###################################################
+looking for peak file for n=370
+read in file named peaks_at_037.000.txt
+23 clumps found
+###################################################
+looking for peak file for n=371
+read in file named peaks_at_037.100.txt
+19 clumps found
+###################################################
+looking for peak file for n=372
+read in file named peaks_at_037.200.txt
+22 clumps found
+###################################################
+looking for peak file for n=373
+read in file named peaks_at_037.300.txt
+23 clumps found
+###################################################
+looking for peak file for n=374
+read in file named peaks_at_037.400.txt
+17 clumps found
+###################################################
+looking for peak file for n=375
+read in file named peaks_at_037.500.txt
+23 clumps found
+###################################################
+looking for peak file for n=376
+read in file named peaks_at_037.600.txt
+22 clumps found
+###################################################
+looking for peak file for n=377
+read in file named peaks_at_037.700.txt
+27 clumps found
+###################################################
+looking for peak file for n=378
+read in file named peaks_at_037.800.txt
+22 clumps found
+###################################################
+looking for peak file for n=379
+read in file named peaks_at_037.900.txt
+18 clumps found
+###################################################
+looking for peak file for n=380
+read in file named peaks_at_038.000.txt
+24 clumps found
+###################################################
+looking for peak file for n=381
+read in file named peaks_at_038.100.txt
+23 clumps found
+###################################################
+looking for peak file for n=382
+read in file named peaks_at_038.200.txt
+22 clumps found
+###################################################
+looking for peak file for n=383
+read in file named peaks_at_038.300.txt
+28 clumps found
+###################################################
+looking for peak file for n=384
+read in file named peaks_at_038.400.txt
+25 clumps found
+###################################################
+looking for peak file for n=385
+read in file named peaks_at_038.500.txt
+27 clumps found
+###################################################
+looking for peak file for n=386
+read in file named peaks_at_038.600.txt
+25 clumps found
+###################################################
+looking for peak file for n=387
+read in file named peaks_at_038.700.txt
+24 clumps found
+###################################################
+looking for peak file for n=388
+read in file named peaks_at_038.800.txt
+32 clumps found
+###################################################
+looking for peak file for n=389
+read in file named peaks_at_038.900.txt
+29 clumps found
+total clumps ever: 93
+splitters: 28
+doing stats on: 65
+average mass: 0.05528439350740226
+Computing fit_spl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 0.002
+n = 40 of 1000, average time per sample = 0.002
+n = 60 of 1000, average time per sample = 0.002
+n = 80 of 1000, average time per sample = 0.002
+n = 100 of 1000, average time per sample = 0.002
+n = 120 of 1000, average time per sample = 0.002
+n = 140 of 1000, average time per sample = 0.002
+n = 160 of 1000, average time per sample = 0.002
+n = 180 of 1000, average time per sample = 0.002
+n = 200 of 1000, average time per sample = 0.002
+n = 220 of 1000, average time per sample = 0.002
+n = 240 of 1000, average time per sample = 0.002
+n = 260 of 1000, average time per sample = 0.002
+n = 280 of 1000, average time per sample = 0.002
+n = 300 of 1000, average time per sample = 0.002
+n = 320 of 1000, average time per sample = 0.002
+n = 340 of 1000, average time per sample = 0.002
+n = 360 of 1000, average time per sample = 0.002
+n = 380 of 1000, average time per sample = 0.002
+n = 400 of 1000, average time per sample = 0.002
+n = 420 of 1000, average time per sample = 0.002
+n = 440 of 1000, average time per sample = 0.002
+n = 460 of 1000, average time per sample = 0.002
+n = 480 of 1000, average time per sample = 0.002
+n = 500 of 1000, average time per sample = 0.002
+n = 520 of 1000, average time per sample = 0.002
+n = 540 of 1000, average time per sample = 0.002
+n = 560 of 1000, average time per sample = 0.002
+n = 580 of 1000, average time per sample = 0.002
+n = 600 of 1000, average time per sample = 0.002
+n = 620 of 1000, average time per sample = 0.002
+n = 640 of 1000, average time per sample = 0.002
+n = 660 of 1000, average time per sample = 0.002
+n = 680 of 1000, average time per sample = 0.002
+n = 700 of 1000, average time per sample = 0.002
+n = 720 of 1000, average time per sample = 0.002
+n = 740 of 1000, average time per sample = 0.002
+n = 760 of 1000, average time per sample = 0.002
+n = 780 of 1000, average time per sample = 0.002
+n = 800 of 1000, average time per sample = 0.002
+n = 820 of 1000, average time per sample = 0.002
+n = 840 of 1000, average time per sample = 0.002
+n = 860 of 1000, average time per sample = 0.002
+n = 880 of 1000, average time per sample = 0.002
+n = 900 of 1000, average time per sample = 0.002
+n = 920 of 1000, average time per sample = 0.002
+n = 940 of 1000, average time per sample = 0.002
+n = 960 of 1000, average time per sample = 0.002
+n = 980 of 1000, average time per sample = 0.002
+Computing fit_stpl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 0.061
+n = 40 of 1000, average time per sample = 0.061
+n = 60 of 1000, average time per sample = 0.064
+n = 80 of 1000, average time per sample = 0.071
+n = 100 of 1000, average time per sample = 0.072
+n = 120 of 1000, average time per sample = 0.07
+n = 140 of 1000, average time per sample = 0.069
+n = 160 of 1000, average time per sample = 0.068
+n = 180 of 1000, average time per sample = 0.067
+n = 200 of 1000, average time per sample = 0.067
+n = 220 of 1000, average time per sample = 0.066
+n = 240 of 1000, average time per sample = 0.066
+n = 260 of 1000, average time per sample = 0.065
+n = 280 of 1000, average time per sample = 0.065
+n = 300 of 1000, average time per sample = 0.065
+n = 320 of 1000, average time per sample = 0.065
+n = 340 of 1000, average time per sample = 0.064
+n = 360 of 1000, average time per sample = 0.064
+n = 380 of 1000, average time per sample = 0.064
+n = 400 of 1000, average time per sample = 0.064
+n = 420 of 1000, average time per sample = 0.064
+n = 440 of 1000, average time per sample = 0.064
+n = 460 of 1000, average time per sample = 0.064
+n = 480 of 1000, average time per sample = 0.063
+n = 500 of 1000, average time per sample = 0.063
+n = 520 of 1000, average time per sample = 0.063
+n = 540 of 1000, average time per sample = 0.063
+n = 560 of 1000, average time per sample = 0.063
+n = 580 of 1000, average time per sample = 0.063
+n = 600 of 1000, average time per sample = 0.063
+n = 620 of 1000, average time per sample = 0.063
+n = 640 of 1000, average time per sample = 0.063
+n = 660 of 1000, average time per sample = 0.063
+n = 680 of 1000, average time per sample = 0.063
+n = 700 of 1000, average time per sample = 0.063
+n = 720 of 1000, average time per sample = 0.063
+n = 740 of 1000, average time per sample = 0.063
+n = 760 of 1000, average time per sample = 0.063
+n = 780 of 1000, average time per sample = 0.063
+n = 800 of 1000, average time per sample = 0.063
+n = 820 of 1000, average time per sample = 0.063
+n = 840 of 1000, average time per sample = 0.063
+n = 860 of 1000, average time per sample = 0.063
+n = 880 of 1000, average time per sample = 0.063
+n = 900 of 1000, average time per sample = 0.063
+n = 920 of 1000, average time per sample = 0.063
+n = 940 of 1000, average time per sample = 0.063
+n = 960 of 1000, average time per sample = 0.063
+n = 980 of 1000, average time per sample = 0.063
+Computing fit_vtpl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 1.501
+n = 40 of 1000, average time per sample = 1.52
+n = 60 of 1000, average time per sample = 1.525
+n = 80 of 1000, average time per sample = 1.53
+n = 100 of 1000, average time per sample = 1.52
+n = 120 of 1000, average time per sample = 1.519
+n = 140 of 1000, average time per sample = 1.517
+n = 160 of 1000, average time per sample = 1.507
+n = 180 of 1000, average time per sample = 1.508
+n = 200 of 1000, average time per sample = 1.509
+n = 220 of 1000, average time per sample = 1.518
+n = 240 of 1000, average time per sample = 1.518
+n = 260 of 1000, average time per sample = 1.527
+n = 280 of 1000, average time per sample = 1.526
+n = 300 of 1000, average time per sample = 1.523
+n = 320 of 1000, average time per sample = 1.521
+n = 340 of 1000, average time per sample = 1.518
+n = 360 of 1000, average time per sample = 1.518
+n = 380 of 1000, average time per sample = 1.514
+n = 400 of 1000, average time per sample = 1.514
+n = 420 of 1000, average time per sample = 1.515
+n = 440 of 1000, average time per sample = 1.516
+n = 460 of 1000, average time per sample = 1.513
+n = 480 of 1000, average time per sample = 1.514
+n = 500 of 1000, average time per sample = 1.512
+n = 520 of 1000, average time per sample = 1.515
+n = 540 of 1000, average time per sample = 1.519
+n = 560 of 1000, average time per sample = 1.519
+n = 580 of 1000, average time per sample = 1.519
+n = 600 of 1000, average time per sample = 1.519
+n = 620 of 1000, average time per sample = 1.518
+n = 640 of 1000, average time per sample = 1.518
+n = 660 of 1000, average time per sample = 1.518
+n = 680 of 1000, average time per sample = 1.519
+n = 700 of 1000, average time per sample = 1.518
+n = 720 of 1000, average time per sample = 1.522
+n = 740 of 1000, average time per sample = 1.522
+n = 760 of 1000, average time per sample = 1.519
+n = 780 of 1000, average time per sample = 1.518
+n = 800 of 1000, average time per sample = 1.516
+n = 820 of 1000, average time per sample = 1.517
+n = 840 of 1000, average time per sample = 1.516
+n = 860 of 1000, average time per sample = 1.516
+n = 880 of 1000, average time per sample = 1.516
+n = 900 of 1000, average time per sample = 1.517
+n = 920 of 1000, average time per sample = 1.517
+n = 940 of 1000, average time per sample = 1.516
+n = 960 of 1000, average time per sample = 1.517
+n = 980 of 1000, average time per sample = 1.516
+Computing fit_bcpl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 1.393
+n = 40 of 1000, average time per sample = 1.366
+n = 60 of 1000, average time per sample = 1.369
+n = 80 of 1000, average time per sample = 1.363
+n = 100 of 1000, average time per sample = 1.362
+n = 120 of 1000, average time per sample = 1.376
+n = 140 of 1000, average time per sample = 1.373
+n = 160 of 1000, average time per sample = 1.363
+n = 180 of 1000, average time per sample = 1.358
+n = 200 of 1000, average time per sample = 1.359
+n = 220 of 1000, average time per sample = 1.362
+n = 240 of 1000, average time per sample = 1.362
+n = 260 of 1000, average time per sample = 1.358
+n = 280 of 1000, average time per sample = 1.363
+n = 300 of 1000, average time per sample = 1.366
+n = 320 of 1000, average time per sample = 1.365
+n = 340 of 1000, average time per sample = 1.365
+n = 360 of 1000, average time per sample = 1.365
+n = 380 of 1000, average time per sample = 1.367
+n = 400 of 1000, average time per sample = 1.369
+n = 420 of 1000, average time per sample = 1.366
+n = 440 of 1000, average time per sample = 1.363
+n = 460 of 1000, average time per sample = 1.361
+n = 480 of 1000, average time per sample = 1.36
+n = 500 of 1000, average time per sample = 1.362
+n = 520 of 1000, average time per sample = 1.358
+n = 540 of 1000, average time per sample = 1.362
+n = 560 of 1000, average time per sample = 1.359
+n = 580 of 1000, average time per sample = 1.358
+n = 600 of 1000, average time per sample = 1.356
+n = 620 of 1000, average time per sample = 1.356
+n = 640 of 1000, average time per sample = 1.355
+n = 660 of 1000, average time per sample = 1.355
+n = 680 of 1000, average time per sample = 1.357
+n = 700 of 1000, average time per sample = 1.356
+n = 720 of 1000, average time per sample = 1.357
+n = 740 of 1000, average time per sample = 1.357
+n = 760 of 1000, average time per sample = 1.355
+n = 780 of 1000, average time per sample = 1.353
+n = 800 of 1000, average time per sample = 1.353
+n = 820 of 1000, average time per sample = 1.354
+n = 840 of 1000, average time per sample = 1.353
+n = 860 of 1000, average time per sample = 1.354
+n = 880 of 1000, average time per sample = 1.354
+n = 900 of 1000, average time per sample = 1.355
+n = 920 of 1000, average time per sample = 1.354
+n = 940 of 1000, average time per sample = 1.354
+n = 960 of 1000, average time per sample = 1.353
+n = 980 of 1000, average time per sample = 1.353
+Computing fit_tpl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 0.112
+n = 40 of 1000, average time per sample = 0.111
+n = 60 of 1000, average time per sample = 0.113
+n = 80 of 1000, average time per sample = 0.114
+n = 100 of 1000, average time per sample = 0.113
+n = 120 of 1000, average time per sample = 0.115
+n = 140 of 1000, average time per sample = 0.117
+n = 160 of 1000, average time per sample = 0.116
+n = 180 of 1000, average time per sample = 0.118
+n = 200 of 1000, average time per sample = 0.117
+n = 220 of 1000, average time per sample = 0.122
+n = 240 of 1000, average time per sample = 0.121
+n = 260 of 1000, average time per sample = 0.12
+n = 280 of 1000, average time per sample = 0.12
+n = 300 of 1000, average time per sample = 0.119
+n = 320 of 1000, average time per sample = 0.119
+n = 340 of 1000, average time per sample = 0.12
+n = 360 of 1000, average time per sample = 0.119
+n = 380 of 1000, average time per sample = 0.119
+n = 400 of 1000, average time per sample = 0.119
+n = 420 of 1000, average time per sample = 0.119
+n = 440 of 1000, average time per sample = 0.118
+n = 460 of 1000, average time per sample = 0.118
+n = 480 of 1000, average time per sample = 0.118
+n = 500 of 1000, average time per sample = 0.118
+n = 520 of 1000, average time per sample = 0.118
+n = 540 of 1000, average time per sample = 0.118
+n = 560 of 1000, average time per sample = 0.118
+n = 580 of 1000, average time per sample = 0.118
+n = 600 of 1000, average time per sample = 0.118
+n = 620 of 1000, average time per sample = 0.118
+n = 640 of 1000, average time per sample = 0.117
+n = 660 of 1000, average time per sample = 0.118
+n = 680 of 1000, average time per sample = 0.117
+n = 700 of 1000, average time per sample = 0.117
+n = 720 of 1000, average time per sample = 0.117
+n = 740 of 1000, average time per sample = 0.117
+n = 760 of 1000, average time per sample = 0.117
+n = 780 of 1000, average time per sample = 0.117
+n = 800 of 1000, average time per sample = 0.117
+n = 820 of 1000, average time per sample = 0.117
+n = 840 of 1000, average time per sample = 0.117
+n = 860 of 1000, average time per sample = 0.117
+n = 880 of 1000, average time per sample = 0.116
+n = 900 of 1000, average time per sample = 0.117
+n = 920 of 1000, average time per sample = 0.117
+n = 940 of 1000, average time per sample = 0.117
+n = 960 of 1000, average time per sample = 0.117
+n = 980 of 1000, average time per sample = 0.117
+Computing fit_bpl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 1.555
+n = 40 of 1000, average time per sample = 1.59
+n = 60 of 1000, average time per sample = 1.606
+n = 80 of 1000, average time per sample = 1.603
+n = 100 of 1000, average time per sample = 1.59
+n = 120 of 1000, average time per sample = 1.587
+n = 140 of 1000, average time per sample = 1.58
+n = 160 of 1000, average time per sample = 1.58
+n = 180 of 1000, average time per sample = 1.582
+n = 200 of 1000, average time per sample = 1.584
+n = 220 of 1000, average time per sample = 1.585
+n = 240 of 1000, average time per sample = 1.579
+n = 260 of 1000, average time per sample = 1.571
+n = 280 of 1000, average time per sample = 1.565
+n = 300 of 1000, average time per sample = 1.559
+n = 320 of 1000, average time per sample = 1.555
+n = 340 of 1000, average time per sample = 1.554
+n = 360 of 1000, average time per sample = 1.557
+n = 380 of 1000, average time per sample = 1.557
+n = 400 of 1000, average time per sample = 1.556
+n = 420 of 1000, average time per sample = 1.559
+n = 440 of 1000, average time per sample = 1.557
+n = 460 of 1000, average time per sample = 1.554
+n = 480 of 1000, average time per sample = 1.552
+n = 500 of 1000, average time per sample = 1.549
+n = 520 of 1000, average time per sample = 1.544
+n = 540 of 1000, average time per sample = 1.542
+n = 560 of 1000, average time per sample = 1.538
+n = 580 of 1000, average time per sample = 1.535
+n = 600 of 1000, average time per sample = 1.532
+n = 620 of 1000, average time per sample = 1.53
+n = 640 of 1000, average time per sample = 1.528
+n = 660 of 1000, average time per sample = 1.526
+n = 680 of 1000, average time per sample = 1.524
+n = 700 of 1000, average time per sample = 1.521
+n = 720 of 1000, average time per sample = 1.519
+n = 740 of 1000, average time per sample = 1.52
+n = 760 of 1000, average time per sample = 1.521
+n = 780 of 1000, average time per sample = 1.524
+n = 800 of 1000, average time per sample = 1.525

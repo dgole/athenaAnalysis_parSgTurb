@@ -1,0 +1,309 @@
+initializing PLAN data structure from ../../data/prodRuns/run100/planOutput2/
+###################################################
+looking for peak file for n=220
+read in file named peaks_at_022.000.txt
+7 clumps found
+###################################################
+looking for peak file for n=221
+read in file named peaks_at_022.100.txt
+10 clumps found
+###################################################
+looking for peak file for n=222
+read in file named peaks_at_022.200.txt
+9 clumps found
+###################################################
+looking for peak file for n=223
+read in file named peaks_at_022.300.txt
+13 clumps found
+###################################################
+looking for peak file for n=224
+read in file named peaks_at_022.400.txt
+9 clumps found
+###################################################
+looking for peak file for n=225
+read in file named peaks_at_022.500.txt
+13 clumps found
+###################################################
+looking for peak file for n=226
+read in file named peaks_at_022.600.txt
+19 clumps found
+###################################################
+looking for peak file for n=227
+read in file named peaks_at_022.700.txt
+21 clumps found
+###################################################
+looking for peak file for n=228
+read in file named peaks_at_022.800.txt
+21 clumps found
+###################################################
+looking for peak file for n=229
+read in file named peaks_at_022.900.txt
+18 clumps found
+###################################################
+looking for peak file for n=230
+read in file named peaks_at_023.000.txt
+21 clumps found
+###################################################
+looking for peak file for n=231
+read in file named peaks_at_023.100.txt
+29 clumps found
+###################################################
+looking for peak file for n=232
+read in file named peaks_at_023.200.txt
+34 clumps found
+###################################################
+looking for peak file for n=233
+read in file named peaks_at_023.300.txt
+28 clumps found
+###################################################
+looking for peak file for n=234
+read in file named peaks_at_023.400.txt
+32 clumps found
+###################################################
+looking for peak file for n=235
+read in file named peaks_at_023.500.txt
+32 clumps found
+###################################################
+looking for peak file for n=236
+read in file named peaks_at_023.600.txt
+43 clumps found
+###################################################
+looking for peak file for n=237
+read in file named peaks_at_023.700.txt
+44 clumps found
+###################################################
+looking for peak file for n=238
+read in file named peaks_at_023.800.txt
+52 clumps found
+###################################################
+looking for peak file for n=239
+read in file named peaks_at_023.900.txt
+47 clumps found
+###################################################
+looking for peak file for n=240
+read in file named peaks_at_024.000.txt
+53 clumps found
+###################################################
+looking for peak file for n=241
+read in file named peaks_at_024.100.txt
+56 clumps found
+###################################################
+looking for peak file for n=242
+read in file named peaks_at_024.200.txt
+57 clumps found
+###################################################
+looking for peak file for n=243
+read in file named peaks_at_024.300.txt
+53 clumps found
+###################################################
+looking for peak file for n=244
+read in file named peaks_at_024.400.txt
+65 clumps found
+###################################################
+looking for peak file for n=245
+read in file named peaks_at_024.500.txt
+64 clumps found
+###################################################
+looking for peak file for n=246
+read in file named peaks_at_024.600.txt
+59 clumps found
+###################################################
+looking for peak file for n=247
+read in file named peaks_at_024.700.txt
+72 clumps found
+###################################################
+looking for peak file for n=248
+read in file named peaks_at_024.800.txt
+62 clumps found
+###################################################
+looking for peak file for n=249
+read in file named peaks_at_024.900.txt
+78 clumps found
+###################################################
+looking for peak file for n=250
+read in file named peaks_at_025.000.txt
+92 clumps found
+###################################################
+looking for peak file for n=251
+read in file named peaks_at_025.100.txt
+100 clumps found
+###################################################
+looking for peak file for n=252
+read in file named peaks_at_025.200.txt
+101 clumps found
+###################################################
+looking for peak file for n=253
+read in file named peaks_at_025.300.txt
+92 clumps found
+###################################################
+looking for peak file for n=254
+read in file named peaks_at_025.400.txt
+99 clumps found
+###################################################
+looking for peak file for n=255
+read in file named peaks_at_025.500.txt
+110 clumps found
+###################################################
+looking for peak file for n=256
+read in file named peaks_at_025.600.txt
+103 clumps found
+###################################################
+looking for peak file for n=257
+read in file named peaks_at_025.700.txt
+114 clumps found
+###################################################
+looking for peak file for n=258
+read in file named peaks_at_025.800.txt
+130 clumps found
+###################################################
+looking for peak file for n=259
+read in file named peaks_at_025.900.txt
+119 clumps found
+###################################################
+looking for peak file for n=260
+read in file named peaks_at_026.000.txt
+133 clumps found
+###################################################
+looking for peak file for n=261
+read in file named peaks_at_026.100.txt
+137 clumps found
+###################################################
+looking for peak file for n=262
+read in file named peaks_at_026.200.txt
+131 clumps found
+###################################################
+looking for peak file for n=263
+read in file named peaks_at_026.300.txt
+143 clumps found
+###################################################
+looking for peak file for n=264
+read in file named peaks_at_026.400.txt
+150 clumps found
+###################################################
+looking for peak file for n=265
+read in file named peaks_at_026.500.txt
+148 clumps found
+###################################################
+looking for peak file for n=266
+read in file named peaks_at_026.600.txt
+152 clumps found
+###################################################
+looking for peak file for n=267
+read in file named peaks_at_026.700.txt
+148 clumps found
+###################################################
+looking for peak file for n=268
+read in file named peaks_at_026.800.txt
+159 clumps found
+###################################################
+looking for peak file for n=269
+read in file named peaks_at_026.900.txt
+163 clumps found
+###################################################
+looking for peak file for n=270
+read in file named peaks_at_027.000.txt
+158 clumps found
+###################################################
+looking for peak file for n=271
+read in file named peaks_at_027.100.txt
+164 clumps found
+###################################################
+looking for peak file for n=272
+read in file named peaks_at_027.200.txt
+166 clumps found
+###################################################
+looking for peak file for n=273
+read in file named peaks_at_027.300.txt
+164 clumps found
+###################################################
+looking for peak file for n=274
+read in file named peaks_at_027.400.txt
+164 clumps found
+total clumps ever: 491
+splitters: 145
+doing stats on: 346
+average mass: 0.0554630643227042
+Computing fit_spl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 0.005
+n = 40 of 100, average time per sample = 0.005
+n = 60 of 100, average time per sample = 0.004
+n = 80 of 100, average time per sample = 0.004
+Computing fit_stpl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 0.115
+n = 40 of 100, average time per sample = 0.127
+n = 60 of 100, average time per sample = 0.125
+n = 80 of 100, average time per sample = 0.124
+Computing fit_vtpl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 3.046
+n = 40 of 100, average time per sample = 3.073
+n = 60 of 100, average time per sample = 3.053
+n = 80 of 100, average time per sample = 3.043
+Computing fit_bcpl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 2.354
+n = 40 of 100, average time per sample = 2.326
+n = 60 of 100, average time per sample = 2.318
+n = 80 of 100, average time per sample = 2.315
+Computing fit_tpl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 0.202
+n = 40 of 100, average time per sample = 0.201
+n = 60 of 100, average time per sample = 0.201
+n = 80 of 100, average time per sample = 0.201
+Computing fit_bpl fit for 100 subsamples...
+n = 20 of 100, average time per sample = 2.634
+n = 40 of 100, average time per sample = 2.623
+n = 60 of 100, average time per sample = 2.623
+n = 80 of 100, average time per sample = 2.619
+########################################################
+Single PL MLE Slope
+1.372 pm 0.02
+########################################################
+SPL
+alpha    = 0.372 p 0.0093 m 0.0069
+ln(like) = -704.921
+DBIC     = 565.647
+DAIC     = 585.033
+########################################################
+STPL
+alpha    = -0.0474 p 0.0066 m 0.0103
+x_exp    = 2.8374 p 0.0548 m 0.087
+M__exp   = 0.046773 p 0.002635 m 0.003899
+ln(like) = -439.447
+DBIC     = 46.392
+DAIC     = 56.085
+########################################################
+VTPL
+alpha    = -0.3998 p 0.008 m 0.0084
+beta     = 0.4008 p 0.0088 m 0.0057
+x_exp    = 0.0329 p 0.0196 m 0.0184
+M__exp   = 0.002832 p 5.6e-05 m 5.2e-05
+ln(like) = -535.557
+DBIC     = 250.305
+DAIC     = 250.305
+########################################################
+BCPL
+alpha1   = 0.0653 p 0.0154 m 0.0144
+alpha2   = 1.0597 p 0.0938 m 0.0448
+x_br     = 1.9334 p 0.0686 m 0.12
+M__br    = 0.018941 p 0.001346 m 0.002142
+ln(like) = -606.291
+DBIC     = 391.772
+DAIC     = 391.772
+########################################################
+TPL
+alpha    = -0.0746 p 0.0183 m 0.0606
+x_tr     = 5.0593 p 0.0 m 0.2596
+M__tr    = 0.431496 p 0.0 m 0.098655
+ln(like) = -559.135
+DBIC     = 285.767
+DAIC     = 295.46
+########################################################
+BPL
+alpha1   = -1.5366 p 0.2062 m 0.1896
+alpha2   = 1.7182 p 0.2258 m 0.1133
+x_br     = 2.7306 p 0.1357 m 0.0972
+M__br    = 0.042039 p 0.006111 m 0.003893
+ln(like) = -410.405
+DBIC     = 0.0
+DAIC     = 0.0
+########################################################
+[0.00506437 0.00506437 0.00506437 ... 0.0696748  0.0696748  0.0696748 ]

@@ -1,0 +1,363 @@
+initializing PLAN data structure from ../../data/prodRuns/run100/planOutput2/
+###################################################
+looking for peak file for n=253
+read in file named peaks_at_025.300.txt
+92 clumps found
+(90,)
+(92,)
+Computing fit_spl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 0.003
+n = 40 of 1000, average time per sample = 0.002
+n = 60 of 1000, average time per sample = 0.002
+n = 80 of 1000, average time per sample = 0.002
+n = 100 of 1000, average time per sample = 0.002
+n = 120 of 1000, average time per sample = 0.002
+n = 140 of 1000, average time per sample = 0.002
+n = 160 of 1000, average time per sample = 0.002
+n = 180 of 1000, average time per sample = 0.002
+n = 200 of 1000, average time per sample = 0.002
+n = 220 of 1000, average time per sample = 0.002
+n = 240 of 1000, average time per sample = 0.002
+n = 260 of 1000, average time per sample = 0.002
+n = 280 of 1000, average time per sample = 0.002
+n = 300 of 1000, average time per sample = 0.002
+n = 320 of 1000, average time per sample = 0.002
+n = 340 of 1000, average time per sample = 0.002
+n = 360 of 1000, average time per sample = 0.002
+n = 380 of 1000, average time per sample = 0.002
+n = 400 of 1000, average time per sample = 0.002
+n = 420 of 1000, average time per sample = 0.002
+n = 440 of 1000, average time per sample = 0.002
+n = 460 of 1000, average time per sample = 0.002
+n = 480 of 1000, average time per sample = 0.002
+n = 500 of 1000, average time per sample = 0.002
+n = 520 of 1000, average time per sample = 0.002
+n = 540 of 1000, average time per sample = 0.002
+n = 560 of 1000, average time per sample = 0.002
+n = 580 of 1000, average time per sample = 0.002
+n = 600 of 1000, average time per sample = 0.002
+n = 620 of 1000, average time per sample = 0.002
+n = 640 of 1000, average time per sample = 0.002
+n = 660 of 1000, average time per sample = 0.002
+n = 680 of 1000, average time per sample = 0.002
+n = 700 of 1000, average time per sample = 0.002
+n = 720 of 1000, average time per sample = 0.002
+n = 740 of 1000, average time per sample = 0.002
+n = 760 of 1000, average time per sample = 0.002
+n = 780 of 1000, average time per sample = 0.002
+n = 800 of 1000, average time per sample = 0.002
+n = 820 of 1000, average time per sample = 0.002
+n = 840 of 1000, average time per sample = 0.002
+n = 860 of 1000, average time per sample = 0.002
+n = 880 of 1000, average time per sample = 0.002
+n = 900 of 1000, average time per sample = 0.002
+n = 920 of 1000, average time per sample = 0.002
+n = 940 of 1000, average time per sample = 0.002
+n = 960 of 1000, average time per sample = 0.002
+n = 980 of 1000, average time per sample = 0.002
+Computing fit_stpl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 0.055
+n = 40 of 1000, average time per sample = 0.056
+n = 60 of 1000, average time per sample = 0.056
+n = 80 of 1000, average time per sample = 0.055
+n = 100 of 1000, average time per sample = 0.059
+n = 120 of 1000, average time per sample = 0.058
+n = 140 of 1000, average time per sample = 0.059
+n = 160 of 1000, average time per sample = 0.061
+n = 180 of 1000, average time per sample = 0.061
+n = 200 of 1000, average time per sample = 0.06
+n = 220 of 1000, average time per sample = 0.061
+n = 240 of 1000, average time per sample = 0.061
+n = 260 of 1000, average time per sample = 0.061
+n = 280 of 1000, average time per sample = 0.061
+n = 300 of 1000, average time per sample = 0.061
+n = 320 of 1000, average time per sample = 0.062
+n = 340 of 1000, average time per sample = 0.064
+n = 360 of 1000, average time per sample = 0.067
+n = 380 of 1000, average time per sample = 0.069
+n = 400 of 1000, average time per sample = 0.069
+n = 420 of 1000, average time per sample = 0.068
+n = 440 of 1000, average time per sample = 0.068
+n = 460 of 1000, average time per sample = 0.067
+n = 480 of 1000, average time per sample = 0.067
+n = 500 of 1000, average time per sample = 0.067
+n = 520 of 1000, average time per sample = 0.066
+n = 540 of 1000, average time per sample = 0.066
+n = 560 of 1000, average time per sample = 0.066
+n = 580 of 1000, average time per sample = 0.065
+n = 600 of 1000, average time per sample = 0.065
+n = 620 of 1000, average time per sample = 0.065
+n = 640 of 1000, average time per sample = 0.064
+n = 660 of 1000, average time per sample = 0.064
+n = 680 of 1000, average time per sample = 0.064
+n = 700 of 1000, average time per sample = 0.064
+n = 720 of 1000, average time per sample = 0.064
+n = 740 of 1000, average time per sample = 0.064
+n = 760 of 1000, average time per sample = 0.063
+n = 780 of 1000, average time per sample = 0.063
+n = 800 of 1000, average time per sample = 0.063
+n = 820 of 1000, average time per sample = 0.063
+n = 840 of 1000, average time per sample = 0.063
+n = 860 of 1000, average time per sample = 0.063
+n = 880 of 1000, average time per sample = 0.063
+n = 900 of 1000, average time per sample = 0.063
+n = 920 of 1000, average time per sample = 0.063
+n = 940 of 1000, average time per sample = 0.062
+n = 960 of 1000, average time per sample = 0.062
+n = 980 of 1000, average time per sample = 0.062
+Computing fit_vtpl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 1.667
+n = 40 of 1000, average time per sample = 1.676
+n = 60 of 1000, average time per sample = 1.663
+n = 80 of 1000, average time per sample = 1.669
+n = 100 of 1000, average time per sample = 1.657
+n = 120 of 1000, average time per sample = 1.661
+n = 140 of 1000, average time per sample = 1.658
+n = 160 of 1000, average time per sample = 1.656
+n = 180 of 1000, average time per sample = 1.656
+n = 200 of 1000, average time per sample = 1.661
+n = 220 of 1000, average time per sample = 1.673
+n = 240 of 1000, average time per sample = 1.68
+n = 260 of 1000, average time per sample = 1.677
+n = 280 of 1000, average time per sample = 1.679
+n = 300 of 1000, average time per sample = 1.683
+n = 320 of 1000, average time per sample = 1.68
+n = 340 of 1000, average time per sample = 1.683
+n = 360 of 1000, average time per sample = 1.685
+n = 380 of 1000, average time per sample = 1.693
+n = 400 of 1000, average time per sample = 1.699
+n = 420 of 1000, average time per sample = 1.701
+n = 440 of 1000, average time per sample = 1.708
+n = 460 of 1000, average time per sample = 1.716
+n = 480 of 1000, average time per sample = 1.723
+n = 500 of 1000, average time per sample = 1.726
+n = 520 of 1000, average time per sample = 1.727
+n = 540 of 1000, average time per sample = 1.732
+n = 560 of 1000, average time per sample = 1.743
+n = 580 of 1000, average time per sample = 1.761
+n = 600 of 1000, average time per sample = 1.768
+n = 620 of 1000, average time per sample = 1.773
+n = 640 of 1000, average time per sample = 1.779
+n = 660 of 1000, average time per sample = 1.778
+n = 680 of 1000, average time per sample = 1.782
+n = 700 of 1000, average time per sample = 1.784
+n = 720 of 1000, average time per sample = 1.785
+n = 740 of 1000, average time per sample = 1.786
+n = 760 of 1000, average time per sample = 1.79
+n = 780 of 1000, average time per sample = 1.791
+n = 800 of 1000, average time per sample = 1.789
+n = 820 of 1000, average time per sample = 1.789
+n = 840 of 1000, average time per sample = 1.789
+n = 860 of 1000, average time per sample = 1.792
+n = 880 of 1000, average time per sample = 1.793
+n = 900 of 1000, average time per sample = 1.794
+n = 920 of 1000, average time per sample = 1.796
+n = 940 of 1000, average time per sample = 1.794
+n = 960 of 1000, average time per sample = 1.795
+n = 980 of 1000, average time per sample = 1.794
+Computing fit_bcpl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 1.726
+n = 40 of 1000, average time per sample = 1.73
+n = 60 of 1000, average time per sample = 1.745
+n = 80 of 1000, average time per sample = 1.723
+n = 100 of 1000, average time per sample = 1.752
+n = 120 of 1000, average time per sample = 1.734
+n = 140 of 1000, average time per sample = 1.705
+n = 160 of 1000, average time per sample = 1.691
+n = 180 of 1000, average time per sample = 1.688
+n = 200 of 1000, average time per sample = 1.666
+n = 220 of 1000, average time per sample = 1.647
+n = 240 of 1000, average time per sample = 1.635
+n = 260 of 1000, average time per sample = 1.649
+n = 280 of 1000, average time per sample = 1.652
+n = 300 of 1000, average time per sample = 1.649
+n = 320 of 1000, average time per sample = 1.653
+n = 340 of 1000, average time per sample = 1.658
+n = 360 of 1000, average time per sample = 1.654
+n = 380 of 1000, average time per sample = 1.647
+n = 400 of 1000, average time per sample = 1.655
+n = 420 of 1000, average time per sample = 1.656
+n = 440 of 1000, average time per sample = 1.659
+n = 460 of 1000, average time per sample = 1.668
+n = 480 of 1000, average time per sample = 1.675
+n = 500 of 1000, average time per sample = 1.673
+n = 520 of 1000, average time per sample = 1.674
+n = 540 of 1000, average time per sample = 1.679
+n = 560 of 1000, average time per sample = 1.678
+n = 580 of 1000, average time per sample = 1.675
+n = 600 of 1000, average time per sample = 1.676
+n = 620 of 1000, average time per sample = 1.681
+n = 640 of 1000, average time per sample = 1.686
+n = 660 of 1000, average time per sample = 1.682
+n = 680 of 1000, average time per sample = 1.679
+n = 700 of 1000, average time per sample = 1.675
+n = 720 of 1000, average time per sample = 1.673
+n = 740 of 1000, average time per sample = 1.675
+n = 760 of 1000, average time per sample = 1.678
+n = 780 of 1000, average time per sample = 1.675
+n = 800 of 1000, average time per sample = 1.672
+n = 820 of 1000, average time per sample = 1.677
+n = 840 of 1000, average time per sample = 1.677
+n = 860 of 1000, average time per sample = 1.674
+n = 880 of 1000, average time per sample = 1.673
+n = 900 of 1000, average time per sample = 1.676
+n = 920 of 1000, average time per sample = 1.676
+n = 940 of 1000, average time per sample = 1.679
+n = 960 of 1000, average time per sample = 1.684
+n = 980 of 1000, average time per sample = 1.686
+Computing fit_tpl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 0.128
+n = 40 of 1000, average time per sample = 0.127
+n = 60 of 1000, average time per sample = 0.127
+n = 80 of 1000, average time per sample = 0.127
+n = 100 of 1000, average time per sample = 0.127
+n = 120 of 1000, average time per sample = 0.127
+n = 140 of 1000, average time per sample = 0.127
+n = 160 of 1000, average time per sample = 0.127
+n = 180 of 1000, average time per sample = 0.127
+n = 200 of 1000, average time per sample = 0.127
+n = 220 of 1000, average time per sample = 0.127
+n = 240 of 1000, average time per sample = 0.127
+n = 260 of 1000, average time per sample = 0.127
+n = 280 of 1000, average time per sample = 0.127
+n = 300 of 1000, average time per sample = 0.127
+n = 320 of 1000, average time per sample = 0.127
+n = 340 of 1000, average time per sample = 0.127
+n = 360 of 1000, average time per sample = 0.128
+n = 380 of 1000, average time per sample = 0.128
+n = 400 of 1000, average time per sample = 0.128
+n = 420 of 1000, average time per sample = 0.128
+n = 440 of 1000, average time per sample = 0.128
+n = 460 of 1000, average time per sample = 0.128
+n = 480 of 1000, average time per sample = 0.128
+n = 500 of 1000, average time per sample = 0.128
+n = 520 of 1000, average time per sample = 0.128
+n = 540 of 1000, average time per sample = 0.128
+n = 560 of 1000, average time per sample = 0.128
+n = 580 of 1000, average time per sample = 0.128
+n = 600 of 1000, average time per sample = 0.128
+n = 620 of 1000, average time per sample = 0.128
+n = 640 of 1000, average time per sample = 0.128
+n = 660 of 1000, average time per sample = 0.128
+n = 680 of 1000, average time per sample = 0.128
+n = 700 of 1000, average time per sample = 0.128
+n = 720 of 1000, average time per sample = 0.128
+n = 740 of 1000, average time per sample = 0.128
+n = 760 of 1000, average time per sample = 0.129
+n = 780 of 1000, average time per sample = 0.13
+n = 800 of 1000, average time per sample = 0.13
+n = 820 of 1000, average time per sample = 0.13
+n = 840 of 1000, average time per sample = 0.131
+n = 860 of 1000, average time per sample = 0.132
+n = 880 of 1000, average time per sample = 0.132
+n = 900 of 1000, average time per sample = 0.132
+n = 920 of 1000, average time per sample = 0.132
+n = 940 of 1000, average time per sample = 0.132
+n = 960 of 1000, average time per sample = 0.132
+n = 980 of 1000, average time per sample = 0.132
+Computing fit_bpl fit for 1000 subsamples...
+n = 20 of 1000, average time per sample = 2.03
+n = 40 of 1000, average time per sample = 1.945
+n = 60 of 1000, average time per sample = 1.943
+n = 80 of 1000, average time per sample = 1.939
+n = 100 of 1000, average time per sample = 1.987
+n = 120 of 1000, average time per sample = 2.002
+n = 140 of 1000, average time per sample = 2.013
+n = 160 of 1000, average time per sample = 2.015
+n = 180 of 1000, average time per sample = 2.004
+n = 200 of 1000, average time per sample = 1.991
+n = 220 of 1000, average time per sample = 1.99
+n = 240 of 1000, average time per sample = 1.993
+n = 260 of 1000, average time per sample = 1.987
+n = 280 of 1000, average time per sample = 1.982
+n = 300 of 1000, average time per sample = 1.975
+n = 320 of 1000, average time per sample = 1.969
+n = 340 of 1000, average time per sample = 1.967
+n = 360 of 1000, average time per sample = 1.96
+n = 380 of 1000, average time per sample = 1.951
+n = 400 of 1000, average time per sample = 1.951
+n = 420 of 1000, average time per sample = 1.95
+n = 440 of 1000, average time per sample = 1.948
+n = 460 of 1000, average time per sample = 1.949
+n = 480 of 1000, average time per sample = 1.951
+n = 500 of 1000, average time per sample = 1.956
+n = 520 of 1000, average time per sample = 1.956
+n = 540 of 1000, average time per sample = 1.956
+n = 560 of 1000, average time per sample = 1.96
+n = 580 of 1000, average time per sample = 1.964
+n = 600 of 1000, average time per sample = 1.969
+n = 620 of 1000, average time per sample = 1.991
+n = 640 of 1000, average time per sample = 2.052
+n = 660 of 1000, average time per sample = 2.09
+n = 680 of 1000, average time per sample = 2.087
+n = 700 of 1000, average time per sample = 2.11
+n = 720 of 1000, average time per sample = 2.121
+n = 740 of 1000, average time per sample = 2.125
+n = 760 of 1000, average time per sample = 2.122
+n = 780 of 1000, average time per sample = 2.119
+n = 800 of 1000, average time per sample = 2.112
+n = 820 of 1000, average time per sample = 2.113
+n = 840 of 1000, average time per sample = 2.115
+n = 860 of 1000, average time per sample = 2.125
+n = 880 of 1000, average time per sample = 2.155
+n = 900 of 1000, average time per sample = 2.151
+n = 920 of 1000, average time per sample = 2.145
+n = 940 of 1000, average time per sample = 2.14
+n = 960 of 1000, average time per sample = 2.133
+n = 980 of 1000, average time per sample = 2.128
+########################################################
+Single PL MLE Slope
+1.462 pm 0.048
+########################################################
+SPL
+alpha    = 0.4621 p 0.0872 m 0.0149
+ln(like) = -163.328
+DBIC     = 33.054
+DAIC     = 47.053
+########################################################
+STPL
+alpha    = 0.1514 p 0.1191 m 0.0607
+x_exp    = 3.1425 p 0.2895 m 0.4506
+M__exp   = 0.260685 p 0.087524 m 0.094565
+ln(like) = -148.23
+DBIC     = 11.857
+DAIC     = 18.856
+########################################################
+VTPL
+alpha    = -0.3557 p 1.1707 m 0.052
+beta     = 0.417 p 0.0154 m 1.26
+x_exp    = 0.0271 p 0.533 m 0.0171
+M__exp   = 0.011565 p 0.008141 m 0.000196
+ln(like) = -144.761
+DBIC     = 13.92
+DAIC     = 13.92
+########################################################
+BCPL
+alpha1   = 0.2826 p 0.0827 m 0.0629
+alpha2   = 1.1805 p 0.383 m 0.1983
+x_br     = 2.1855 p 0.2355 m 0.737
+M__br    = 0.100118 p 0.026588 m 0.052205
+ln(like) = -152.873
+DBIC     = 30.142
+DAIC     = 30.142
+########################################################
+TPL
+alpha    = 0.2176 p 0.0966 m 0.1571
+x_tr     = 5.3403 p 0.0 m 1.1329
+M__tr    = 2.347548 p 0.0 m 1.591432
+ln(like) = -149.151
+DBIC     = 13.698
+DAIC     = 20.698
+########################################################
+BPL
+alpha1   = -0.4851 p 0.4851 m 0.1999
+alpha2   = 1.2547 p 0.5232 m 0.142
+x_br     = 2.5398 p 0.5483 m 0.347
+M__br    = 0.142678 p 0.104204 m 0.041837
+ln(like) = -137.802
+DBIC     = 0.0
+DAIC     = 0.0
+########################################################
+mean mass: 0.18652146904231603
+min mass: 0.01125522256389105
+[0.00534564 0.00534564 0.00534564 ... 0.0696748  0.0696748  0.0696748 ]

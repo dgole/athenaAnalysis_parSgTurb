@@ -22,9 +22,10 @@ from matplotlib.backends.backend_pdf import PdfPages
 #colorList   = ['r', 'g', 'm', 'b', 'k']
 #pathSave = pathBase + 'plots/pspec_160/'
 ################################################################################
-pathBase    = '../../data/kspaceTest/'
-runNameList = ['run300', 'run301', 'run302', 'run303']
-colorList   = ['r', 'g', 'm', 'b', 'k']
+pathBase    = '../../data/prodRuns/'
+runNameList = ['run301_noPar', 'run302_noPar', 'run303_noPar']
+labelList = ['lr_strong_np', 'lr_moderate_np', 'lr_weak_np']
+colorList   = ['r', 'g', 'b', 'm', 'k']
 pathSave = pathBase + 'plots/pspec_300/'
 ################################################################################
 if not os.path.exists(pathSave): os.makedirs(pathSave)
@@ -37,7 +38,7 @@ for n in range(len(runNameList)):
 ################################################################################
 vExpo = -1.833
 eExpo = 2.0*(vExpo)+2.0
-nStart = 2
+nStart = 4
 
 for n in range(len(do3dList)):
     do3d    = do3dList[n]
@@ -48,13 +49,14 @@ for n in range(len(do3dList)):
     psk  = psk_vx  + psk_vy  + psk_vz
     psk*=np.power(freqs, -eExpo)
     psk/=np.mean(psk)
-    plt.loglog(freqs, psk, color=color, label=runNameList[n])
+    plt.loglog(freqs, psk, color=color, label=labelList[n])
 plt.xlabel(r'$|\mathbf{k}|$')
 plt.ylabel('Power')
-plt.ylim(1.e-3,1.e3)
+plt.ylim(1.e-2,1.e2)
 plt.xlim(freqs[1],freqs[-1])
 plt.legend()
 
+'''
 index = 2
 for prefactor in np.arange(-10,10,0.5):
     plt.plot(freqs, np.power(10,prefactor)*np.power(freqs, index), color=(1,0,0,0.2))
@@ -67,7 +69,7 @@ for prefactor in np.arange(-10,10,0.5):
 index = -2
 for prefactor in np.arange(-10,10,0.5):
     plt.plot(freqs, np.power(10,prefactor)*np.power(freqs, index), color=(0,0,0,0.2))
-
+'''
 
 tools.saveAndClear(pathSave + 'adjustedPspecSpheresSumPerts.png', figNum=0)
 
