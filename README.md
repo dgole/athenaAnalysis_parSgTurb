@@ -3,7 +3,7 @@
 combines the 3d files into one for each time step in 3d folder
 checks to see if data dump is already done first  
 parallelizes infineitley  
-args: <npc> <pathToDir1> <pathToDir2> <pathToDir3> ...
+args: <npc> <pathToDir1> <pathToDir2> <pathToDir3> <etc>
 
 # PLOTTING GAS QUANTITIES  
 ### quickLook.py  
