@@ -73,9 +73,9 @@ def psProfileMean(do, key, nStart=None, nEnd=None, norm=False):
 #psProfile(do3d, 'vx', 6)
 #psProfileMean(do3d, 'vx', 6, 11)
 
-psk_vx, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvx', nStart=nStart, nEnd=nEnd)
-psk_vy, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvy', nStart=nStart, nEnd=nEnd)
-psk_vz, freqs = reader3d.psProfileMean(do3d, 'rootRhoDvz', nStart=nStart, nEnd=nEnd)
+psk_vx, freqs = psProfileMean(do3d, 'rootRhoDvx', nStart=nStart, nEnd=nEnd)
+psk_vy, freqs = psProfileMean(do3d, 'rootRhoDvy', nStart=nStart, nEnd=nEnd)
+psk_vz, freqs = psProfileMean(do3d, 'rootRhoDvz', nStart=nStart, nEnd=nEnd)
 psk  = psk_vx  + psk_vy  + psk_vz
 psk *= np.power(freqs, -eExpo)
 psk /= np.mean(psk)
