@@ -15,6 +15,8 @@ from matplotlib.backends.backend_pdf import PdfPages
 pathBase = str(sys.argv[1])
 nStart   = int(sys.argv[2])
 nEnd     = int(sys.argv[3])
+kStart   = int(sys.argv[4])
+kEnd     = int(sys.argv[5])
 path3d   = pathBase + '3d/'
 pathSave = pathBase + 'plots/pspec/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
