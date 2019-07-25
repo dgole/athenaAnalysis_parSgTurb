@@ -60,9 +60,9 @@ def psProfile_ztAvg(do, key, nStart, nEnd, kStart, kEnd, norm=False):
 	pskList = []
 	count   = 0
 	for n in range(nStart, nEnd):
-		data = do.get3d(key, n)
-		for k in range(kStart, kEnd):
-			if np.mod(do.t[n], do.shearTime)<1.e-8:
+		if np.mod(do.t[n], do.shearTime)<1.e-8:
+			data = do.get3d(key, n)
+			for k in range(kStart, kEnd):
 				data2d = data[:,:,k]
 				psk, freqs = psProfile_2D(do, data2d, norm=norm)
 				pskList.append(psk)
