@@ -551,6 +551,49 @@ def psProfileMean_justMP(do, key, nStart=None, nEnd=None, norm=False):
 	#print(freqs)
 	return psk, freqs
 
+
+
+def calcPs_2D(do, data2d):
+	#data       = do.get3d(key, n)
+	#data2d     = data[:,:,k]
+	freqs      = np.fft.fftfreq(data2d.shape[0], d=do.dx)
+	nFreqs     = freqs.shape[0]//2
+	freqs      = freqs[:nFreqs]
+	fft        = np.fft.fftn(data2d*np.power(do.dx,2))[:nFreqs,:nFreqs]
+	ps         = np.square(np.absolute(fft))
+	return ps, freqs
+
+def psProfile_2D(do, data2d, norm=False):
+	ps, freqs = calcPs_2D(do, data2d)
+	dk        = freqs[1]-freqs[0]
+	freqsNew  = np.arange(0, dk*ps.shape[0], dk)
+	psk       = np.zeros_like(freqsNew)
+	count     = np.zeros_like(freqsNew)
+	for i in range(ps.shape[0]):
+		for j in range(ps.shape[1]):
+			totFreq		  = np.sqrt(np.square(freqs[i]) + np.square(freqs[j]))
+			index         = np.argmin(np.absolute(freqsNew-totFreq))
+			if index < freqsNew.shape[0]:
+				#print(totFreq, index)
+				psk[index]   += ps[i,j]
+				count[index] += 1
+	if norm==True: psk /= count
+	return psk, freqsNew
+
+def psProfile_ztAvg(do, key, nStart, nEnd, kStart, kEnd, norm=False):
+	pskList = []
+	count   = 0
+	for n in range(nStart, nEnd):
+		if np.mod(do.t[n], do.shearTime)<1.e-8:
+			data = do.get3d(key, n)
+			for k in range(kStart, kEnd):
+				data2d = data[:,:,k]
+				psk, freqs = psProfile_2D(do, data2d, norm=norm)
+				pskList.append(psk)
+				count += 1
+	psk = np.asarray(np.sum(pskList,  axis=0))/float(count)
+	return psk, freqs
+
 #########################################################################
 # ACF STUFF
 #########################################################################
