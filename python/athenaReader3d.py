@@ -496,6 +496,61 @@ def psProfileMean(do, key, nStart=None, nEnd=None, unsheared=False, norm=False):
 	return psk, freqs
 
 
+
+def calcPs_justMP(do, key, n):
+	data       = do.get3d(key, n)
+	data       = data[:,:,(do.nz//2-8):(do.nz//2)+8]
+	freqs      = [np.fft.fftfreq(shape, d=do.dx) for shape in data.shape]
+	nFreqs     = [freqs[0].shape[0]//2,freqs[1].shape[0]//2,freqs[2].shape[0]//2]
+	fft        = np.fft.fftn(data*np.power(do.dx,3))[:nFreqs[0],:nFreqs[1],:nFreqs[2]]
+	ps         = np.square(np.absolute(fft))
+	freqs      = [freqs[0][:nFreqs[0]],freqs[1][:nFreqs[1]],freqs[2][:nFreqs[2]]]
+	#print(ps.shape)
+	#print(freqs[0].shape,freqs[1].shape,freqs[2].shape)
+	return ps, freqs
+
+def psProfile_justMP(do, key, n, norm=False):
+	ps, freqs = calcPs_justMP(do, key, n)
+	dk        = [freqs[0][1]-freqs[0][0],
+				 freqs[1][1]-freqs[1][0],
+				 freqs[2][1]-freqs[2][0]]
+	#psk       = np.zeros(int(ps.shape[0]*np.sqrt(3))+1)
+	#freqs     = np.arange(0,dk*len(psk),dk)
+	freqsNew  = np.arange(0, dk[0]*ps.shape[0]*1.5, dk[0])
+	psk       = np.zeros_like(freqsNew)
+	count     = np.zeros_like(freqsNew)
+	for i in range(ps.shape[0]):
+		for j in range(ps.shape[1]):
+			for k in range(ps.shape[2]):
+				totFreq		  = np.sqrt(np.square(freqs[0][i]) +
+										np.square(freqs[1][j]) +
+										np.square(freqs[2][k]))
+				index         = np.argmin(np.absolute(freqsNew-totFreq))
+				if index < freqsNew.shape[0]:
+					print(totFreq, index)
+					psk[index]   += ps[i,j,k]
+					count[index] += 1
+	if norm==True: psk /= count
+	print(freqsNew)
+	print(psk)
+	return psk, freqsNew
+
+def psProfileMean_justMP(do, key, nStart=None, nEnd=None, norm=False):
+	#if nStart is None: nStart = do.nt // 2
+	if nStart is None: nStart = do.nt - 10*int(1.0/do.dt)
+	if nEnd   is None: nEnd   = do.nt
+	pskList = []
+	count   = 0
+	for n in range(nStart, nEnd):
+		if np.mod(do.t[n], do.shearTime)<1.e-8:
+			psk, freqs = psProfile_justMP(do, key, n, norm=norm)
+			pskList.append(psk)
+			count += 1
+	psk = np.asarray(np.sum(pskList,  axis=0))/float(count)
+	#print(psk)
+	#print(freqs)
+	return psk, freqs
+
 #########################################################################
 # ACF STUFF
 #########################################################################
