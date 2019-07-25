@@ -12,7 +12,7 @@ module load python3
 
 
 DIR=$SCRATCH/parSgTurb/data/prodRuns/run100/bin/
-python3 pspec_justMP_2D.py $DIR 16 21 248 265
+python3 pspec_justMP_2D.py $DIR 19 21 255 257
 
 
 
