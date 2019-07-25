@@ -24,9 +24,9 @@ if not os.path.exists(pathSave): os.makedirs(pathSave)
 do3d = reader3d.Data3d(path3d)
 ################################################################################
 # dv profiles, all components on same plot
-'''
 key = 'dv'
 reader3d.profile(do3d, key, color='k', figNum=0, nStart=nStart, nEnd=nEnd, legendLabel=do3d.header[key])
+'''
 key = 'dvx'
 reader3d.profile(do3d, key, color='r', figNum=0, nStart=nStart, nEnd=nEnd, legendLabel=do3d.header[key])
 key = 'dvy'
@@ -41,9 +41,9 @@ tools.saveAndClear(pathSave + 'profilePert_alldv.png', figNum=0)
 '''
 ################################################################################
 # dv time evo, all components on same plot
-'''
 key = 'dv'
 reader3d.timeEvo(do3d, key, color='k', figNum=0, legendLabel=do3d.header[key])
+'''
 key = 'dvx'
 reader3d.timeEvo(do3d, key, color='r', figNum=0, legendLabel=do3d.header[key])
 key = 'dvy'
@@ -58,6 +58,7 @@ tools.saveAndClear(pathSave + 'timeEvoPert_alldv.png', figNum=0)
 '''
 ################################################################################
 # max dpar
+'''
 plt.figure(0)
 print("making max dpar plot...")
 sys.stdout.flush()
@@ -77,6 +78,7 @@ plt.axvline(20, color='gray', lineStyle=':')
 plt.axhline(plotData[20], color='gray', lineStyle=':')
 plt.xlim(0.0, np.amax(do3d.t))
 tools.saveAndClear(pathSave + 'timeEvo_maxDPar.png', figNum=0)
+'''
 ################################################################################
 '''
 # dv distribution
