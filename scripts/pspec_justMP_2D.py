@@ -87,7 +87,9 @@ plt.xlabel(r'$|\mathbf{k}|$')
 plt.ylabel('Power')
 plt.ylim(1.e-2,1.e2)
 plt.xlim(freqs[1],freqs[-1])
-tools.saveAndClear(pathSave + 'adjustedPspecSpheresSumPerts.png', figNum=0)
+tools.saveAndClear(pathSave + 'adjustedPspec_2D_' +
+                   str(kStart) + '_' + str(kEnd)  + 
+                   '.png', figNum=0)
 
 
 

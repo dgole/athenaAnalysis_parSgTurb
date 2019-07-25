@@ -12,10 +12,24 @@ module load python3
 
 
 DIR=$SCRATCH/parSgTurb/data/prodRuns/run100/bin/
-python3 pspec_justMP_2D.py $DIR 19 21 255 257
+python3 pspec_justMP_2D.py $DIR 15 21 248 265
+python3 pspec_justMP_2D.py $DIR 15 21 64 73
+python3 pspec_justMP_2D.py $DIR 15 21 440 449
 
+DIR=$SCRATCH/parSgTurb/data/prodRuns/run101/bin/
+python3 pspec_justMP_2D.py $DIR 15 21 248 265
+python3 pspec_justMP_2D.py $DIR 15 21 64 73
+python3 pspec_justMP_2D.py $DIR 15 21 440 449
 
+DIR=$SCRATCH/parSgTurb/data/prodRuns/run102/bin/
+python3 pspec_justMP_2D.py $DIR 15 21 248 265
+python3 pspec_justMP_2D.py $DIR 15 21 64 73
+python3 pspec_justMP_2D.py $DIR 15 21 440 449
 
+DIR=$SCRATCH/parSgTurb/data/prodRuns/run103/bin/
+python3 pspec_justMP_2D.py $DIR 15 21 248 265
+python3 pspec_justMP_2D.py $DIR 15 21 64 73
+python3 pspec_justMP_2D.py $DIR 15 21 440 449
 
 
 
