@@ -23,8 +23,8 @@ module load python3
 DIR=$SCRATCH/parSgTurb/data/prodRuns/run100/bin/
 python3 plots3d.py $DIR 16 20 1.e-5 
 
-DIR=$SCRATCH/parSgTurb/data/prodRuns/run101/bin/
-python3 plots3d.py $DIR 16 20 3.2e-4
+#DIR=$SCRATCH/parSgTurb/data/prodRuns/run101/bin/
+#python3 plots3d.py $DIR 16 20 3.2e-4
 
 #DIR=$SCRATCH/parSgTurb/data/prodRuns/run102/bin/
 #python3 plots3d.py $DIR 16 20 1.e-3
