@@ -26,6 +26,7 @@ do3d = reader3d.Data3d(path3d)
 # dv profiles, all components on same plot
 key = 'dv'
 reader3d.profile(do3d, key, color='k', figNum=0, nStart=nStart, nEnd=nEnd, legendLabel=do3d.header[key])
+tools.saveAndClear(pathSave + 'profilePert_newdv.png', figNum=0)
 '''
 key = 'dvx'
 reader3d.profile(do3d, key, color='r', figNum=0, nStart=nStart, nEnd=nEnd, legendLabel=do3d.header[key])
@@ -37,12 +38,13 @@ plt.ylim(dvBase*0.1, dvBase*3.2)
 plt.axhline(dvBase, color='gray', linestyle='--')
 #plt.axhline(dvBase/np.sqrt(3.), color='gray', linestyle=':')
 plt.legend(loc='best')
-tools.saveAndClear(pathSave + 'profilePert_alldv.png', figNum=0)
+tools.saveAndClear(pathSave + 'profilePert_newdv.png', figNum=0)
 '''
 ################################################################################
 # dv time evo, all components on same plot
 key = 'dv'
 reader3d.timeEvo(do3d, key, color='k', figNum=0, legendLabel=do3d.header[key])
+tools.saveAndClear(pathSave + 'timeEvoPert_newdv.png', figNum=0)
 '''
 key = 'dvx'
 reader3d.timeEvo(do3d, key, color='r', figNum=0, legendLabel=do3d.header[key])
