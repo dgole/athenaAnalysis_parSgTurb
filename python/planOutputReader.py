@@ -15,7 +15,7 @@ import time
 # Data class ###################################################################
 ################################################################################
 class DataPlan:
-	def __init__(self, path, dt=0.1, nPar=128*128*128, G=0.1, nStart=200, nTot=500, tSg=20.0):
+	def __init__(self, path, dt=0.1, nPar=512*512*512, G=0.1, nStart=200, nTot=500, tSg=20.0):
 		print("initializing PLAN data structure from " + path)
 
 		# housekeeping
@@ -206,7 +206,7 @@ def gridSearch1d(funcName, mp, p1min, p1max, p1step):
 	grid = np.zeros(p1.shape[0])
 	for n1 in range(p1.shape[0]):
 		params      = (p1[n1])
-		lnLike      = funcName(mp, params)
+		lnLike      = funcName(params, mp)
 		grid[n1] = lnLike
 		if lnLike > maxLike:
 			maxLike     = lnLike
@@ -302,18 +302,18 @@ def bootstrap(mp, funcName, nParams, nb=100, sampleFactor=1.0, pathSave=None):
 
 
 # SPL FITTING
-def p_spl(masses, params):
-	alpha  = params
+def p_spl(params, masses):
+	alpha  = params[0]
 	xArr   = convert_to_x(masses)
 	return alpha * np.exp(-alpha*xArr)
-def P_spl(masses, params):
-	alpha   = params
+def P_spl(params, masses):
+	alpha   = params[0]
 	minMass = np.amin(masses)
 	nMasses = masses.shape[0]
 	ngtm    = np.power(masses/minMass, -alpha)
 	return ngtm
-def lnlike_spl(masses, params):
-	pArr = p_spl(masses, params)
+def lnlike_spl(params, masses):
+	pArr = p_spl(params, masses)
 	sum  = np.sum(np.log(pArr))
 	return sum
 def fit_spl(mp):

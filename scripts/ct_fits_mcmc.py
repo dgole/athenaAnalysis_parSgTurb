@@ -54,64 +54,6 @@ print("splitters: " + str(nSplitters))
 print("doing stats on: " + str(nStats))
 print("average mass: " + str(np.mean(np.asarray(mp))))
 
-'''
-# get split fraction distribution
-splitFracList = []
-massOfSplittersList = []
-persistenceList = []
-for clump in clumpObjList:
-	if clump.splitFrac > -1.0:
-		splitFracList.append(clump.splitFrac)
-		massOfSplittersList.append(clump.massDict[clump.n0])
-		persistenceList.append(clump.persistence)
-plt.figure(0)
-plt.hist(np.asarray(splitFracList), bins=20)
-plt.xlim(0,1.0)
-plt.ylabel("Count")
-plt.xlabel("Split Fraction")
-tools.saveAndClear(pathSave + "hist_splitFracs_ct.png", figNum=0)
-
-plt.figure(0)
-plt.semilogx(massOfSplittersList, splitFracList, 'ko', markersize=2)
-#plt.xlim(0,1.0)
-plt.xlabel("Mp (initial)")
-plt.ylabel("Split Frac")
-#plt.axhline(0.9, color='gray', linestyle="--")
-plt.axhline(0.5, color='gray', linestyle="--")
-#plt.axhline(0.2, color='gray', linestyle="--")
-plt.axvline(1.e-2, color='gray', linestyle="--")
-countBL = np.sum(
-		  np.where(np.asarray(splitFracList)<0.5, 1, 0) *
-		  np.where(np.asarray(massOfSplittersList)<1.e-2,
-		  1, 0))
-countTL = np.sum(
-		  np.where(np.asarray(splitFracList)>0.5, 1, 0) *
-		  np.where(np.asarray(massOfSplittersList)<1.e-2,
-		  1, 0))
-countBR = np.sum(
-		  np.where(np.asarray(splitFracList)<0.5, 1, 0) *
-		  np.where(np.asarray(massOfSplittersList)>1.e-2,
-		  1, 0))
-countTR = np.sum(
-		  np.where(np.asarray(splitFracList)>0.5, 1, 0) *
-		  np.where(np.asarray(massOfSplittersList)>1.e-2,
-		  1, 0))
-plt.text(5.e-3, 0.25, str(countBL))
-plt.text(5.e-3, 0.75, str(countTL))
-plt.text(1.e-1, 0.25, str(countBR))
-plt.text(1.e-1, 0.75, str(countTR))
-
-tools.saveAndClear(pathSave + "splitFrac_vs_mass.png", figNum=0)
-
-plt.figure(0)
-plt.semilogx(massOfSplittersList, persistenceList, 'ko', markersize=2)
-#plt.xlim(0,1.0)
-plt.xlabel("Mp (initial)")
-plt.ylabel("Persistence")
-tools.saveAndClear(pathSave + "persistence_vs_mass.png", figNum=0)
-'''
-
-
 ################################################################################
 # do advanced stats on IMS
 # make hist
@@ -119,58 +61,6 @@ mp1, ngtm = readerPlan.getCumMassHist2(mp)
 minMass = np.amin(mp1); maxMass = np.amax(mp1);
 nm = mp1.shape[0]
 plt.figure(0)
-
-
-
-
-
-
-################################################################################
-# diff hist
-mp, dndmp = readerPlan.getDiffMassHist2(mp)
-mp = np.asarray(mp); dndmp = np.asarray(dndmp);
-min = 1.e20
-preFacArr = np.arange(1.0,200.0,0.1)
-# Single PL MLE
-p_mle, err_mle = readerPlan.get_p_mle2(mp1)
-for i in range(preFacArr.shape[0]):
-	preFac   = preFacArr[i]
-	model    = preFac * np.power(mp, -p_mle)
-	logDndmp = np.log10(dndmp)
-	logModel = np.log10(model)
-	diff     = np.sum(np.square(logDndmp - logModel))
-	if diff < min:
-		min  = diff
-		bestPreFac = preFac
-		#print("new min found")
-		#print(min)
-		#print(bestPreFac)
-
-plt.figure(0)
-plt.loglog(mp, dndmp, 'ko', ms=2)
-mp2 = np.logspace(-10.0, 10, num=500)
-model = bestPreFac * np.power(mp2, -p_mle)
-plt.loglog(mp2, model, linestyle='--', linewidth=1, color='k')
-# plot labels etc.
-plt.xlabel(r'$M_p$')
-plt.ylabel(r'$dN/dM_p$')
-plt.ylim(3.e0,  1.e5)
-plt.xlim(1e-3, 1.e0)
-tools.saveAndClear(pathSave + "hist_differential_oneFrameExample_" + ".png", figNum=0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ################################################################################
 
