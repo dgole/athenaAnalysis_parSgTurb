@@ -29,20 +29,18 @@ print("velocity spectrum PL exponent is " + str(vExpo))
 print("KE power spectrum PL exponent is " + str(eExpo))
 ################################################################################
 
-def calcPs_2D(do, key, n, k):
-	data       = do.get3d(key, n)
-	data2d     = data[:,:,k]
+def calcPs_2D(do, data2d):
+	#data       = do.get3d(key, n)
+	#data2d     = data[:,:,k]
 	freqs      = np.fft.fftfreq(data2d.shape[0], d=do.dx)
 	nFreqs     = freqs.shape[0]//2
 	freqs      = freqs[:nFreqs]
 	fft        = np.fft.fftn(data2d*np.power(do.dx,2))[:nFreqs,:nFreqs]
 	ps         = np.square(np.absolute(fft))
-	#print(ps.shape)
-	#print(freqs[0].shape,freqs[1].shape,freqs[2].shape)
 	return ps, freqs
 
-def psProfile_2D(do, key, n, z, norm=False):
-	ps, freqs = calcPs_2D(do, key, n, z)
+def psProfile_2D(do, data2d, norm=False):
+	ps, freqs = calcPs_2D(do, data2d)
 	dk        = freqs[1]-freqs[0]
 	freqsNew  = np.arange(0, dk*ps.shape[0], dk)
 	psk       = np.zeros_like(freqsNew)
@@ -56,17 +54,17 @@ def psProfile_2D(do, key, n, z, norm=False):
 				psk[index]   += ps[i,j]
 				count[index] += 1
 	if norm==True: psk /= count
-	#print(freqsNew)
-	#print(psk)
 	return psk, freqsNew
 
-def psProfileMean_2D(do, key, nStart, nEnd, kStart, kEnd, norm=False):
+def psProfile_ztAvg(do, key, nStart, nEnd, kStart, kEnd, norm=False):
 	pskList = []
 	count   = 0
 	for n in range(nStart, nEnd):
+		data = do.get3d(key, n)
 		for k in range(kStart, kEnd):
 			if np.mod(do.t[n], do.shearTime)<1.e-8:
-				psk, freqs = psProfile_2D(do, key, n, k, norm=norm)
+				data2d = data[:,:,k]
+				psk, freqs = psProfile_2D(do, data2d, norm=norm)
 				pskList.append(psk)
 				count += 1
 	psk = np.asarray(np.sum(pskList,  axis=0))/float(count)
@@ -76,9 +74,9 @@ def psProfileMean_2D(do, key, nStart, nEnd, kStart, kEnd, norm=False):
 #psProfile_2D(do3d, 'rootRhoDvx', 10, 32)
 #psProfileMean_2D(do3d, 'rootRhoDvx', 9, 11, 30, 34)
 
-psk_vx, freqs = psProfileMean_2D(do3d, 'rootRhoDvx', nStart, nEnd, kStart, kEnd)
-psk_vy, freqs = psProfileMean_2D(do3d, 'rootRhoDvy', nStart, nEnd, kStart, kEnd)
-psk_vz, freqs = psProfileMean_2D(do3d, 'rootRhoDvz', nStart, nEnd, kStart, kEnd)
+psk_vx, freqs = psProfile_ztAvg(do3d, 'rootRhoDvx', nStart, nEnd, kStart, kEnd)
+psk_vy, freqs = psProfile_ztAvg(do3d, 'rootRhoDvy', nStart, nEnd, kStart, kEnd)
+psk_vz, freqs = psProfile_ztAvg(do3d, 'rootRhoDvz', nStart, nEnd, kStart, kEnd)
 psk  = psk_vx  + psk_vy  + psk_vz
 psk *= np.power(freqs, -eExpo)
 psk /= np.mean(psk)
