@@ -27,7 +27,7 @@ key = 'dpar'
 for n in range(nStart, nEnd):
 	data    = do3d.get3d(key, n)
 	thisTot = np.sum(data)
-	if n = n0:
+	if n == nStart:
 		tot0 = thisTot
 	print(n, str(thisTot/tot0))
 	sys.stdout.flush()
