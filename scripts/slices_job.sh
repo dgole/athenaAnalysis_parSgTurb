@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH -J 3d
-#SBATCH --time=1:00:00
+#SBATCH --time=2:00:00
 #SBATCH -N 1
 #SBATCH --ntasks 64
 #SBATCH -p development
