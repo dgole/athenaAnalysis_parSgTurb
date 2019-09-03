@@ -17,8 +17,9 @@ pathBase  = str(sys.argv[1])
 nStart    = int(sys.argv[2])
 nStop     = int(sys.argv[3])
 nb        = int(sys.argv[4])
-pathPlan  = pathBase + 'planOutput2/'
-pathCT    = pathBase + 'planOutput2/clumpTracking_' + str(nStart) + '_' + str(nStop) + '/'
+#pathPlan  = pathBase + 'planOutput2/'
+pathPlan  = pathBase
+pathCT    = pathPlan + 'clumpTracking_' + str(nStart) + '_' + str(nStop) + '/'
 pathSave  = pathBase + 'plots/clumpTracking_mcmc_bootstrap/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 ################################################################################
@@ -68,13 +69,13 @@ plt.figure(0)
 ################################################################################
 
 fitInfoList = [
-			   #pstats.fitInfo_spl,
-			   #pstats.fitInfo_stpl,
+			   pstats.fitInfo_spl,
+			   pstats.fitInfo_stpl,
 			   #pstats.fitInfo_tpl,
-			   #pstats.fitInfo_bcpl,
-			   #pstats.fitInfo_bpl,
+			   pstats.fitInfo_bcpl,
+			   pstats.fitInfo_bpl,
 			   #pstats.fitInfo_vtpl,
-			   pstats.fitInfo_tspl
+			   #pstats.fitInfo_tspl
 			   ]
 
 finalStats = []
