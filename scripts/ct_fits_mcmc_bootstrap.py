@@ -57,6 +57,7 @@ print("splitters: " + str(nSplitters))
 print("doing stats on: " + str(nStats))
 print("average mass: " + str(np.mean(np.asarray(mp))))
 print("\n")
+sys.stdout.flush()
 
 ################################################################################
 # do advanced stats on IMS
@@ -89,6 +90,7 @@ for fitInfo in fitInfoList:
 			print("##########################################################################")
 			str1 = "n = " + str(n) + " of " + str(nb)
 			str2 = "average time per sample = " + str(np.round((time.time()-t0)/float(n+0.01),3))
+			sys.stdout.flush()
 			print(str1 + ", " + str2)
 		sample          = np.random.choice(mp1, size=nm, replace=True)
 		fits.append(pstats.Fit_Pipeline(sample, fitInfo, verbose=False, makePlots=False))
@@ -98,6 +100,7 @@ for fitInfo in fitInfoList:
 			n+=1
 		except:
 			print("fit failed, not advancing n")
+			sys.stdout.flush()
 	np.save(pathSave+fitInfo.name+"_"+str(nb)+".npy", paramsAll)
 	finalStats    = np.zeros([len(fitInfo.params0), 3])
 	finalStats[:,0] = np.percentile(paramsAll, 50, axis=0)
