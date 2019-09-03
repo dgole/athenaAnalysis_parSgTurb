@@ -2,7 +2,7 @@
 import numpy as np
 import time
 #import matplotlib as m
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import os
 import math
 import sys
@@ -64,7 +64,7 @@ print("\n")
 mp1, ngtm = readerPlan.getCumMassHist2(mp)
 minMass = np.amin(mp1); maxMass = np.amax(mp1);
 nm = mp1.shape[0]
-plt.figure(0)
+#plt.figure(0)
 
 ################################################################################
 
