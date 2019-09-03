@@ -24,7 +24,6 @@ pathPlan    = pathBase + 'planOutput2/'
 if not os.path.exists(pathSave): os.makedirs(pathSave)
 tStart = 23.0
 
-
 fitInfoList = [pstats.fitInfo_spl,
                pstats.fitInfo_tpl,
                pstats.fitInfo_stpl,

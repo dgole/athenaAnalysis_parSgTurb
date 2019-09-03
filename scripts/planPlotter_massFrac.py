@@ -31,7 +31,7 @@ nStartList = [220, 220, 300]
 # plot mass frac in planetesimals over time
 colorList = ['k', 'b', 'r', 'g']
 labelList = ['control', r'$\alpha=10^{-4}$', r'$\alpha=10^{-3.5}$', r'$\alpha=10^{-3}$']
-for n in range(4):
+for n in range(3):
 	try:
 		doPlan = doPlanList[n]
 		mFracList = []
@@ -40,14 +40,15 @@ for n in range(4):
 			except: mNow = 0.0
 			mFracNow = mNow / doPlan.mParTot
 			mFracList.append(mFracNow)
-		plt.plot(doPlan.time, mFracList, color=colorList[n], linewidth=2, label=labelList[n])
+		plt.semilogy(doPlan.time, mFracList, color=colorList[n], linewidth=2, label=labelList[n])
 		print(mFracList[-1])
 	except:
 		plt.plot(np.arange(100), np.zeros(100), color=colorList[n], linewidth=2, label=labelList[n])
 	n+=1
 
 plt.xlim(0, 19)
-plt.legend(fontsize=15)
+plt.ylim(1.e-4, 4.e-1)
+plt.legend(fontsize=15, loc='upper right')
 plt.ylabel(r'$M_{plan} / M_{par}$', fontsize=15)
 plt.xlabel(r'$t \Omega$', fontsize=15)
 plt.tight_layout()

@@ -37,8 +37,8 @@ class DataPlan:
 		self.nClumpsList   = [0    for n in range(self.nTot)]
 		for n in range(self.nStart, self.nTot):
 			# read in propper peak file
-			print('###################################################')
-			print('looking for peak file for n=' + str(n))
+			#print('###################################################')
+			#print('looking for peak file for n=' + str(n))
 			t  = n*self.dt
 			n1 = int(np.floor(t))
 			n2 = np.int(np.floor(n-(1.0/self.dt)*n1))
@@ -53,7 +53,7 @@ class DataPlan:
 				str2 = str(n2)+'01'
 				fileName = self.strBase+str1+'.'+str2+self.strEnd
 				temp     = np.loadtxt(self.path+fileName)
-			print('read in file named ' + fileName)
+			#print('read in file named ' + fileName)
 			# assign data to array / list
 			if len(temp.shape) == 2:
 				self.peakArrayList[n] = temp
@@ -61,7 +61,7 @@ class DataPlan:
 				self.peakArrayList[n] = temp.reshape((1, 19))
 			try:
 				self.nClumpsList[n] = (self.peakArrayList[n]).shape[0]
-				print(str(self.nClumpsList[n]) + ' clumps found')
+				#print(str(self.nClumpsList[n]) + ' clumps found')
 				#self.peakArrayList[n][:,2] *= self.m0_ceres
 				self.peakArrayList[n][:,2] /= self.mg
 			except:

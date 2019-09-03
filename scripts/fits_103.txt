@@ -1,0 +1,8 @@
+initializing PLAN data structure from ../../data/prodRuns/run103/planOutput2/
+###################################################
+looking for peak file for n=291
+read in file named peaks_at_029.100.txt
+54 clumps found
+(52,)
+(54,)
+Computing fit_spl fit for 1000 subsamples...
