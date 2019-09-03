@@ -15,7 +15,6 @@ from matplotlib.backends.backend_pdf import PdfPages
 pathBase = str(sys.argv[1])
 nStart   = int(sys.argv[2])
 nEnd     = int(sys.argv[3])
-dvBase   = np.sqrt(alpha)
 ################################################################################
 path3d   = pathBase + '3d/'
 pathSave = pathBase + 'plots/plots3d/'
