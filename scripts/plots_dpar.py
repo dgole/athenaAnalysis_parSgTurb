@@ -23,7 +23,7 @@ do3d = reader3d.Data3d(path3d)
 plt.figure(0)
 ################################################################################
 key = 'dpar'
-for n in range(nStart, nEnd):
+for n in range(nStart, nEnd,5):
 	data    = do3d.get3d(key, n)
 	thisTot = np.sum(data)
 	if n == nStart:
