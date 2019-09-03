@@ -75,6 +75,8 @@ def worker(return_list):
 	sample = np.random.choice(mp1, size=nm, replace=True)
 	fit = pstats.Fit_Pipeline(sample, fitInfo, verbose=False, makePlots=False)
 	return_list.append(fit)
+	print("number complete: ", str(len(return_list)))
+	sys.stdout.flush()
 	return None
 ################################################################################
 manager     = mproc.Manager()
