@@ -30,6 +30,7 @@ for n in range(nStart, nEnd):
 	if n = n0:
 		tot0 = thisTot
 	print(n, str(thisTot/tot0))
+	sys.stdout.flush()
 
 
 
