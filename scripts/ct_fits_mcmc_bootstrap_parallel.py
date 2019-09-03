@@ -94,8 +94,8 @@ for job in jobs:
 paramsAll = np.zeros([nb, len(fitInfo.params0)])
 for n in range(nb):
 	fit = return_list[n]
-	print(fit.fitInfo.name, fit.params_opt)
-	sys.stdout.flush()
+	#print(fit.fitInfo.name, fit.params_opt)
+	#sys.stdout.flush()
 	paramsAll[n] = fit.params_opt
 
 np.save(pathSave+fitInfo.name+"_"+str(nb)+".npy", paramsAll)
