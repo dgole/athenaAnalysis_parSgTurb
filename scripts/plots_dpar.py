@@ -25,6 +25,7 @@ plt.figure(0)
 key = 'dpar'
 for n in range(nStart, nEnd,5):
 	data    = do3d.get3d(key, n)
+	print(data.shape)
 	thisTot = np.sum(data)
 	if n == nStart:
 		tot0 = thisTot
