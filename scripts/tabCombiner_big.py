@@ -86,19 +86,19 @@ while True:
 			zi   = np.argmin(np.absolute(cArray-zmin))
 			masterArray[xi:xi+nx,yi:yi+ny,zi:zi+nz]=data
 		'''
-                cxArray = np.arange(-0.1+res/2.0, 0.1, res)
+		cxArray = np.arange(-0.1+res/2.0, 0.1, res)
 		cyArray = np.arange(-0.1+res/2.0, 0.1, res)
 		czArray = np.arange(-0.4+res/2.0, 0.4, res)
-                print(nx, ny, nz, res)
-                masterArray = np.zeros((128, 128, 4*128, cols))
-                for data in resultsList:
-                        xmin = np.amin(data[:,:,:,0])
-                        ymin = np.amin(data[:,:,:,1])
-                        zmin = np.amin(data[:,:,:,2])
-                        xi   = np.argmin(np.absolute(cxArray-xmin))
-                        yi   = np.argmin(np.absolute(cyArray-ymin))
-                        zi   = np.argmin(np.absolute(czArray-zmin))
-                        masterArray[xi:xi+nx,yi:yi+ny,zi:zi+nz]=data
+		print(nx, ny, nz, res)
+		masterArray = np.zeros((128, 128, 4*128, cols))
+		for data in resultsList:
+			xmin = np.amin(data[:,:,:,0])
+			ymin = np.amin(data[:,:,:,1])
+			zmin = np.amin(data[:,:,:,2])
+			xi   = np.argmin(np.absolute(cxArray-xmin))
+			yi   = np.argmin(np.absolute(cyArray-ymin))
+			zi   = np.argmin(np.absolute(czArray-zmin))
+			masterArray[xi:xi+nx,yi:yi+ny,zi:zi+nz]=data
 		########################################################################
 		# check if any of the x coordinates are zero (they shouldn't be)
 		if np.any(masterArray[:,:,:,0]==0.0) or np.any(masterArray[:,:,:,1]==0.0) or np.any(masterArray[:,:,:,2]==0.0):
