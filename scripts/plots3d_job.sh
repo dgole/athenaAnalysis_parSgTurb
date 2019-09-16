@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -J 3d_100
+#SBATCH -J dpar
 #SBATCH --time=2:00:00
 #SBATCH -N 1
 #SBATCH --tasks-per-node 1
@@ -9,6 +9,18 @@
 # The following commands will be executed when this script is run.
 module load gcc
 module load python3
+
+DIR=$SCRATCH/parSgTurb/data/prodRuns/run602/bin/
+python3 plots_dpar.py $DIR 0 30 
+
+DIR=$SCRATCH/parSgTurb/data/prodRuns/run603/bin/
+python3 plots_dpar.py $DIR 0 30
+
+#DIR=$SCRATCH/parSgTurb/data/prodRuns/run102/bin/
+#python3 plots_dpar.py $DIR 0 30
+
+#DIR=$SCRATCH/parSgTurb/data/prodRuns/run103/bin/
+#python3 plots_dpar.py $DIR 0 30
 
 
 #DIR=$SCRATCH/parSgTurb/data/prodRuns/run101_noPar/bin/
@@ -26,8 +38,8 @@ module load python3
 #DIR=$SCRATCH/parSgTurb/data/prodRuns/run101/bin/
 #python3 plots3d.py $DIR 16 20 3.2e-4
 
-DIR=$SCRATCH/parSgTurb/data/prodRuns/run102/bin/
-python3 plots3d.py $DIR 20 30 1.e-3
+#DIR=$SCRATCH/parSgTurb/data/prodRuns/run102/bin/
+#python3 plots3d.py $DIR 20 30 1.e-3
 
 #DIR=$SCRATCH/parSgTurb/data/prodRuns/run103/bin/
 #python3 plots3d.py $DIR 16 20 1.e-4

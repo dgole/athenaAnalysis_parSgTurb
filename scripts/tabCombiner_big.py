@@ -72,6 +72,7 @@ while True:
 		nTot   = nx*ny*nz*npc
 		n1d    = int(np.round(np.power(nTot, 1./3.)))
 		res    = np.absolute(data[0,0,0,0]-data[1,0,0,0])
+		'''
 		cLim   = int(res*n1d*100.0); cLim/=200.0;
 		cArray = np.arange(-cLim+res/2.0, cLim, res)
 		print(nx, ny, nz, n1d, res)
@@ -84,6 +85,20 @@ while True:
 			yi   = np.argmin(np.absolute(cArray-ymin))
 			zi   = np.argmin(np.absolute(cArray-zmin))
 			masterArray[xi:xi+nx,yi:yi+ny,zi:zi+nz]=data
+		'''
+                cxArray = np.arange(-0.1+res/2.0, 0.1, res)
+		cyArray = np.arange(-0.1+res/2.0, 0.1, res)
+		czArray = np.arange(-0.4+res/2.0, 0.4, res)
+                print(nx, ny, nz, res)
+                masterArray = np.zeros((128, 128, 4*128, cols))
+                for data in resultsList:
+                        xmin = np.amin(data[:,:,:,0])
+                        ymin = np.amin(data[:,:,:,1])
+                        zmin = np.amin(data[:,:,:,2])
+                        xi   = np.argmin(np.absolute(cxArray-xmin))
+                        yi   = np.argmin(np.absolute(cyArray-ymin))
+                        zi   = np.argmin(np.absolute(czArray-zmin))
+                        masterArray[xi:xi+nx,yi:yi+ny,zi:zi+nz]=data
 		########################################################################
 		# check if any of the x coordinates are zero (they shouldn't be)
 		if np.any(masterArray[:,:,:,0]==0.0) or np.any(masterArray[:,:,:,1]==0.0) or np.any(masterArray[:,:,:,2]==0.0):
